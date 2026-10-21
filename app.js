@@ -1,20 +1,23 @@
 // Importação dos módulos necessários
-const express = require('express'); //importe o módulo 'express'
-const path = require('path'); // Importe o módulo 'path'
-const rotas = require('./routes/index.js'); // Importe o arquivo de rotas
+const express = require('express');
+const path = require('path');
+const rotas = require('./routes/index.js');
 
-//  Criação da aplicação Express
 const app = express();
 const port = process.env.PORT || 3000; // Usa a porta da nuvem ou a 3000 localmente
 
-// Configurar o diretório para arquivos estáticos (CSS, JS, imagens)
+// EJS como template engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Arquivos estáticos (CSS, JS, imagens)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // body parser para processar dados de formulários
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Conectando as Rotas à aplicação principal
+// Conectando as rotas à aplicação principal
 app.use('/', rotas);
 
 app.listen(port, () => {

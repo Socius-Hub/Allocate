@@ -1,0 +1,38 @@
+<%
+const itens = [
+  { id: 'dashboard',     href: '/dashboard',              icone: 'dashboard',              rotulo: 'Painel de Controle' },
+  { id: 'eventos',       href: '/eventos',                icone: 'event',                  rotulo: 'Gestão de Eventos' },
+  { id: 'inscricoes',    href: '/inscricoes-lista',       icone: 'confirmation_number',    rotulo: 'Inscrições' },
+  { id: 'aprovacoes',    href: '/aprovacoes',             icone: 'rule',                   rotulo: 'Filas de Aprovação' },
+  { id: 'simulador',     href: '/simulador-orcamento',    icone: 'calculate',              rotulo: 'Simulador de Orçamento' },
+  { id: 'orcamento',     href: '/orcamento-departamento', icone: 'account_balance_wallet', rotulo: 'Orçamento por Departamento' },
+  { id: 'funcionarios',  href: '/funcionarios',           icone: 'group',                  rotulo: 'Perfis de Equipe' },
+  { id: 'configuracoes', href: '/configuracoes',          icone: 'settings',               rotulo: 'Configurações' }
+];
+const base = 'flex items-center gap-md px-md py-sm rounded-lg font-label-md text-label-md transition-colors duration-200 cursor-pointer active:scale-95';
+const ativoCls = 'text-primary font-bold border-r-4 border-primary bg-primary-container/10';
+const inativoCls = 'text-on-surface-variant hover:text-primary hover:bg-surface-container-high';
+%>
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest shadow-sm py-xl px-md z-50 border-r border-outline-variant/30">
+  <a href="/dashboard" class="flex items-center gap-sm mb-lg">
+    <span class="material-symbols-outlined fill text-primary text-3xl">health_and_safety</span>
+    <div>
+      <h1 class="font-headline-sm text-headline-sm font-bold text-primary">Allocate</h1>
+      <p class="font-label-sm text-label-sm text-on-surface-variant">Gestão de Orçamentos</p>
+    </div>
+  </a>
+  <a href="/evento-novo" class="bg-secondary-container hover:bg-secondary hover:text-white text-on-secondary-container font-label-md text-label-md rounded-full py-md px-lg flex items-center justify-center gap-xs w-full mb-xl transition-colors shadow-sm">
+    <span class="material-symbols-outlined fill">add</span> Novo Evento
+  </a>
+  <div class="flex-1 space-y-xs overflow-y-auto">
+    <% itens.forEach(function (i) { const ativo = i.id === locals.pagina; %>
+      <a href="<%= i.href %>" class="<%= base %> <%= ativo ? ativoCls : inativoCls %>">
+        <span class="material-symbols-outlined <%= ativo ? 'fill' : '' %>"><%= i.icone %></span><%= i.rotulo %>
+      </a>
+    <% }); %>
+  </div>
+  <div class="mt-auto pt-lg border-t border-outline-variant space-y-xs">
+    <a href="#" class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 font-label-md text-label-md"><span class="material-symbols-outlined">help</span>Suporte</a>
+    <a href="/" class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container/30 transition-colors duration-200 font-label-md text-label-md"><span class="material-symbols-outlined">logout</span>Sair</a>
+  </div>
+</nav>

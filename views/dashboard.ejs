@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased">
+
+<%- include('partials/menu-lateral') %>
+
+<div class="md:ml-64 min-h-screen flex flex-col">
+  <%- include('partials/cabecalho') %>
+
+  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
+    <div class="mb-xl">
+      <h2 class="font-headline-md text-headline-md text-on-background">Bem-vinda de volta, Dra. Maria</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1">Aqui está um resumo do orçamento e das atividades recentes.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-gutter">
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
+        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Orçamento Total</p>
+        <p class="font-headline-sm text-headline-sm text-on-surface">R$ 15,4M</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
+        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Utilizado</p>
+        <p class="font-headline-sm text-headline-sm text-secondary-container">R$ 10,2M</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
+        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Disponível</p>
+        <p class="font-headline-sm text-headline-sm text-primary">R$ 5,2M</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
+        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Aprovações Pendentes</p>
+        <p class="font-headline-sm text-headline-sm text-on-surface">12</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+      <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-lg">
+        <div class="flex justify-between items-center mb-md">
+          <h3 class="font-headline-sm text-headline-sm text-on-background">Próximos Eventos</h3>
+          <a href="/eventos" class="font-label-sm text-label-sm text-primary hover:underline">Ver todos</a>
+        </div>
+        <div class="divide-y divide-outline-variant/30">
+          <a href="/evento-detalhes" class="flex items-center justify-between py-3 hover:bg-surface-container-low/50 -mx-2 px-2 rounded transition-colors">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary"><span class="material-symbols-outlined">science</span></div>
+              <div><p class="font-medium text-on-surface">Congresso Nacional de Medicina 2024</p><p class="font-label-sm text-label-sm text-on-surface-variant">15-18 Out · São Paulo, SP</p></div>
+            </div>
+            <span class="inline-flex items-center px-2 py-1 rounded-md bg-tertiary-fixed/30 text-tertiary font-label-sm text-[11px]">Em Planejamento</span>
+          </a>
+          <a href="/evento-detalhes" class="flex items-center justify-between py-3 hover:bg-surface-container-low/50 -mx-2 px-2 rounded transition-colors">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface-variant"><span class="material-symbols-outlined">groups</span></div>
+              <div><p class="font-medium text-on-surface">Treinamento BLS Avançado - Turma B</p><p class="font-label-sm text-label-sm text-on-surface-variant">22 Out · Centro de Simulação</p></div>
+            </div>
+            <span class="inline-flex items-center px-2 py-1 rounded-md bg-[#fff4e5] text-[#b26b00] font-label-sm text-[11px]">Pendente</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-lg">
+        <h3 class="font-headline-sm text-headline-sm text-on-background mb-md">Atalhos Rápidos</h3>
+        <div class="space-y-sm">
+          <a href="/inscricao-nova" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">confirmation_number</span>Nova Inscrição</a>
+          <a href="/aprovacoes" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">rule</span>Revisar Aprovações</a>
+          <a href="/simulador-orcamento" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">calculate</span>Simular Orçamento</a>
+          <a href="/evento-novo" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">event</span>Criar Evento</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

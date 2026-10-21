@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased">
+
+<%- include('partials/menu-lateral') %>
+
+<div class="md:ml-64 min-h-screen flex flex-col">
+  <%- include('partials/cabecalho') %>
+
+  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
+    <div class="mb-lg flex flex-col gap-xs">
+      <div class="flex items-center gap-xs text-on-surface-variant font-label-sm">
+        <a class="hover:text-primary transition-colors" href="/funcionarios">Perfis de Equipe</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-on-surface">Dra. Maria Silva</span>
+      </div>
+      <div class="flex justify-between items-end flex-wrap gap-md">
+        <div><h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background">Dra. Maria Silva</h2><p class="font-body-lg text-body-lg text-on-surface-variant">Cardiologia Clínica · CRM 123456</p></div>
+        <span class="px-3 py-1 bg-tertiary-container/20 text-tertiary rounded-full font-label-sm flex items-center gap-xs"><span class="material-symbols-outlined text-[16px]">check_circle</span>Ativo</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 gap-gutter">
+      <div class="col-span-12 md:col-span-4 bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm flex flex-col gap-md">
+        <div class="flex items-center gap-md border-b border-outline-variant pb-md">
+          <div class="w-20 h-20 rounded-full bg-primary-container/20 text-primary flex items-center justify-center font-headline-sm text-headline-sm border-2 border-surface-container-highest">MS</div>
+          <div><h3 class="font-headline-sm text-headline-sm text-on-background">Maria Silva</h3><p class="font-body-sm text-body-sm text-on-surface-variant">Coordenadora Médica</p><p class="font-label-sm text-label-sm text-primary mt-1">Unidade Central</p></div>
+        </div>
+        <div class="flex flex-col gap-sm pt-sm">
+          <div class="flex items-center gap-sm text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">mail</span><span class="font-body-sm text-body-sm">maria.silva@unimed.coop.br</span></div>
+          <div class="flex items-center gap-sm text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">call</span><span class="font-body-sm text-body-sm">(19) 98765-4321</span></div>
+          <div class="flex items-center gap-sm text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">business</span><span class="font-body-sm text-body-sm">Depto. de Cardiologia</span></div>
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-8 bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
+        <h3 class="font-headline-sm text-headline-sm text-on-background mb-lg flex items-center gap-sm"><span class="material-symbols-outlined text-primary">account_balance_wallet</span>Resumo de Orçamento (2024)</h3>
+        <div class="grid grid-cols-3 gap-md mb-lg">
+          <div class="bg-surface-container-low p-md rounded-lg border border-outline-variant/50"><p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Alocado</p><p class="font-headline-md text-headline-md text-on-surface">R$ 45.000</p></div>
+          <div class="bg-surface-container-low p-md rounded-lg border border-outline-variant/50"><p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Utilizado</p><p class="font-headline-md text-headline-md text-secondary">R$ 28.500</p></div>
+          <div class="bg-primary-container/10 p-md rounded-lg border border-primary/20"><p class="font-label-sm text-label-sm text-primary uppercase mb-1">Disponível</p><p class="font-headline-md text-headline-md text-primary">R$ 16.500</p></div>
+        </div>
+        <div class="w-full">
+          <div class="flex justify-between font-label-sm text-label-sm mb-2 text-on-surface-variant"><span>Utilização Atual</span><span class="font-bold text-on-surface">63%</span></div>
+          <div class="h-3 w-full bg-surface-variant rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:63%"></div></div>
+        </div>
+      </div>
+
+      <div class="col-span-12 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+        <div class="p-md border-b border-outline-variant flex justify-between items-center">
+          <h3 class="font-headline-sm text-headline-sm text-on-background flex items-center gap-sm"><span class="material-symbols-outlined text-primary">history</span>Histórico de Eventos</h3>
+          <a href="/inscricoes-lista" class="text-primary font-label-md text-label-md hover:underline flex items-center gap-xs">Ver Todos<span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead><tr class="bg-surface-container-low text-on-surface-variant font-label-sm border-b border-outline-variant uppercase"><th class="py-3 px-md">Evento</th><th class="py-3 px-md">Data</th><th class="py-3 px-md">Categoria</th><th class="py-3 px-md">Custo (R$)</th><th class="py-3 px-md">Status</th></tr></thead>
+            <tbody class="font-body-sm text-body-sm text-on-surface">
+              <tr class="border-b border-outline-variant/50"><td class="py-4 px-md font-medium">Congresso Bras. de Cardiologia</td><td class="py-4 px-md text-on-surface-variant">15/09/2024</td><td class="py-4 px-md">Congresso</td><td class="py-4 px-md">4.500,00</td><td class="py-4 px-md"><span class="px-2 py-1 bg-tertiary-container/20 text-tertiary rounded-md font-label-sm">Aprovado</span></td></tr>
+              <tr class="border-b border-outline-variant/50"><td class="py-4 px-md font-medium">Curso Avançado de Imagem</td><td class="py-4 px-md text-on-surface-variant">02/08/2024</td><td class="py-4 px-md">Capacitação</td><td class="py-4 px-md">2.100,00</td><td class="py-4 px-md"><span class="px-2 py-1 bg-tertiary-container/20 text-tertiary rounded-md font-label-sm">Aprovado</span></td></tr>
+              <tr><td class="py-4 px-md font-medium">Simpósio Internacional SP</td><td class="py-4 px-md text-on-surface-variant">10/11/2024</td><td class="py-4 px-md">Simpósio</td><td class="py-4 px-md">3.800,00</td><td class="py-4 px-md"><span class="px-2 py-1 bg-secondary-fixed-dim/30 text-secondary rounded-md font-label-sm">Pendente</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

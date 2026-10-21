@@ -1,91 +1,43 @@
 const express = require('express');
 const router = express.Router();
-const app = express();
-const path = require('path');
 
-//app.use() diz ao Express para usar um middleware em todas as rotas.
-//extended: true permite dados mais complexos nos formulários.
-app.use(express.urlencoded({ extended: true }))
+// rota, view (.ejs), item ativo no menu, título e placeholder da busca
+const paginas = [
+  { rota: '/dashboard',              view: 'dashboard',              menu: 'dashboard',     titulo: 'Painel de Controle',         busca: 'Buscar eventos, funcionários...' },
+  { rota: '/configuracoes',          view: 'configuracoes',          menu: 'configuracoes', titulo: 'Configurações do Sistema',   busca: 'Buscar configurações...' },
+  { rota: '/aprovacoes',             view: 'aprovacoes',             menu: 'aprovacoes',    titulo: 'Fila de Aprovações',         busca: 'Buscar solicitações...' },
+  { rota: '/aprovacao-detalhe',      view: 'aprovacao-detalhe',      menu: 'aprovacoes',    titulo: 'Detalhe da Solicitação',     busca: 'Buscar solicitações...' },
+  { rota: '/simulador-orcamento',    view: 'simulador-orcamento',    menu: 'simulador',     titulo: 'Simulador de Orçamento',     busca: 'Buscar cenários...' },
+  { rota: '/orcamento-departamento', view: 'orcamento-departamento', menu: 'orcamento',     titulo: 'Orçamento por Departamento', busca: 'Buscar departamentos, eventos...' },
+  { rota: '/funcionarios',           view: 'funcionarios',           menu: 'funcionarios',  titulo: 'Perfis de Equipe',           busca: 'Buscar equipe, departamentos...' },
+  { rota: '/funcionario-perfil',     view: 'funcionario-perfil',     menu: 'funcionarios',  titulo: 'Perfil do Funcionário',      busca: 'Buscar perfis, eventos...' },
+  { rota: '/usuario-novo',           view: 'usuario-novo',           menu: 'funcionarios',  titulo: 'Novo Usuário',               busca: 'Buscar...' },
+  { rota: '/inscricoes-lista',       view: 'inscricoes-lista',       menu: 'inscricoes',    titulo: 'Inscrições',                 busca: 'Buscar inscrições...' },
+  { rota: '/inscricao-nova',         view: 'inscricao-nova',         menu: 'inscricoes',    titulo: 'Nova Inscrição',             busca: 'Buscar...' },
+  { rota: '/eventos',                view: 'eventos',                menu: 'eventos',       titulo: 'Eventos',                    busca: 'Buscar eventos, categorias...' },
+  { rota: '/evento-detalhes',        view: 'evento-detalhes',        menu: 'eventos',       titulo: 'Detalhes do Evento',         busca: 'Buscar...' },
+  { rota: '/evento-novo',            view: 'evento-novo',            menu: 'eventos',       titulo: 'Criar Novo Evento',          busca: 'Buscar...' },
+  { rota: '/evento-tiers',           view: 'evento-tiers',           menu: 'eventos',       titulo: 'Gerenciar Tiers',            busca: 'Buscar eventos, tiers...' }
+];
 
-// Página de Login
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/login.html'));
+// Login (sem sidebar/header)
+router.get('/', (req, res) => {
+  res.render('login', { titulo: 'Login' });
 });
 
-// Página de dashboard
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/dashboard.html'));
+paginas.forEach((p) => {
+  router.get(p.rota, (req, res) => {
+    res.render(p.view, {
+      pagina: p.menu,
+      titulo: p.titulo,
+      placeholderBusca: p.busca
+    });
+  });
 });
 
-// Página de Configurações
-app.get('/configuracoes', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/configuracoes.html'));
+// 404
+router.use((req, res) => {
+  res.status(404).render('404', { titulo: 'Página não encontrada', pagina: '' });
 });
 
-// Página de aprovacoes
-app.get('/aprovacoes', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/aprovacoes.html'));
-});
-
-// Página de aprovacao-detalhe
-app.get('/aprovacao-detalhe', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/aprovacao-detalhe.html'));
-});
-
-// Página de simulador-orcamento
-app.get('/simulador-orcamento', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/simulador-orcamento.html'));
-});
-
-// Página de orcamento-departamento
-app.get('/orcamento-departamento', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/orcamento-departamento.html'));
-});
-
-// Funcionarios
-app.get('/funcionarios', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/funcionarios.html'));
-});
-
-app.get('/funcionario-perfil', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/funcionario-perfil.html'));
-});
-
-// Usuario
-app.get('/usuario-novo', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/usuario-novo.html'));
-});
-
-// Inscrição
-app.get('/inscricao-nova', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/inscricao-nova.html'));
-});
-
-app.get('/inscricoes-lista', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/inscricoes-lista.html'));
-});
-
-// Eventos
-app.get('/eventos', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/eventos.html'));
-});
-
-app.get('/evento-detalhes', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/evento-detalhes.html'));
-});
-
-app.get('/evento-novo', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/evento-novo.html'));
-});
-
-app.get('/evento-tiers', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/evento-tiers.html'));
-});
-
-// Middleware para tratamento de Rota Não Encontrada (Erro 404)
-app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, '../views/404.html'));
-});
-
-module.exports = router; // Exporta o roteador para ser usado no app.js
-module.exports = app;
+module.exports = router;

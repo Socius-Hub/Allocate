@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased">
+
+<%- include('partials/menu-lateral') %>
+
+<div class="md:ml-64 min-h-screen flex flex-col">
+  <%- include('partials/cabecalho') %>
+
+  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-xl">
+        <div><h1 class="font-headline-md text-headline-md text-on-surface mb-xs">Nova Inscrição</h1><p class="font-body-md text-body-md text-on-surface-variant">Selecione o evento e a categoria de inscrição desejada.</p></div>
+        <a href="/inscricoes-lista" class="flex items-center gap-sm text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">close</span><span class="font-label-md text-label-md hidden md:inline">Cancelar</span></a>
+      </div>
+
+      <form class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-lg md:p-xl space-y-xl" onsubmit="event.preventDefault(); location.href='/inscricoes-lista';">
+        <div class="space-y-md">
+          <h2 class="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant pb-sm">Detalhes do Evento</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+            <div><label class="font-label-md text-label-md text-on-surface-variant block mb-xs">Evento Ativo</label>
+              <select class="w-full px-md py-sm border border-outline-variant rounded-lg bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary font-body-md text-body-md">
+                <option disabled selected value="">Selecione um evento...</option>
+                <option>Congresso Nacional de Medicina 2024</option><option>Workshop de Gestão Clínica</option><option>Simpósio de Inovação em Saúde</option>
+              </select>
+            </div>
+            <div><label class="font-label-md text-label-md text-on-surface-variant block mb-xs">Participante</label>
+              <div class="relative"><input class="w-full pl-10 px-md py-sm border border-outline-variant rounded-lg bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary font-body-md text-body-md" placeholder="Buscar funcionário..." type="text"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-md">
+          <h2 class="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant pb-sm">Seleção de Categoria (Tier)</h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Escolha o pacote de inscrição para o evento selecionado.</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+            <label class="border border-outline-variant rounded-xl p-lg bg-surface-container-lowest cursor-pointer flex flex-col h-full relative hover:border-primary transition-all">
+              <input type="radio" name="tier" class="absolute top-4 right-4 accent-primary w-5 h-5">
+              <h3 class="font-headline-sm text-headline-sm text-primary mb-xs">Básico</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mb-md flex-1">Acesso às palestras principais e feira de expositores.</p>
+              <span class="font-headline-md text-headline-md text-on-surface block mb-xs">R$ 150</span>
+            </label>
+            <label class="border-2 border-primary rounded-xl p-lg bg-primary-container/5 cursor-pointer flex flex-col h-full relative">
+              <span class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-secondary text-on-secondary px-sm py-1 rounded-full font-label-sm shadow-sm whitespace-nowrap">Mais Popular</span>
+              <input type="radio" name="tier" checked class="absolute top-4 right-4 accent-primary w-5 h-5">
+              <h3 class="font-headline-sm text-headline-sm text-primary mb-xs">Completo</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mb-md flex-1">Acesso total, workshops práticos e material exclusivo.</p>
+              <span class="font-headline-md text-headline-md text-on-surface block mb-xs">R$ 300</span>
+            </label>
+            <label class="border border-outline-variant rounded-xl p-lg bg-surface-container-lowest cursor-pointer flex flex-col h-full relative hover:border-primary transition-all">
+              <input type="radio" name="tier" class="absolute top-4 right-4 accent-primary w-5 h-5">
+              <h3 class="font-headline-sm text-headline-sm text-primary mb-xs">VIP</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mb-md flex-1">Experiência premium com networking exclusivo e assentos reservados.</p>
+              <span class="font-headline-md text-headline-md text-on-surface block mb-xs">R$ 500</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="pt-lg border-t border-outline-variant flex items-center justify-end gap-md">
+          <button class="px-lg py-sm rounded-lg font-label-md text-label-md text-primary border border-primary hover:bg-primary-container/10 transition-colors" type="button">Salvar Rascunho</button>
+          <button class="px-lg py-sm rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-surface-tint transition-colors shadow-sm flex items-center gap-sm" type="submit">Confirmar Inscrição<span class="material-symbols-outlined text-[18px]">arrow_forward</span></button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

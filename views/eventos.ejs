@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased">
+
+<%- include('partials/menu-lateral') %>
+
+<div class="md:ml-64 min-h-screen flex flex-col">
+  <%- include('partials/cabecalho') %>
+
+  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
+    <section class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-md mb-xl">
+      <div class="flex overflow-x-auto w-full lg:w-auto gap-sm">
+        <button class="px-md py-1.5 bg-primary text-white font-label-md text-label-md rounded-full whitespace-nowrap shadow-sm">Todos (24)</button>
+        <button class="px-md py-1.5 bg-surface text-on-surface-variant border border-outline-variant font-label-md text-label-md rounded-full hover:bg-surface-container-low transition-colors whitespace-nowrap">Ativos (8)</button>
+        <button class="px-md py-1.5 bg-surface text-on-surface-variant border border-outline-variant font-label-md text-label-md rounded-full hover:bg-surface-container-low transition-colors whitespace-nowrap flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary-container"></span>Pendentes (12)</button>
+        <button class="px-md py-1.5 bg-surface text-on-surface-variant border border-outline-variant font-label-md text-label-md rounded-full hover:bg-surface-container-low transition-colors whitespace-nowrap">Concluídos (4)</button>
+      </div>
+      <div class="flex items-center gap-sm w-full lg:w-auto">
+        <select class="w-full lg:w-48 appearance-none bg-surface border border-outline-variant rounded-lg py-2 px-md font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary">
+          <option>Todas Categorias</option><option>Treinamento Médico</option><option>Congresso</option><option>Workshop Interno</option>
+        </select>
+        <input class="w-full lg:w-48 bg-surface border border-outline-variant rounded-lg py-2 px-md font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary" type="date">
+      </div>
+    </section>
+
+    <div class="bg-surface rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[800px]">
+          <thead>
+            <tr class="bg-surface-container-low border-b border-outline-variant">
+              <th class="py-md px-lg font-label-sm text-label-sm text-on-surface-variant font-medium">Nome do Evento</th>
+              <th class="py-md px-lg font-label-sm text-label-sm text-on-surface-variant font-medium">Data</th>
+              <th class="py-md px-lg font-label-sm text-label-sm text-on-surface-variant font-medium">Categoria</th>
+              <th class="py-md px-lg font-label-sm text-label-sm text-on-surface-variant font-medium">Status</th>
+              <th class="py-md px-lg font-label-sm text-label-sm text-on-surface-variant font-medium">Orçamento</th>
+              <th class="py-md px-lg font-label-sm text-label-sm text-on-surface-variant font-medium text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody class="font-body-sm text-body-sm divide-y divide-outline-variant">
+            <tr class="hover:bg-surface-container-lowest transition-colors cursor-pointer" onclick="location.href='/evento-detalhes'">
+              <td class="py-md px-lg"><p class="font-medium text-on-surface">Congresso Nacional de Medicina 2024</p><p class="text-on-surface-variant text-xs mt-0.5">São Paulo, SP</p></td>
+              <td class="py-md px-lg text-on-surface-variant">15 Out, 2024</td>
+              <td class="py-md px-lg text-on-surface-variant">Congresso</td>
+              <td class="py-md px-lg"><span class="inline-flex items-center px-2 py-1 rounded-md bg-[#E6F4EA] text-[#006341] font-label-sm text-[11px] border border-primary/20"><span class="w-1.5 h-1.5 rounded-full bg-primary mr-1.5"></span>Ativo</span></td>
+              <td class="py-md px-lg font-medium text-on-surface">R$ 150.000</td>
+              <td class="py-md px-lg text-right"><span class="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span></td>
+            </tr>
+            <tr class="hover:bg-surface-container-lowest transition-colors cursor-pointer" onclick="location.href='/evento-detalhes'">
+              <td class="py-md px-lg"><p class="font-medium text-on-surface">Treinamento BLS Avançado - Turma B</p><p class="text-on-surface-variant text-xs mt-0.5">Centro de Simulação</p></td>
+              <td class="py-md px-lg text-on-surface-variant">22 Out, 2024</td>
+              <td class="py-md px-lg text-on-surface-variant">Treinamento Médico</td>
+              <td class="py-md px-lg"><span class="inline-flex items-center px-2 py-1 rounded-md bg-[#FFF4E5] text-[#B26B00] font-label-sm text-[11px] border border-secondary-container/20"><span class="w-1.5 h-1.5 rounded-full bg-secondary-container mr-1.5"></span>Pendente</span></td>
+              <td class="py-md px-lg font-medium text-on-surface">R$ 12.500</td>
+              <td class="py-md px-lg text-right"><span class="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span></td>
+            </tr>
+            <tr class="hover:bg-surface-container-lowest transition-colors cursor-pointer opacity-70" onclick="location.href='/evento-detalhes'">
+              <td class="py-md px-lg"><p class="font-medium text-on-surface line-through decoration-outline-variant">Workshop: Novos Protocolos Clínicos</p><p class="text-on-surface-variant text-xs mt-0.5">Sala de Reuniões 3</p></td>
+              <td class="py-md px-lg text-on-surface-variant">02 Set, 2024</td>
+              <td class="py-md px-lg text-on-surface-variant">Workshop Interno</td>
+              <td class="py-md px-lg"><span class="inline-flex items-center px-2 py-1 rounded-md bg-surface-container-high text-on-surface-variant font-label-sm text-[11px] border border-outline-variant">Concluído</span></td>
+              <td class="py-md px-lg font-medium text-on-surface">R$ 3.200</td>
+              <td class="py-md px-lg text-right"><span class="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="bg-surface border-t border-outline-variant py-3 px-lg flex items-center justify-between">
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Mostrando <span class="font-medium text-on-surface">1</span> a <span class="font-medium text-on-surface">3</span> de <span class="font-medium text-on-surface">24</span> eventos</p>
+        <div class="flex items-center gap-1">
+          <button class="p-1 text-outline hover:bg-surface-container rounded-md" disabled><span class="material-symbols-outlined">chevron_left</span></button>
+          <button class="w-8 h-8 flex items-center justify-center rounded-md bg-primary-container/10 text-primary font-label-sm font-medium">1</button>
+          <button class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container text-on-surface-variant font-label-sm">2</button>
+          <button class="p-1 text-on-surface hover:bg-surface-container rounded-md"><span class="material-symbols-outlined">chevron_right</span></button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

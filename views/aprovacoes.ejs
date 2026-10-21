@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased">
+
+<%- include('partials/menu-lateral') %>
+
+<div class="md:ml-64 min-h-screen flex flex-col">
+  <%- include('partials/cabecalho') %>
+
+  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
+    <div class="flex justify-between items-end mb-lg gap-md flex-wrap">
+      <div><h2 class="font-headline-md text-headline-md font-bold text-on-surface">Fila de Aprovações</h2><p class="font-body-md text-body-md text-on-surface-variant mt-1">Revise e gerencie solicitações financeiras para os próximos eventos.</p></div>
+      <div class="flex gap-sm">
+        <button class="flex items-center gap-xs px-3 py-1.5 rounded-md border border-outline-variant bg-surface-container-lowest font-label-sm text-label-sm hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-sm">filter_list</span>Filtrar</button>
+        <button class="flex items-center gap-xs px-3 py-1.5 rounded-md border border-outline-variant bg-surface-container-lowest font-label-sm text-label-sm hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-sm">sort</span>Ordenar</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 gap-gutter">
+      <div class="col-span-12 lg:col-span-4 flex flex-col gap-md">
+        <div class="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-sm">
+          <h3 class="font-label-md text-label-md text-on-surface-variant mb-xs">Aprovações Pendentes</h3>
+          <p class="font-display-lg text-display-lg text-on-surface">12</p>
+          <span class="mt-4 inline-flex bg-error-container text-on-error-container px-2 py-1 rounded-md font-label-sm text-label-sm items-center gap-1"><span class="material-symbols-outlined text-[14px]">warning</span>3 Alta Prioridade</span>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-sm">
+          <h3 class="font-label-md text-label-md text-on-surface-variant mb-xs">Total Solicitado</h3>
+          <p class="font-headline-md text-headline-md text-on-surface mt-2">R$ 45.250,00</p>
+          <div class="w-full bg-surface-variant h-2 rounded-full mt-4 overflow-hidden"><div class="bg-primary h-full w-[65%] rounded-full"></div></div>
+          <p class="font-label-sm text-label-sm text-on-surface-variant mt-2 text-right">65% do Orçamento Q3</p>
+        </div>
+      </div>
+
+      <div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col">
+        <div class="grid grid-cols-12 gap-4 p-4 bg-surface-container-low border-b border-outline-variant font-label-sm text-label-sm text-on-surface-variant items-center">
+          <div class="col-span-4">Colaborador</div><div class="col-span-3">Evento e Tier</div><div class="col-span-2 text-right">Valor (R$)</div><div class="col-span-3 text-center">Ações</div>
+        </div>
+        <a href="/aprovacao-detalhe" class="grid grid-cols-12 gap-4 p-4 border-b border-outline-variant items-center hover:bg-surface-container-lowest transition-colors group">
+          <div class="col-span-4 flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-primary-container/20 text-primary flex items-center justify-center font-bold">AS</div><div><p class="font-label-md text-label-md text-on-surface">Dra. Ana Silva</p><p class="font-body-sm text-body-sm text-on-surface-variant">Cardiologia</p></div></div>
+          <div class="col-span-3"><p class="font-body-md text-body-md text-on-surface truncate">Congresso Brasileiro de Cardiologia</p><span class="inline-block mt-1 bg-surface-dim text-on-surface px-2 py-0.5 rounded text-[10px] uppercase font-bold">Tier 1</span></div>
+          <div class="col-span-2 text-right"><p class="font-label-md text-label-md text-on-surface">R$ 5.400,00</p></div>
+          <div class="col-span-3 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <span class="p-2 rounded-full bg-error-container text-on-error-container"><span class="material-symbols-outlined text-sm">close</span></span>
+            <span class="p-2 rounded-full bg-primary-container/20 text-primary"><span class="material-symbols-outlined text-sm">check</span></span>
+          </div>
+        </a>
+        <a href="/aprovacao-detalhe" class="grid grid-cols-12 gap-4 p-4 border-b border-outline-variant items-center hover:bg-surface-container-lowest transition-colors group">
+          <div class="col-span-4 flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-primary-container/20 text-primary flex items-center justify-center font-bold">CE</div><div><p class="font-label-md text-label-md text-on-surface">Carlos Eduardo</p><p class="font-body-sm text-body-sm text-on-surface-variant">Operações de TI</p></div></div>
+          <div class="col-span-3"><p class="font-body-md text-body-md text-on-surface truncate">Encontro Nacional de Tecnologia</p><span class="inline-block mt-1 bg-surface-dim text-on-surface px-2 py-0.5 rounded text-[10px] uppercase font-bold">Tier 2</span></div>
+          <div class="col-span-2 text-right"><p class="font-label-md text-label-md text-on-surface">R$ 1.250,00</p></div>
+          <div class="col-span-3 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <span class="p-2 rounded-full bg-error-container text-on-error-container"><span class="material-symbols-outlined text-sm">close</span></span>
+            <span class="p-2 rounded-full bg-primary-container/20 text-primary"><span class="material-symbols-outlined text-sm">check</span></span>
+          </div>
+        </a>
+        <div class="p-3 border-t border-outline-variant bg-surface-container-low flex justify-between items-center text-on-surface-variant font-label-sm">
+          <span>Mostrando 1-2 de 12 solicitações</span>
+          <div class="flex gap-2"><span class="material-symbols-outlined text-sm cursor-pointer">chevron_left</span><span class="material-symbols-outlined text-sm cursor-pointer">chevron_right</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

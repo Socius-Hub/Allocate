@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased">
+
+<%- include('partials/menu-lateral') %>
+
+<div class="md:ml-64 min-h-screen flex flex-col">
+  <%- include('partials/cabecalho') %>
+
+  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-2 text-on-surface-variant font-label-sm">
+          <a class="hover:text-primary transition-colors" href="/eventos">Eventos</a>
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+          <span class="text-primary">Congresso Nacional de Medicina 2024</span>
+        </div>
+        <h1 class="font-headline-md text-headline-md font-bold text-on-background">Congresso Nacional de Medicina 2024</h1>
+        <div class="flex items-center gap-4 mt-2 font-body-sm text-on-surface-variant flex-wrap">
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">calendar_today</span>15-18 Out 2024</span>
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">location_on</span>São Paulo, SP</span>
+          <span class="px-2 py-1 bg-tertiary-container/20 text-tertiary rounded-full font-label-sm">Em Planejamento</span>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <a href="/evento-novo" class="px-4 py-2 border border-primary text-primary rounded-lg font-label-md hover:bg-primary/5 transition-colors">Editar Evento</a>
+        <a href="/aprovacao-detalhe" class="px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md hover:bg-surface-tint transition-colors">Aprovar Orçamento</a>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-lg lg:col-span-2">
+        <h2 class="font-headline-sm text-headline-sm font-semibold mb-md text-on-surface">Visão Geral do Evento</h2>
+        <p class="font-body-md text-on-surface-variant mb-6">O maior congresso médico do país, reunindo especialistas para discutir inovações tecnológicas e novos protocolos de atendimento. Inclui palestras, workshops e área de exposição de fornecedores.</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="p-4 bg-surface-container rounded-lg"><span class="block text-on-surface-variant font-label-sm mb-1">Orçamento Total</span><span class="font-headline-sm text-primary font-bold">R$ 150.000</span></div>
+          <div class="p-4 bg-surface-container rounded-lg"><span class="block text-on-surface-variant font-label-sm mb-1">Alocado</span><span class="font-headline-sm text-on-surface font-bold">R$ 95.000</span></div>
+          <div class="p-4 bg-surface-container rounded-lg"><span class="block text-on-surface-variant font-label-sm mb-1">Restante</span><span class="font-headline-sm text-secondary-container font-bold">R$ 55.000</span></div>
+          <div class="p-4 bg-surface-container rounded-lg"><span class="block text-on-surface-variant font-label-sm mb-1">Participantes</span><span class="font-headline-sm text-on-surface font-bold">12 / 15</span></div>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-lg">
+        <h2 class="font-headline-sm text-headline-sm font-semibold mb-md text-on-surface">Disponibilidade de Tiers</h2>
+        <div class="space-y-4">
+          <div class="p-3 border border-outline-variant/50 rounded-lg flex justify-between items-center bg-surface">
+            <div><span class="block font-label-md text-on-surface font-bold">Tier A - Palestrantes</span><span class="font-label-sm text-on-surface-variant">Cobertura total + Hotel Premium</span></div>
+            <div class="text-right"><span class="block font-headline-sm text-primary">2/2</span><span class="font-label-sm text-on-surface-variant">Preenchido</span></div>
+          </div>
+          <div class="p-3 border border-primary/30 rounded-lg flex justify-between items-center bg-primary-container/5">
+            <div><span class="block font-label-md text-primary font-bold">Tier B - Especialistas</span><span class="font-label-sm text-on-surface-variant">Voo Padrão + Hotel</span></div>
+            <div class="text-right"><span class="block font-headline-sm text-on-surface">8/10</span><span class="font-label-sm text-secondary-container">2 Vagas</span></div>
+          </div>
+          <div class="p-3 border border-outline-variant/50 rounded-lg flex justify-between items-center bg-surface">
+            <div><span class="block font-label-md text-on-surface font-bold">Tier C - Residentes</span><span class="font-label-sm text-on-surface-variant">Ingresso + Hospedagem Compartilhada</span></div>
+            <div class="text-right"><span class="block font-headline-sm text-on-surface">2/3</span><span class="font-label-sm text-secondary-container">1 Vaga</span></div>
+          </div>
+        </div>
+        <a href="/evento-tiers" class="block text-center w-full mt-4 py-2 border border-outline-variant text-on-surface-variant rounded-lg font-label-md hover:bg-surface-container transition-colors">Gerenciar Tiers</a>
+      </div>
+
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm lg:col-span-3 overflow-hidden">
+        <div class="p-lg flex justify-between items-center border-b border-outline-variant/30 bg-surface">
+          <h2 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Participantes Inscritos</h2>
+          <a href="/inscricao-nova" class="px-3 py-1.5 bg-primary/10 text-primary rounded-md font-label-md hover:bg-primary/20 transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">add</span>Adicionar</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead><tr class="bg-surface-container-low text-on-surface-variant font-label-sm border-b border-outline-variant">
+              <th class="p-4 font-medium">Funcionário</th><th class="p-4 font-medium">Departamento</th><th class="p-4 font-medium">Tier</th><th class="p-4 font-medium">Custo Est.</th><th class="p-4 font-medium">Status</th>
+            </tr></thead>
+            <tbody class="font-body-sm text-on-surface">
+              <tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest transition-colors h-12">
+                <td class="p-4 font-medium">Dra. Ana Silva</td><td class="p-4 text-on-surface-variant">Cardiologia</td><td class="p-4"><span class="px-2 py-1 bg-surface-container-high rounded text-xs font-medium">Tier A</span></td><td class="p-4">R$ 12.500</td>
+                <td class="p-4"><span class="px-2 py-1 bg-[#e6f4ea] text-[#137333] rounded-full text-xs font-medium inline-flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">check_circle</span>Aprovado</span></td>
+              </tr>
+              <tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest transition-colors h-12">
+                <td class="p-4 font-medium">Dr. Roberto Carlos</td><td class="p-4 text-on-surface-variant">Neurologia</td><td class="p-4"><span class="px-2 py-1 bg-surface-container-high rounded text-xs font-medium">Tier B</span></td><td class="p-4">R$ 8.200</td>
+                <td class="p-4"><span class="px-2 py-1 bg-[#e6f4ea] text-[#137333] rounded-full text-xs font-medium inline-flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">check_circle</span>Aprovado</span></td>
+              </tr>
+              <tr class="hover:bg-surface-container-lowest transition-colors h-12">
+                <td class="p-4 font-medium">Enf. Marcos Pereira</td><td class="p-4 text-on-surface-variant">UTI</td><td class="p-4"><span class="px-2 py-1 bg-surface-container-high rounded text-xs font-medium">Tier C</span></td><td class="p-4">R$ 4.500</td>
+                <td class="p-4"><span class="px-2 py-1 bg-[#fef7e0] text-[#b06000] rounded-full text-xs font-medium inline-flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">schedule</span>Pendente</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

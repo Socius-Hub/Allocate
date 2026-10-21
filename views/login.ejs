@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="h-full bg-surface-container flex items-center justify-center p-margin-mobile md:p-margin-desktop min-h-screen">
+<main class="w-full max-w-md bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant p-xl">
+  <div class="text-center mb-lg">
+    <div class="inline-flex items-center justify-center w-12 h-12 bg-primary-container rounded-full mb-md text-on-primary-container">
+      <span class="material-symbols-outlined" style="font-size:28px;">medical_services</span>
+    </div>
+    <h1 class="font-headline-md text-headline-md text-on-surface mb-xs">Allocate</h1>
+    <p class="font-body-md text-body-md text-on-surface-variant">Gestão de Orçamentos</p>
+  </div>
+  <form action="/dashboard" class="space-y-lg" method="GET">
+    <div>
+      <label class="block font-label-md text-label-md text-on-surface mb-sm" for="email">E-mail Corporativo</label>
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">mail</span>
+        <input class="block w-full pl-10 pr-3 py-2 border border-outline-variant rounded-lg bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary font-body-md text-body-md placeholder-on-surface-variant/50" id="email" name="email" placeholder="admin@unimed.coop.br" required type="email">
+      </div>
+    </div>
+    <div>
+      <label class="block font-label-md text-label-md text-on-surface mb-sm" for="password">Senha</label>
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">lock</span>
+        <input class="block w-full pl-10 pr-3 py-2 border border-outline-variant rounded-lg bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary font-body-md text-body-md placeholder-on-surface-variant/50" id="password" name="password" placeholder="********" required type="password">
+      </div>
+    </div>
+    <div class="flex items-center justify-between">
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input class="h-4 w-4 text-primary focus:ring-primary border-outline-variant rounded" type="checkbox">
+        <span class="font-body-sm text-body-sm text-on-surface-variant">Lembrar de mim</span>
+      </label>
+      <a class="font-label-md text-label-md text-primary hover:text-primary-container font-medium transition-colors" href="/recuperar-senha">Esqueceu a senha?</a>
+    </div>
+    <button class="w-full flex justify-center py-2.5 px-4 rounded-lg shadow-sm font-label-md text-label-md text-on-primary bg-primary hover:bg-[#006341] transition-colors" type="submit">Entrar</button>
+  </form>
+  <div class="mt-lg text-center font-body-sm text-body-sm text-on-surface-variant">
+    <p>Conexão segura. Acesso restrito a administradores autorizados da Unimed.</p>
+  </div>
+</main>
+</body>
+</html>

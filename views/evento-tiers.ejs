@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased">
+
+<%- include('partials/menu-lateral') %>
+
+<div class="md:ml-64 min-h-screen flex flex-col">
+  <%- include('partials/cabecalho') %>
+
+  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
+    <div class="mb-lg">
+      <div class="flex items-center gap-2 mb-2 text-on-surface-variant font-label-sm">
+        <a class="hover:text-primary transition-colors" href="/evento-detalhes">Congresso Nacional de Medicina 2024</a>
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <span class="text-primary">Gerenciar Tiers</span>
+      </div>
+      <h1 class="font-headline-md text-headline-md text-on-background mb-xs">Gerenciar Tiers de Inscrição</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">Configure categorias de inscrição, preços e capacidade para este evento.</p>
+    </div>
+
+    <div class="grid grid-cols-12 gap-gutter">
+      <div class="col-span-12 lg:col-span-4 space-y-md">
+        <div class="bg-surface-container-lowest p-lg rounded-xl border border-outline-variant shadow-sm relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+          <h2 class="font-headline-sm text-headline-sm text-on-background mb-lg">Adicionar Novo Tier</h2>
+          <form class="space-y-md" onsubmit="event.preventDefault();">
+            <div><label class="block font-label-md text-label-md text-on-surface mb-xs">Nome do Tier</label><input class="w-full border border-outline-variant rounded-lg px-3 py-2 bg-surface focus:outline-none focus:border-primary font-body-sm text-body-sm" placeholder="Ex: Early Bird, VIP" type="text"></div>
+            <div><label class="block font-label-md text-label-md text-on-surface mb-xs">Preço (R$)</label><input class="w-full border border-outline-variant rounded-lg px-3 py-2 bg-surface focus:outline-none focus:border-primary font-body-sm text-body-sm" placeholder="0,00" type="number"></div>
+            <div class="grid grid-cols-2 gap-md">
+              <div><label class="block font-label-md text-label-md text-on-surface mb-xs">Capacidade</label><input class="w-full border border-outline-variant rounded-lg px-3 py-2 bg-surface focus:outline-none focus:border-primary font-body-sm text-body-sm" placeholder="Vagas" type="number"></div>
+              <div><label class="block font-label-md text-label-md text-on-surface mb-xs">Status</label><select class="w-full border border-outline-variant rounded-lg px-3 py-2 bg-surface focus:outline-none focus:border-primary font-body-sm text-body-sm"><option>Ativo</option><option>Rascunho</option><option>Encerrado</option></select></div>
+            </div>
+            <div><label class="block font-label-md text-label-md text-on-surface mb-xs">Prazo de Inscrição</label><input class="w-full border border-outline-variant rounded-lg px-3 py-2 bg-surface focus:outline-none focus:border-primary font-body-sm text-body-sm" type="date"></div>
+            <button class="w-full bg-primary hover:bg-[#006341] text-on-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors" type="button">Salvar Tier</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-span-12 lg:col-span-8">
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden h-full flex flex-col">
+          <div class="p-lg border-b border-outline-variant flex justify-between items-center bg-surface-bright">
+            <h2 class="font-headline-sm text-headline-sm text-on-background">Categorias Ativas</h2>
+            <span class="inline-flex items-center px-2 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Capacidade Total: 500</span>
+          </div>
+          <div class="flex-1 p-lg space-y-md overflow-y-auto">
+            <div class="border border-outline-variant rounded-lg p-md hover:border-primary/50 hover:shadow-sm transition-all bg-surface">
+              <div class="flex justify-between items-start mb-sm">
+                <div><div class="flex items-center gap-sm mb-xs"><h3 class="font-label-md text-label-md text-on-background font-bold">Early Bird - Médicos</h3><span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-[10px] uppercase">Encerrando</span></div><div class="font-headline-sm text-headline-sm text-primary">R$ 450,00</div></div>
+                <div class="flex gap-xs"><span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-primary">edit</span><span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-error">delete</span></div>
+              </div>
+              <div class="grid grid-cols-2 gap-sm mt-md pt-md border-t border-outline-variant/50">
+                <div><span class="font-label-sm text-label-sm text-on-surface-variant mb-xs block">Capacidade</span><div class="flex items-center gap-sm"><div class="flex-1 h-1.5 bg-surface-container-high rounded-full overflow-hidden"><div class="h-full bg-secondary-container w-[85%]"></div></div><span class="font-body-sm text-body-sm">85/100</span></div></div>
+                <div class="text-right"><span class="font-label-sm text-label-sm text-on-surface-variant mb-xs block">Prazo</span><span class="font-body-sm text-body-sm flex items-center gap-xs justify-end"><span class="material-symbols-outlined text-[16px] text-error">schedule</span>15 Out 2024</span></div>
+              </div>
+            </div>
+            <div class="border border-outline-variant rounded-lg p-md hover:border-primary/50 hover:shadow-sm transition-all bg-surface">
+              <div class="flex justify-between items-start mb-sm">
+                <div><div class="flex items-center gap-sm mb-xs"><h3 class="font-label-md text-label-md text-on-background font-bold">Padrão - Inscrição Geral</h3><span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-[10px] uppercase">Ativo</span></div><div class="font-headline-sm text-headline-sm text-on-background">R$ 600,00</div></div>
+                <div class="flex gap-xs"><span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-primary">edit</span><span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-error">delete</span></div>
+              </div>
+              <div class="grid grid-cols-2 gap-sm mt-md pt-md border-t border-outline-variant/50">
+                <div><span class="font-label-sm text-label-sm text-on-surface-variant mb-xs block">Capacidade</span><div class="flex items-center gap-sm"><div class="flex-1 h-1.5 bg-surface-container-high rounded-full overflow-hidden"><div class="h-full bg-primary w-[30%]"></div></div><span class="font-body-sm text-body-sm">90/300</span></div></div>
+                <div class="text-right"><span class="font-label-sm text-label-sm text-on-surface-variant mb-xs block">Prazo</span><span class="font-body-sm text-body-sm flex items-center gap-xs justify-end"><span class="material-symbols-outlined text-[16px]">schedule</span>01 Nov 2024</span></div>
+              </div>
+            </div>
+            <div class="border border-outline-variant rounded-lg p-md bg-surface-container-lowest opacity-75">
+              <div class="flex justify-between items-start"><div><div class="flex items-center gap-sm mb-xs"><h3 class="font-label-md text-label-md text-on-surface-variant font-bold">Inscrição Tardia</h3><span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-[10px] uppercase">Agendado</span></div><div class="font-headline-sm text-headline-sm text-on-surface-variant">R$ 850,00</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

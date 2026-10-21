@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased">
+
+<%- include('partials/menu-lateral') %>
+
+<div class="md:ml-64 min-h-screen flex flex-col">
+  <%- include('partials/cabecalho') %>
+
+  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
+    <div class="mb-xxl">
+      <h1 class="font-display-lg-mobile md:font-display-lg text-on-background">Configurações do Sistema</h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant mt-xs">Gerencie categorias de eventos, departamentos e parâmetros globais do Allocate.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+      <div class="lg:col-span-8 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden flex flex-col">
+        <div class="p-lg border-b border-outline-variant flex justify-between items-center">
+          <div><h2 class="font-headline-sm text-headline-sm text-on-background">Categorias de Eventos</h2><p class="font-body-sm text-body-sm text-on-surface-variant">Classificação para alocação orçamentária.</p></div>
+          <button class="flex items-center gap-xs bg-primary-container text-on-primary-container px-md py-sm rounded-lg hover:bg-surface-tint hover:text-white transition-colors font-label-sm"><span class="material-symbols-outlined text-[18px]">add</span>Nova Categoria</button>
+        </div>
+        <div class="flex-1 overflow-x-auto p-md">
+          <table class="w-full text-left border-collapse">
+            <thead><tr class="bg-surface-container-low text-on-surface-variant border-b border-outline-variant"><th class="p-sm font-label-sm">ID</th><th class="p-sm font-label-sm">Categoria</th><th class="p-sm font-label-sm">Limite Padrão</th><th class="p-sm font-label-sm">Status</th><th class="p-sm font-label-sm text-right">Ações</th></tr></thead>
+            <tbody class="font-body-sm text-body-sm">
+              <tr class="border-b border-outline-variant/50 h-12"><td class="p-sm text-on-surface-variant">CAT-01</td><td class="p-sm font-medium">Congresso Médico</td><td class="p-sm text-on-surface-variant">R$ 15.000,00</td><td class="p-sm"><span class="inline-flex px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-[10px] font-bold uppercase">Ativo</span></td><td class="p-sm text-right"><span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">edit</span></td></tr>
+              <tr class="border-b border-outline-variant/50 h-12"><td class="p-sm text-on-surface-variant">CAT-02</td><td class="p-sm font-medium">Simpósio Regional</td><td class="p-sm text-on-surface-variant">R$ 8.500,00</td><td class="p-sm"><span class="inline-flex px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-[10px] font-bold uppercase">Ativo</span></td><td class="p-sm text-right"><span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">edit</span></td></tr>
+              <tr class="h-12"><td class="p-sm text-on-surface-variant">CAT-03</td><td class="p-sm font-medium">Treinamento Interno</td><td class="p-sm text-on-surface-variant">R$ 3.000,00</td><td class="p-sm"><span class="inline-flex px-2 py-1 rounded-full bg-surface-variant text-on-surface-variant text-[10px] font-bold uppercase">Inativo</span></td><td class="p-sm text-right"><span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">edit</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant flex flex-col">
+        <div class="p-lg border-b border-outline-variant flex justify-between items-center"><h2 class="font-headline-sm text-headline-sm text-on-background">Departamentos</h2><span class="material-symbols-outlined text-primary cursor-pointer">add_circle</span></div>
+        <div class="p-md flex-1 space-y-sm">
+          <div class="p-md rounded-lg border border-outline-variant hover:border-primary transition-colors cursor-pointer group bg-surface"><div class="flex justify-between items-center"><div><h3 class="font-label-md text-label-md text-on-background group-hover:text-primary">Cardiologia</h3><p class="font-body-sm text-body-sm text-on-surface-variant">Centro de Especialidades</p></div><span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">chevron_right</span></div></div>
+          <div class="p-md rounded-lg border border-outline-variant hover:border-primary transition-colors cursor-pointer group bg-surface"><div class="flex justify-between items-center"><div><h3 class="font-label-md text-label-md text-on-background group-hover:text-primary">Pediatria</h3><p class="font-body-sm text-body-sm text-on-surface-variant">Hospital Infantil</p></div><span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">chevron_right</span></div></div>
+          <div class="p-md rounded-lg border border-outline-variant hover:border-primary transition-colors cursor-pointer group bg-surface"><div class="flex justify-between items-center"><div><h3 class="font-label-md text-label-md text-on-background group-hover:text-primary">Oncologia</h3><p class="font-body-sm text-body-sm text-on-surface-variant">Instituto Oncológico</p></div><span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">chevron_right</span></div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

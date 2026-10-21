@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased">
+
+<%- include('partials/menu-lateral') %>
+
+<div class="md:ml-64 min-h-screen flex flex-col">
+  <%- include('partials/cabecalho') %>
+
+  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-md mb-xl">
+      <div><h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background">Simulador de Orçamento</h2><p class="font-body-lg text-body-lg text-on-surface-variant mt-sm max-w-2xl">Modele o impacto financeiro de novas contratações, ajustes de tier e mudanças de benefícios no orçamento do próximo trimestre.</p></div>
+      <select class="bg-surface border border-outline-variant rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary"><option>Cenário Base Q3 2024</option><option>Crescimento Agressivo Q4 2024</option><option>Rascunho Personalizado 1</option></select>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+      <div class="md:col-span-8 flex flex-col gap-gutter">
+        <div class="bg-surface rounded-xl p-lg border border-outline-variant shadow-sm">
+          <h3 class="font-headline-sm text-headline-sm text-on-surface mb-md flex items-center gap-sm"><span class="material-symbols-outlined text-primary">person_add</span>Adicionar Funcionário / Recurso</h3>
+          <form class="grid grid-cols-1 md:grid-cols-2 gap-md" onsubmit="event.preventDefault();">
+            <div><label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Função</label><select class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 font-body-md text-body-md focus:border-primary outline-none"><option>Médico Especialista</option><option>Enfermeiro Chefe</option><option>Analista Administrativo</option><option>Técnico de TI</option></select></div>
+            <div><label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Nível (Tier)</label><select class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 font-body-md text-body-md focus:border-primary outline-none"><option>Tier 1 (Júnior)</option><option>Tier 2 (Pleno)</option><option>Tier 3 (Sênior)</option><option>Tier 4 (Especialista)</option></select></div>
+            <div><label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Quantidade</label><input class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 font-body-md text-body-md focus:border-primary outline-none" min="1" type="number" value="1"></div>
+            <div><label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Início Previsto</label><input class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 font-body-md text-body-md focus:border-primary outline-none" type="month"></div>
+            <div class="md:col-span-2 pt-sm"><button class="w-full bg-surface-container-high hover:bg-surface-variant text-on-surface font-label-md text-label-md py-2 rounded-lg border border-outline-variant transition-colors flex items-center justify-center gap-xs" type="button"><span class="material-symbols-outlined text-[18px]">add_circle</span>Adicionar ao Cenário</button></div>
+          </form>
+        </div>
+
+        <div class="bg-surface rounded-xl p-lg border border-outline-variant shadow-sm">
+          <h3 class="font-headline-sm text-headline-sm text-on-surface mb-md">Composição do Cenário Atual</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead><tr class="bg-surface-container-lowest border-b border-outline-variant"><th class="py-3 px-4 font-label-sm text-on-surface-variant">Recurso</th><th class="py-3 px-4 font-label-sm text-on-surface-variant">Tier</th><th class="py-3 px-4 font-label-sm text-on-surface-variant">Qtd</th><th class="py-3 px-4 font-label-sm text-on-surface-variant text-right">Custo Mensal Est.</th><th class="py-3 px-4 font-label-sm text-on-surface-variant text-center">Ação</th></tr></thead>
+              <tbody class="font-body-sm text-body-sm">
+                <tr class="border-b border-outline-variant"><td class="py-3 px-4">Médico Especialista</td><td class="py-3 px-4"><span class="px-2 py-1 bg-surface-container-highest rounded font-medium">Tier 3</span></td><td class="py-3 px-4">2</td><td class="py-3 px-4 text-right font-medium text-primary">R$ 48.000</td><td class="py-3 px-4 text-center"><span class="material-symbols-outlined text-error text-[18px] cursor-pointer">delete</span></td></tr>
+                <tr class="border-b border-outline-variant"><td class="py-3 px-4">Enfermeiro Chefe</td><td class="py-3 px-4"><span class="px-2 py-1 bg-surface-container-highest rounded font-medium">Tier 2</span></td><td class="py-3 px-4">5</td><td class="py-3 px-4 text-right font-medium text-primary">R$ 35.000</td><td class="py-3 px-4 text-center"><span class="material-symbols-outlined text-error text-[18px] cursor-pointer">delete</span></td></tr>
+                <tr><td class="py-3 px-4">Técnico de TI</td><td class="py-3 px-4"><span class="px-2 py-1 bg-surface-container-highest rounded font-medium">Tier 1</span></td><td class="py-3 px-4">1</td><td class="py-3 px-4 text-right font-medium text-primary">R$ 4.500</td><td class="py-3 px-4 text-center"><span class="material-symbols-outlined text-error text-[18px] cursor-pointer">delete</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-4 flex flex-col gap-gutter">
+        <div class="bg-surface rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col h-full">
+          <div class="p-lg bg-surface-container-low border-b border-outline-variant"><h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-sm"><span class="material-symbols-outlined text-secondary-container">monitoring</span>Impacto Total</h3></div>
+          <div class="p-lg flex-1 flex flex-col gap-md">
+            <div class="bg-surface border border-outline-variant rounded-lg p-md"><p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Custo Base Atual</p><p class="font-headline-md text-headline-md text-on-surface mt-1">R$ 1,2M <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">/mês</span></p></div>
+            <div class="bg-primary-container/10 border border-primary/20 rounded-lg p-md relative overflow-hidden">
+              <p class="font-label-sm text-label-sm text-primary uppercase font-semibold">Novo Custo Projetado</p>
+              <p class="font-headline-md text-headline-md text-primary mt-1">R$ 1,28M <span class="font-body-sm text-body-sm text-primary/70 font-normal">/mês</span></p>
+              <p class="font-label-md text-label-md text-error mt-2 flex items-center gap-xs"><span class="material-symbols-outlined text-[16px]">arrow_upward</span>+R$ 87.500 (7,2%)</p>
+            </div>
+            <div class="mt-auto pt-md border-t border-outline-variant">
+              <div class="flex justify-between items-center mb-xs"><span class="font-label-sm text-label-sm text-on-surface-variant">Capacidade do Orçamento</span><span class="font-label-sm text-label-sm text-on-surface font-medium">92% Utilizado</span></div>
+              <div class="w-full bg-surface-container-high rounded-full h-2"><div class="bg-secondary-container h-2 rounded-full" style="width:92%"></div></div>
+            </div>
+          </div>
+          <div class="p-md bg-surface-container-lowest border-t border-outline-variant flex gap-sm">
+            <button class="flex-1 bg-surface border border-outline-variant text-on-surface font-label-md text-label-md py-2 rounded-lg hover:bg-surface-container-low transition-colors">Salvar Rascunho</button>
+            <button class="flex-1 bg-primary text-on-primary font-label-md text-label-md py-2 rounded-lg hover:bg-primary/90 transition-colors shadow-sm">Aprovar Cenário</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
