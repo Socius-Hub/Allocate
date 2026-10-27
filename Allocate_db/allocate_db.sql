@@ -3,69 +3,79 @@ CREATE DATABASE allocate_db;
 
 USE allocate_db;
 
+# Tabelas auxiliares
 CREATE TABLE perfil_acesso(
-	idPerfil int PRIMARY KEY auto_increment,
-    tipo varchar(100) NOT NULL
+	idPerfil INT PRIMARY KEY AUTO_INCREMENT,
+    tipo VARCHAR(250) NOT NULL
 );
 
 CREATE TABLE departamento(
-	idDepto int PRIMARY KEY auto_increment,
-    nomeDepto varchar(100) NOT NULL
-);
-
-CREATE TABLE usuario(
-	idUsuario int PRIMARY KEY auto_increment,
-    nomeCompleto varchar(100) NOT NULL,
-    CRM_matricula int NOT NULL,
-    telefone int NOT NULL,
-    idPerfil int NOT NULL,
-    idDepto int NOT NULL,
-    status char not null,
-    CONSTRAINT fk_perfil foreign key (idPerfil) REFERENCES perfil_acesso(idPerfil),
-    CONSTRAINT fk_depto foreign key (idDepto) REFERENCES departamento(idDepto)
+	idDepto INT PRIMARY KEY AUTO_INCREMENT,
+    nomeDepto varchar(250) NOT NULL
 );
 
 CREATE TABLE categoria_evento(
-	idCatEvento int PRIMARY KEY auto_increment,
-    categoria varchar(100) NOT NULL,
-    descricao varchar(100)
+	idCatEvento INT PRIMARY KEY AUTO_INCREMENT,
+    categoria VARCHAR(250) NOT NULL,
+    descricao VARCHAR(250)
+);
+
+# Tabelas pricipais
+CREATE TABLE usuario(
+	idUsuario INT PRIMARY KEY AUTO_INCREMENT,
+    nomeCompleto VARCHAR(250) NOT NULL,
+    CRM_matricula VARCHAR(250) NOT NULL,
+    telefone VARCHAR(250) NOT NULL,
+    idPerfil INT NOT NULL,
+    idDepto INT NOT NULL,
+    status VARCHAR(10) NOT NULL DEFAULT 'ATIVO',
+    CONSTRAINT fk_perfil foreign key (idPerfil) REFERENCES perfil_acesso(idPerfil),
+    CONSTRAINT fk_depto foreign key (idDepto) REFERENCES departamento(idDepto),
+    CONSTRAINT chk_usuario_status CHECK (status IN ('ATIVO', 'INATIVO'))
 );
 
 CREATE TABLE evento(
-	idEvento int PRIMARY KEY auto_increment,
-    nome varchar(100) NOT NULL,
-    data_inicio datetime NOT NULL,
-    data_termino datetime NOT NULL,
-    local varchar(100) NOT NULL,
-    idCatEvento int not null,
-    capacidade int not null,
-    descricao varchar(100),
-    custo_estimado decimal(2,0) not null,
-	CONSTRAINT fk_catEvento foreign key (idCatEvento) REFERENCES categoria_evento(idCatEvento)
+	idEvento INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(250) NOT NULL,
+    data_inicio DATETIME NOT NULL,
+    data_termino DATETIME NOT NULL,
+    local VARCHAR(250) NOT NULL,
+    idCatEvento INT NOT NULL,
+    capacidade INT NOT NULL,
+    descricao VARCHAR(250),
+    custo_estimado decimal(10,2) NOT NULL,
+	CONSTRAINT fk_catEvento foreign key (idCatEvento) REFERENCES categoria_evento(idCatEvento),
+    CONSTRAINT chk_evento_datas CHECK (data_termino >= data_inicio),
+    CONSTRAINT chk_evento_capacidade CHECK (capacidade > 0)
 );
 
 CREATE TABLE historico_evento(
-	idHistEvento int PRIMARY KEY auto_increment,
-    nome varchar(100) NOT NULL,
-    data_evento datetime not null,
-    idCatEvento int,
+	idHistEvento INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(250) NOT NULL,
+    data_evento DATETIME NOT NULL,
+    idCatEvento INT,
     CONSTRAINT fk_catEvento1 foreign key (idCatEvento) REFERENCES categoria_evento(idCatEvento)
 );
 
 CREATE TABLE tier_inscricao(
-	idTier int PRIMARY KEY auto_increment,
-    nome varchar(100) NOT NULL,
-    preco decimal(2,0) NOT NULL,
-    capacidade int not null,
-    status char not null
+	idTier INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(250) NOT NULL,
+    preco decimal(10,2) NOT NULL,
+    capacidade INT NOT NULL,
+    status VARCHAR(10) NOT NULL DEFAULT 'RASCUNHO',
+    CONSTRAINT chk_tier_status CHECK (status IN ('ATIVO', 'RASCUNHO', 'ENCERRADO')),
+    CONSTRAINT chk_tier_capacidade CHECK (capacidade > 0)
 );
 
 CREATE TABLE inscricao(
-	idInscricao int PRIMARY KEY auto_increment,
-    idEvento int not null, # tem que estar com o status ativo
-    idUsuario int not null,
-    idTier int,
+	idInscricao INT PRIMARY KEY AUTO_INCREMENT,
+    idEvento INT NOT NULL, # tem que estar com o status ativo
+    idUsuario INT NOT NULL,
+    idTier INT NOT NULL,
+    status VARCHAR(10) NOT NULL DEFAULT 'SOLICITADO',
+    data_inscricao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_inscEvento foreign key (idEvento) REFERENCES evento(idEvento),
     CONSTRAINT fk_inscUser foreign key (idUsuario) REFERENCES usuario(idUsuario),
-    CONSTRAINT fk_inscTier foreign key (idTier) REFERENCES tier_inscricao(idTier)
+    CONSTRAINT fk_inscTier foreign key (idTier) REFERENCES tier_inscricao(idTier),
+    CONSTRAINT chk_inscricao_status CHECK (status IN ('SOLICITADO', 'APROVADO', 'PAGO', 'REJEITADO'))
 );
