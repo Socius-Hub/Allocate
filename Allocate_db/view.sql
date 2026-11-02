@@ -11,6 +11,7 @@ FROM usuario u
 INNER JOIN perfil_acesso p ON u.idPerfil = p.idPerfil
 INNER JOIN departamento d ON u.idDepto = d.idDepto;
 
+
 CREATE VIEW vw_eventos_detalhes AS
 SELECT 
     e.idEvento,
@@ -39,3 +40,9 @@ FROM inscricao i
 INNER JOIN usuario u ON i.idUsuario = u.idUsuario
 INNER JOIN evento e ON i.idEvento = e.idEvento
 LEFT JOIN tier_inscricao t ON i.idTier = t.idTier;
+
+select * from vw_usuarios_detalhes;
+
+select * from vw_eventos_detalhes;
+
+select * from vw_inscricoes_completas;
