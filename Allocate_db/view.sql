@@ -41,6 +41,12 @@ INNER JOIN usuario u ON i.idUsuario = u.idUsuario
 INNER JOIN evento e ON i.idEvento = e.idEvento
 LEFT JOIN tier_inscricao t ON i.idTier = t.idTier;
 
+CREATE VIEW vw_usuarios_seguros AS
+SELECT id, nome_usuario, email, status, criado_em, ultimo_login
+FROM usuarios;
+
+SELECT * FROM vw_usuarios_seguros WHERE status = 'ativo';
+
 select * from vw_usuarios_detalhes;
 
 select * from vw_eventos_detalhes;

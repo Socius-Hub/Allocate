@@ -21,6 +21,16 @@ CREATE TABLE categoria_evento(
 );
 
 # Tabelas pricipais
+CREATE TABLE IF NOT EXISTS login (
+    idLogin INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha_hash VARCHAR(255) NOT NULL, 
+    status ENUM('ativo', 'inativo', 'bloqueado') DEFAULT 'ativo' NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ultimo_login DATETIME NULL,
+    CONSTRAINT chk_email_valido CHECK (email LIKE '%@%.%')
+);
+
 CREATE TABLE usuario(
 	idUsuario INT PRIMARY KEY AUTO_INCREMENT,
     nomeCompleto VARCHAR(250) NOT NULL,

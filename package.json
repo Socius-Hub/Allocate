@@ -12,6 +12,8 @@
   "description": "",
   "dependencies": {
     "ejs": "^3.1.10",
-    "express": "^4.22.3"
+    "express": "^4.22.3",
+    "mysql2": "^3.24.6",
+    "sequelize": "^6.37.8"
   }
 }
