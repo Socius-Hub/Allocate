@@ -6,7 +6,7 @@ import { pool } from "./db.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -22,10 +22,38 @@ app.post("/cadastro", async (req, res) => {
             [email, senha_hash]
         );
 
-        res.status(201).json({ message: "Login criado com sucesso", id: result.insertId, email, senha_hash });
+        res.status(201).json({ 
+            message: "Login criado com sucesso",
+            id: result.insertId, 
+            email
+        });
     } catch (error) {
-        console.error("Erro ao criar login:", error);
-        res.status(500).json({ message: "Erro ao criar login" });
+        console.error("Erro ao criar cadastro:", error);
+        res.status(500).json({ message: "Erro ao criar cadastro" });
+    }
+});
+
+// autenticação de login
+app.post("/login", async (req, res) => {
+    try{
+        const { email, senha_hash } = req.body;
+
+        const [rows] = await pool.query(
+            "SELECT * FROM login WHERE email = ? AND senha_hash = ?",
+            [email, senha_hash]
+        );  
+
+        if (rows.length === 0) {
+            return res.status(401).json({ message: "E-mail ou senha incorretos" });
+    }   
+
+        res.json({ 
+            message: "Login realizado com sucesso", 
+            user: { id: rows[0].id, email: rows[0].email } 
+        });
+    } catch (error) {
+        console.error("Erro ao realizar login:", error);
+        res.status(500).json({ message: "Erro ao realizar login" });
     }
 });
 
@@ -82,5 +110,5 @@ app.delete("/login/:id", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server rodando na porta: ${PORT}`);
 });
