@@ -1,3 +1,9 @@
+# TRIGGERS
+-- -----------------------------------------------------------------------------------------------
+
+
+# TRIGGER INSCRIÇÃO
+
 DELIMITER //
 
 CREATE TRIGGER trg_valida_capacidade_inscricao
@@ -39,5 +45,29 @@ BEGIN
         END IF;
     END IF;
 END//
+
+DELIMITER ;
+
+
+# TRIGGER ORÇAMENTO
+
+DELIMITER //
+
+-- Trigger para garantir integridade e regras de negócio antes de inserir itens no simulador
+CREATE TRIGGER trg_valida_item_cenario_bi
+BEFORE INSERT ON item_cenario_orcamento
+FOR EACH ROW
+BEGIN
+    IF NEW.quantidade <= 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Erro: A quantidade de recursos no simulador deve ser maior que zero.';
+    END IF;
+    
+    IF NEW.custo_mensal_est < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Erro: O custo mensal estimado não pode ser negativo.';
+    END IF;
+END;
+//
 
 DELIMITER ;

@@ -1,3 +1,8 @@
+# VIEWS
+-- -----------------------------------------------------------------------------------------------
+
+# VIEWS DE USUARIO
+
 CREATE VIEW vw_usuarios_detalhes AS
 SELECT 
     u.idUsuario,
@@ -11,6 +16,10 @@ FROM usuario u
 INNER JOIN perfil_acesso p ON u.idPerfil = p.idPerfil
 INNER JOIN departamento d ON u.idDepto = d.idDepto;
 
+select * from vw_usuarios_detalhes;
+
+
+# VIEW DE DETALHES COMPLETOS DOSZ EVENTOS
 
 CREATE VIEW vw_eventos_detalhes AS
 SELECT 
@@ -24,6 +33,11 @@ SELECT
     e.custo_estimado
 FROM evento e
 INNER JOIN categoria_evento c ON e.idCatEvento = c.idCatEvento;
+
+select * from vw_eventos_detalhes;
+
+
+# VIEW DAS INSCRIÇÕES COMPLETAS
 
 CREATE VIEW vw_inscricoes_completas AS
 SELECT 
@@ -41,14 +55,31 @@ INNER JOIN usuario u ON i.idUsuario = u.idUsuario
 INNER JOIN evento e ON i.idEvento = e.idEvento
 LEFT JOIN tier_inscricao t ON i.idTier = t.idTier;
 
-CREATE VIEW vw_usuarios_seguros AS
-SELECT id, nome_usuario, email, status, criado_em, ultimo_login
-FROM usuarios;
-
-SELECT * FROM vw_usuarios_seguros WHERE status = 'ativo';
-
-select * from vw_usuarios_detalhes;
-
-select * from vw_eventos_detalhes;
-
 select * from vw_inscricoes_completas;
+
+
+# VIEWS PARA RELATÓRIOS E CONSULTAS
+
+-- View consolidada para a tela de Orçamento por Departamento (calcula disponível, % e status de alerta)
+CREATE OR REPLACE VIEW vw_orcamento_departamentos AS
+SELECT 
+    od.idOrcamentoDepto,
+    c.nome AS ciclo,
+    d.nomeDepto AS departamento,
+    u.nomeCompleto AS lider,
+    od.limite,
+    od.utilizado,
+    (od.limite - od.utilizado) AS disponivel,
+    ROUND((od.utilizado / od.limite) * 100, 2) AS percentual_utilizado,
+    CASE 
+        WHEN (od.utilizado / od.limite) >= 0.90 THEN 'CRÍTICO'
+        WHEN (od.utilizado / od.limite) >= 0.75 THEN 'ATENÇÃO'
+        ELSE 'NORMAL'
+    END AS status_alerta
+FROM orcamento_departamento od
+JOIN departamento d ON od.idDepto = d.idDepto
+JOIN ciclo_orcamento c ON od.idCiclo = c.idCiclo
+LEFT JOIN usuario u ON od.idUsuario = u.idUsuario;
+
+select * from vw_orcamento_departamentos;
+
