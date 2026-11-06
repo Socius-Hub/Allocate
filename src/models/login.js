@@ -1,4 +1,4 @@
-import db from '../src/config/database.js';
+import db from '../config/database.js';
 
 export const LoginModel = {
   // Buscar todos os logins

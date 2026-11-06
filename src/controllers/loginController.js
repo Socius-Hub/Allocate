@@ -1,4 +1,4 @@
-import { LoginModel } from '../src/models/login.js';
+import { LoginModel } from '../models/login.js';
 
 export const LoginController = {
   // GET /api/login

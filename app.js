@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import productRoutes from './src/routes/loginRoutes.js';
+import loginRoutes from './src/routes/loginRoutes.js';
 
 dotenv.config();
 
@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Registrar as Rotas da API
-app.use('/api/products', loginRoutes);
+app.use('/api/login', loginRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {
