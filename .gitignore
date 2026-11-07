@@ -1,12 +1,12 @@
 # Dependências do Node
 node_modules/
 
-# Arquivos de ambiente e logs
+# Variáveis de ambiente (credenciais!) e logs
 .env
+.env.local
 npm-debug.log*
 
-# Arquivos do mac
+# Sistema operacional / editores
 .DS_Store
-
-# Arquivo .gitignore
-.gitignore.DS_Store
+Thumbs.db
+.vscode/

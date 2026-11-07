@@ -1,0 +1,56 @@
+<%- include('../partials/publico-inicio') %>
+<% const vagas = Math.max(0, evento.capacidade - evento.inscritos); const s = fmt.status(evento.status); %>
+<section class="max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop py-xl">
+  <nav class="flex items-center gap-xs mb-md text-on-surface-variant font-label-sm text-label-sm" aria-label="Trilha">
+    <a class="hover:text-primary" href="/catalogo">Catálogo</a><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="text-primary truncate"><%= evento.nome %></span>
+  </nav>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+    <article class="lg:col-span-2 cartao p-lg md:p-xl">
+      <div class="flex flex-wrap gap-sm mb-md">
+        <span class="badge border bg-primary-container/10 text-primary border-primary/20"><%= evento.categoria %></span>
+        <span class="badge border <%= s.classe %>"><%= s.rotulo %></span>
+      </div>
+      <h1 class="font-headline-md text-headline-md text-on-surface mb-md"><%= evento.nome %></h1>
+      <div class="grid sm:grid-cols-2 gap-md mb-lg font-body-md text-body-md text-on-surface-variant">
+        <p class="flex items-center gap-sm"><span class="material-symbols-outlined text-primary">calendar_today</span><%= fmt.dataHora(evento.data_inicio) %> até <%= fmt.dataHora(evento.data_termino) %></p>
+        <p class="flex items-center gap-sm"><span class="material-symbols-outlined text-primary">location_on</span><%= evento.localizacao %></p>
+        <p class="flex items-center gap-sm"><span class="material-symbols-outlined text-primary">group</span><%= evento.capacidade %> vagas · <%= vagas %> disponível(is)</p>
+        <% if (evento.nome_depto) { %><p class="flex items-center gap-sm"><span class="material-symbols-outlined text-primary">apartment</span><%= evento.nome_depto %></p><% } %>
+      </div>
+      <h2 class="font-headline-sm text-[20px] font-semibold text-on-surface mb-sm">Sobre o evento</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant whitespace-pre-line"><%= evento.descricao || 'Descrição não informada.' %></p>
+    </article>
+
+    <aside class="cartao p-lg h-fit">
+      <h2 class="font-headline-sm text-[20px] font-semibold text-on-surface mb-md">Categorias de inscrição</h2>
+      <% if (tiers.length) { %>
+        <div class="space-y-sm mb-lg">
+          <% tiers.forEach(function (t) { const livres = Math.max(0, t.capacidade - t.inscritos); %>
+            <div class="p-md border border-outline-variant/60 rounded-lg">
+              <div class="flex justify-between gap-sm">
+                <p class="font-label-md text-label-md font-bold text-on-surface"><%= t.nome %></p>
+                <p class="font-label-md text-label-md text-primary font-bold"><%= Number(t.preco) === 0 ? 'Gratuito' : fmt.moeda(t.preco) %></p>
+              </div>
+              <% if (t.descricao) { %><p class="font-body-sm text-body-sm text-on-surface-variant"><%= t.descricao %></p><% } %>
+              <p class="font-label-sm text-label-sm mt-xs <%= t.status === 'ATIVO' && livres > 0 ? 'text-secondary' : 'text-error' %>">
+                <%= t.status !== 'ATIVO' ? 'Encerrado' : (livres > 0 ? livres + ' vaga(s)' : 'Esgotado') %><%= t.prazo ? ' · até ' + fmt.data(t.prazo) : '' %>
+              </p>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mb-lg">As categorias de inscrição ainda não foram divulgadas.</p>
+      <% } %>
+      <% if (evento.status === 'ATIVO' && vagas > 0) { %>
+        <a href="<%= usuarioLogado ? '/inscricoes/nova?evento=' + evento.id_evento : '/login?voltar=' + encodeURIComponent('/inscricoes/nova?evento=' + evento.id_evento) %>" class="btn btn-primario w-full">
+          <span class="material-symbols-outlined text-[18px]">how_to_reg</span>Solicitar inscrição
+        </a>
+        <% if (!usuarioLogado) { %><p class="font-body-sm text-body-sm text-on-surface-variant text-center mt-sm">Não tem conta? <a href="/registro" class="text-primary hover:underline">Cadastre-se</a></p><% } %>
+      <% } else { %>
+        <p class="font-body-sm text-body-sm text-on-surface-variant text-center">Inscrições indisponíveis no momento.</p>
+      <% } %>
+    </aside>
+  </div>
+</section>
+<%- include('../partials/publico-fim') %>

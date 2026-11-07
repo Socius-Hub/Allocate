@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('head') %>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
+<header class="bg-surface-container-lowest border-b border-outline-variant/40 sticky top-0 z-30">
+  <div class="max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop h-16 flex items-center justify-between gap-md">
+    <a href="/" class="flex items-center gap-sm shrink-0">
+      <span class="material-symbols-outlined fill text-primary text-3xl">health_and_safety</span>
+      <span class="font-headline-sm text-headline-sm font-bold text-primary">Allocate</span>
+    </a>
+    <nav class="flex items-center gap-xs sm:gap-md font-label-md text-label-md" aria-label="Navegação pública">
+      <a href="/" class="hidden sm:inline px-sm py-xs rounded-lg <%= caminho === '/' ? 'text-primary font-semibold' : 'text-on-surface-variant hover:text-primary' %>">Início</a>
+      <a href="/catalogo" class="px-sm py-xs rounded-lg <%= caminho.startsWith('/catalogo') ? 'text-primary font-semibold' : 'text-on-surface-variant hover:text-primary' %>">Eventos</a>
+      <% if (usuarioLogado) { %>
+        <a href="/dashboard" class="btn btn-primario btn-sm"><span class="material-symbols-outlined text-[18px]">dashboard</span>Painel</a>
+      <% } else { %>
+        <a href="/login" class="px-sm py-xs rounded-lg <%= caminho === '/login' ? 'text-primary font-semibold' : 'text-on-surface-variant hover:text-primary' %>">Entrar</a>
+        <a href="/registro" class="btn btn-primario btn-sm">Criar conta</a>
+      <% } %>
+    </nav>
+  </div>
+</header>
+<main class="flex-1 w-full">

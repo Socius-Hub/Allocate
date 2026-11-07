@@ -1,0 +1,72 @@
+<%- include('../partials/publico-inicio') %>
+
+<section class="bg-gradient-to-br from-primary to-[#004d2e] text-on-primary">
+  <div class="max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop py-xxl md:py-[80px] grid md:grid-cols-2 gap-xl items-center">
+    <div>
+      <p class="font-label-md text-label-md uppercase tracking-widest text-primary-fixed mb-sm">Educação continuada</p>
+      <h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg mb-md">Eventos, inscrições e orçamento em um só lugar.</h1>
+      <p class="font-body-lg text-body-lg text-on-primary/85 mb-lg">Consulte congressos, workshops e treinamentos abertos, solicite sua inscrição e acompanhe a aprovação do seu departamento.</p>
+      <div class="flex flex-wrap gap-md">
+        <a href="/catalogo" class="btn bg-white text-primary hover:bg-primary-fixed"><span class="material-symbols-outlined text-[18px]">event</span>Ver eventos</a>
+        <% if (usuarioLogado) { %>
+          <a href="/dashboard" class="btn border-white text-white hover:bg-white/10">Ir para o painel</a>
+        <% } else { %>
+          <a href="/registro" class="btn border-white text-white hover:bg-white/10">Criar conta</a>
+        <% } %>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-md">
+      <div class="bg-white/10 rounded-xl p-lg border border-white/20">
+        <span class="material-symbols-outlined text-primary-fixed text-3xl">event_available</span>
+        <p class="font-display-lg-mobile text-display-lg-mobile mt-sm"><%= totalEventos %></p>
+        <p class="font-body-sm text-body-sm text-on-primary/80">eventos com inscrições previstas</p>
+      </div>
+      <div class="bg-white/10 rounded-xl p-lg border border-white/20">
+        <span class="material-symbols-outlined text-primary-fixed text-3xl">category</span>
+        <p class="font-display-lg-mobile text-display-lg-mobile mt-sm"><%= categorias.length %></p>
+        <p class="font-body-sm text-body-sm text-on-primary/80">categorias de eventos</p>
+      </div>
+      <div class="col-span-2 bg-white/10 rounded-xl p-lg border border-white/20 flex items-center gap-md">
+        <span class="material-symbols-outlined text-primary-fixed text-3xl">verified_user</span>
+        <p class="font-body-sm text-body-sm text-on-primary/90">Aprovação por fila, controle de vagas por tier e orçamento por departamento em tempo real.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop py-xxl">
+  <div class="flex flex-wrap items-end justify-between gap-md mb-lg">
+    <div>
+      <h2 class="font-headline-md text-headline-md text-on-surface">Próximos eventos</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant">Confira o que vem por aí.</p>
+    </div>
+    <a href="/catalogo" class="btn btn-secundario">Ver catálogo completo<span class="material-symbols-outlined text-[18px]">arrow_forward</span></a>
+  </div>
+  <% if (eventos.length) { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+      <% eventos.forEach(function (e) { %><%- include('../partials/cartao-evento', { e }) %><% }); %>
+    </div>
+  <% } else { %>
+    <div class="cartao p-xl text-center text-on-surface-variant">
+      <span class="material-symbols-outlined text-4xl">event_busy</span>
+      <p class="mt-sm">Nenhum evento programado no momento.</p>
+    </div>
+  <% } %>
+</section>
+
+<section class="bg-surface-container-low border-y border-outline-variant/40">
+  <div class="max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop py-xxl grid md:grid-cols-3 gap-gutter">
+    <% [
+      ['travel_explore', 'Encontre', 'Navegue pelo catálogo público e veja datas, locais e vagas de cada evento.'],
+      ['how_to_reg', 'Inscreva-se', 'Crie sua conta, escolha o tier de inscrição e envie uma justificativa.'],
+      ['task_alt', 'Acompanhe', 'Veja o status da aprovação e o impacto no orçamento do seu departamento.']
+    ].forEach(function (p) { %>
+      <div class="flex gap-md">
+        <span class="w-12 h-12 shrink-0 rounded-full bg-primary-container/15 text-primary flex items-center justify-center"><span class="material-symbols-outlined"><%= p[0] %></span></span>
+        <div><h3 class="font-headline-sm text-[20px] font-semibold text-on-surface"><%= p[1] %></h3><p class="font-body-sm text-body-sm text-on-surface-variant mt-xs"><%= p[2] %></p></div>
+      </div>
+    <% }); %>
+  </div>
+</section>
+
+<%- include('../partials/publico-fim') %>

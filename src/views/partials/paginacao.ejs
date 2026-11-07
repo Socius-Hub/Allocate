@@ -1,0 +1,23 @@
+<%
+// espera: paginaAtual, totalPaginas, total, porPagina, link(fn), rotulo
+const inicio = total === 0 ? 0 : (paginaAtual - 1) * porPagina + 1;
+const fim = Math.min(paginaAtual * porPagina, total);
+%>
+<div class="bg-surface-container-low border-t border-outline-variant py-3 px-lg flex flex-col sm:flex-row gap-sm items-center justify-between">
+  <p class="font-body-sm text-body-sm text-on-surface-variant">
+    Mostrando <span class="font-medium text-on-surface"><%= inicio %></span> a <span class="font-medium text-on-surface"><%= fim %></span> de <span class="font-medium text-on-surface"><%= total %></span> <%= rotulo %>
+  </p>
+  <% if (totalPaginas > 1) { %>
+    <nav class="flex items-center gap-1" aria-label="Paginação">
+      <% if (paginaAtual > 1) { %>
+        <a href="<%= link({ pagina: paginaAtual - 1 }) %>" class="btn-icone" aria-label="Anterior"><span class="material-symbols-outlined">chevron_left</span></a>
+      <% } %>
+      <% for (let p = Math.max(1, paginaAtual - 2); p <= Math.min(totalPaginas, paginaAtual + 2); p++) { %>
+        <a href="<%= link({ pagina: p }) %>" class="w-8 h-8 flex items-center justify-center rounded-md font-label-sm text-label-sm <%= p === paginaAtual ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:bg-surface-container' %>"><%= p %></a>
+      <% } %>
+      <% if (paginaAtual < totalPaginas) { %>
+        <a href="<%= link({ pagina: paginaAtual + 1 }) %>" class="btn-icone" aria-label="Próxima"><span class="material-symbols-outlined">chevron_right</span></a>
+      <% } %>
+    </nav>
+  <% } %>
+</div>

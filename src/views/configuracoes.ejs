@@ -1,50 +1,101 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <%- include('partials/head') %>
-</head>
-<body class="bg-background text-on-background font-body-md antialiased">
-
-<%- include('partials/menu-lateral') %>
-
-<div class="md:ml-64 min-h-screen flex flex-col">
-  <%- include('partials/cabecalho') %>
-
-  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
-    <div class="mb-xxl">
-      <h1 class="font-display-lg-mobile md:font-display-lg text-on-background">Configurações do Sistema</h1>
-      <p class="font-body-lg text-body-lg text-on-surface-variant mt-xs">Gerencie categorias de eventos, departamentos e parâmetros globais do Allocate.</p>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-      <div class="lg:col-span-8 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden flex flex-col">
-        <div class="p-lg border-b border-outline-variant flex justify-between items-center">
-          <div><h2 class="font-headline-sm text-headline-sm text-on-background">Categorias de Eventos</h2><p class="font-body-sm text-body-sm text-on-surface-variant">Classificação para alocação orçamentária.</p></div>
-          <button class="flex items-center gap-xs bg-primary-container text-on-primary-container px-md py-sm rounded-lg hover:bg-surface-tint hover:text-white transition-colors font-label-sm"><span class="material-symbols-outlined text-[18px]">add</span>Nova Categoria</button>
-        </div>
-        <div class="flex-1 overflow-x-auto p-md">
-          <table class="w-full text-left border-collapse">
-            <thead><tr class="bg-surface-container-low text-on-surface-variant border-b border-outline-variant"><th class="p-sm font-label-sm">ID</th><th class="p-sm font-label-sm">Categoria</th><th class="p-sm font-label-sm">Limite Padrão</th><th class="p-sm font-label-sm">Status</th><th class="p-sm font-label-sm text-right">Ações</th></tr></thead>
-            <tbody class="font-body-sm text-body-sm">
-              <tr class="border-b border-outline-variant/50 h-12"><td class="p-sm text-on-surface-variant">CAT-01</td><td class="p-sm font-medium">Congresso Médico</td><td class="p-sm text-on-surface-variant">R$ 15.000,00</td><td class="p-sm"><span class="inline-flex px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-[10px] font-bold uppercase">Ativo</span></td><td class="p-sm text-right"><span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">edit</span></td></tr>
-              <tr class="border-b border-outline-variant/50 h-12"><td class="p-sm text-on-surface-variant">CAT-02</td><td class="p-sm font-medium">Simpósio Regional</td><td class="p-sm text-on-surface-variant">R$ 8.500,00</td><td class="p-sm"><span class="inline-flex px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-[10px] font-bold uppercase">Ativo</span></td><td class="p-sm text-right"><span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">edit</span></td></tr>
-              <tr class="h-12"><td class="p-sm text-on-surface-variant">CAT-03</td><td class="p-sm font-medium">Treinamento Interno</td><td class="p-sm text-on-surface-variant">R$ 3.000,00</td><td class="p-sm"><span class="inline-flex px-2 py-1 rounded-full bg-surface-variant text-on-surface-variant text-[10px] font-bold uppercase">Inativo</span></td><td class="p-sm text-right"><span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">edit</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant flex flex-col">
-        <div class="p-lg border-b border-outline-variant flex justify-between items-center"><h2 class="font-headline-sm text-headline-sm text-on-background">Departamentos</h2><span class="material-symbols-outlined text-primary cursor-pointer">add_circle</span></div>
-        <div class="p-md flex-1 space-y-sm">
-          <div class="p-md rounded-lg border border-outline-variant hover:border-primary transition-colors cursor-pointer group bg-surface"><div class="flex justify-between items-center"><div><h3 class="font-label-md text-label-md text-on-background group-hover:text-primary">Cardiologia</h3><p class="font-body-sm text-body-sm text-on-surface-variant">Centro de Especialidades</p></div><span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">chevron_right</span></div></div>
-          <div class="p-md rounded-lg border border-outline-variant hover:border-primary transition-colors cursor-pointer group bg-surface"><div class="flex justify-between items-center"><div><h3 class="font-label-md text-label-md text-on-background group-hover:text-primary">Pediatria</h3><p class="font-body-sm text-body-sm text-on-surface-variant">Hospital Infantil</p></div><span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">chevron_right</span></div></div>
-          <div class="p-md rounded-lg border border-outline-variant hover:border-primary transition-colors cursor-pointer group bg-surface"><div class="flex justify-between items-center"><div><h3 class="font-label-md text-label-md text-on-background group-hover:text-primary">Oncologia</h3><p class="font-body-sm text-body-sm text-on-surface-variant">Instituto Oncológico</p></div><span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">chevron_right</span></div></div>
-        </div>
-      </div>
-    </div>
-  </main>
+<%- include('partials/app-inicio') %>
+<div class="mb-xl">
+  <h1 class="font-display-lg-mobile text-display-lg-mobile md:text-[40px] md:leading-[48px] text-on-background">Configurações</h1>
+  <p class="font-body-lg text-body-lg text-on-surface-variant mt-xs"><%= isAdmin ? 'Gerencie categorias de eventos, departamentos, ciclos orçamentários e sua senha.' : 'Gerencie a sua conta.' %></p>
 </div>
 
-</body>
-</html>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+  <% if (isAdmin) { %>
+    <!-- CATEGORIAS -->
+    <section class="lg:col-span-7 cartao overflow-hidden flex flex-col" id="categorias">
+      <div class="p-lg border-b border-outline-variant">
+        <h2 class="font-headline-sm text-headline-sm text-on-background">Categorias de Eventos</h2>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Edite diretamente na linha e clique em salvar.</p>
+      </div>
+      <div class="divide-y divide-outline-variant/50">
+        <% categorias.forEach(function (c) { %>
+          <div class="p-md flex flex-col sm:flex-row gap-sm sm:items-center">
+            <form action="/configuracoes/categorias/<%= c.id_cat_evento %>" method="POST" class="flex flex-col sm:flex-row gap-sm flex-1">
+              <input class="form-input sm:w-44" name="categoria" value="<%= c.categoria %>" required maxlength="250" aria-label="Nome da categoria">
+              <input class="form-input flex-1" name="descricao" value="<%= c.descricao || '' %>" maxlength="250" placeholder="Descrição" aria-label="Descrição">
+              <button class="btn-icone" title="Salvar" aria-label="Salvar categoria"><span class="material-symbols-outlined text-[20px]">save</span></button>
+            </form>
+            <div class="flex items-center gap-sm justify-between">
+              <span class="text-xs text-on-surface-variant whitespace-nowrap"><%= c.total_eventos %> evento(s)</span>
+              <form action="/configuracoes/categorias/<%= c.id_cat_evento %>/excluir" method="POST" data-confirmar="Excluir a categoria &quot;<%= c.categoria %>&quot;?">
+                <button class="btn-icone perigo" title="Excluir" aria-label="Excluir categoria" <%= c.total_eventos > 0 ? 'disabled' : '' %>><span class="material-symbols-outlined text-[20px]">delete</span></button>
+              </form>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+      <form action="/configuracoes/categorias" method="POST" class="p-md bg-surface-container-low border-t border-outline-variant flex flex-col sm:flex-row gap-sm">
+        <input class="form-input sm:w-44" name="categoria" required maxlength="250" placeholder="Nova categoria" aria-label="Nova categoria">
+        <input class="form-input flex-1" name="descricao" maxlength="250" placeholder="Descrição (opcional)" aria-label="Descrição">
+        <button class="btn btn-primario"><span class="material-symbols-outlined text-[18px]">add</span>Adicionar</button>
+      </form>
+    </section>
+
+    <!-- DEPARTAMENTOS -->
+    <section class="lg:col-span-5 cartao overflow-hidden flex flex-col" id="departamentos">
+      <div class="p-lg border-b border-outline-variant"><h2 class="font-headline-sm text-headline-sm text-on-background">Departamentos</h2></div>
+      <div class="divide-y divide-outline-variant/50">
+        <% departamentos.forEach(function (d) { %>
+          <div class="p-md flex gap-sm items-start">
+            <form action="/configuracoes/departamentos/<%= d.id_depto %>" method="POST" class="flex-1 grid gap-xs">
+              <div class="flex gap-xs"><input class="form-input" name="nome_depto" value="<%= d.nome_depto %>" required maxlength="250" aria-label="Nome do departamento"><button class="btn-icone" title="Salvar" aria-label="Salvar departamento"><span class="material-symbols-outlined text-[20px]">save</span></button></div>
+              <input class="form-input !text-sm" name="descricao" value="<%= d.descricao || '' %>" maxlength="250" placeholder="Descrição" aria-label="Descrição">
+              <span class="text-xs text-on-surface-variant"><%= d.total_usuarios %> usuário(s)</span>
+            </form>
+            <form action="/configuracoes/departamentos/<%= d.id_depto %>/excluir" method="POST" data-confirmar="Excluir o departamento &quot;<%= d.nome_depto %>&quot;? Os orçamentos dele também serão removidos.">
+              <button class="btn-icone perigo" title="Excluir" aria-label="Excluir departamento" <%= d.total_usuarios > 0 ? 'disabled' : '' %>><span class="material-symbols-outlined text-[20px]">delete</span></button>
+            </form>
+          </div>
+        <% }); %>
+      </div>
+      <form action="/configuracoes/departamentos" method="POST" class="p-md bg-surface-container-low border-t border-outline-variant grid gap-sm">
+        <input class="form-input" name="nome_depto" required maxlength="250" placeholder="Novo departamento" aria-label="Novo departamento">
+        <div class="flex gap-sm"><input class="form-input flex-1" name="descricao" maxlength="250" placeholder="Descrição (opcional)" aria-label="Descrição"><button class="btn btn-primario"><span class="material-symbols-outlined text-[18px]">add</span></button></div>
+      </form>
+    </section>
+
+    <!-- CICLOS -->
+    <section class="lg:col-span-7 cartao overflow-hidden" id="ciclos">
+      <div class="p-lg border-b border-outline-variant"><h2 class="font-headline-sm text-headline-sm text-on-background">Ciclos Orçamentários</h2><p class="font-body-sm text-body-sm text-on-surface-variant">O ciclo "Ativo" é usado no painel e nas aprovações.</p></div>
+      <div class="divide-y divide-outline-variant/50">
+        <% ciclos.forEach(function (c) { %>
+          <div class="p-md flex flex-col sm:flex-row gap-sm sm:items-center">
+            <form action="/configuracoes/ciclos/<%= c.id_ciclo %>" method="POST" class="flex flex-col sm:flex-row gap-sm flex-1">
+              <input class="form-input sm:w-32" name="nome" value="<%= c.nome %>" required maxlength="250" aria-label="Nome do ciclo">
+              <input class="form-input sm:w-44" name="limite_total" type="number" min="0" step="0.01" value="<%= c.limite_total %>" required aria-label="Limite total">
+              <select class="form-input sm:w-40" name="status" aria-label="Status"><% statusCiclo.forEach(function (s) { %><option value="<%= s %>" <%= c.status === s ? 'selected' : '' %>><%= fmt.status(s).rotulo %></option><% }); %></select>
+              <button class="btn-icone" title="Salvar" aria-label="Salvar ciclo"><span class="material-symbols-outlined text-[20px]">save</span></button>
+            </form>
+            <form action="/configuracoes/ciclos/<%= c.id_ciclo %>/excluir" method="POST" data-confirmar="Excluir o ciclo &quot;<%= c.nome %>&quot;? Os orçamentos e cenários dele também serão excluídos.">
+              <button class="btn-icone perigo" title="Excluir" aria-label="Excluir ciclo"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+            </form>
+          </div>
+        <% }); %>
+      </div>
+      <form action="/configuracoes/ciclos" method="POST" class="p-md bg-surface-container-low border-t border-outline-variant flex flex-col sm:flex-row gap-sm">
+        <input class="form-input sm:w-32" name="nome" required maxlength="250" placeholder="Ex: Q2 2027" aria-label="Nome do novo ciclo">
+        <input class="form-input sm:w-44" name="limite_total" type="number" min="0" step="0.01" required placeholder="Limite (R$)" aria-label="Limite total">
+        <select class="form-input sm:w-40" name="status" aria-label="Status"><% statusCiclo.forEach(function (s) { %><option value="<%= s %>"><%= fmt.status(s).rotulo %></option><% }); %></select>
+        <button class="btn btn-primario"><span class="material-symbols-outlined text-[18px]">add</span>Adicionar</button>
+      </form>
+    </section>
+  <% } %>
+
+  <!-- SENHA -->
+  <section class="<%= isAdmin ? 'lg:col-span-5' : 'lg:col-span-6' %> cartao p-lg" id="senha">
+    <h2 class="font-headline-sm text-headline-sm text-on-background mb-xs">Alterar Senha</h2>
+    <p class="font-body-sm text-body-sm text-on-surface-variant mb-md">Conta: <%= usuarioLogado.email %></p>
+    <form action="/configuracoes/senha" method="POST" class="space-y-md">
+      <div><label class="form-label" for="senha_atual">Senha atual</label><input class="form-input" id="senha_atual" name="senha_atual" type="password" required autocomplete="current-password"></div>
+      <div><label class="form-label" for="nova_senha">Nova senha</label><input class="form-input" id="nova_senha" name="nova_senha" type="password" required minlength="8" maxlength="72" autocomplete="new-password"><p class="form-ajuda">Mínimo 8 caracteres, com letras e números.</p></div>
+      <div><label class="form-label" for="confirmar_senha">Confirmar nova senha</label><input class="form-input" id="confirmar_senha" name="confirmar_senha" type="password" required autocomplete="new-password"></div>
+      <button class="btn btn-primario w-full"><span class="material-symbols-outlined text-[18px]">key</span>Alterar senha</button>
+    </form>
+  </section>
+</div>
+<%- include('partials/app-fim') %>

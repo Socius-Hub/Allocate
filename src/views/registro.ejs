@@ -1,0 +1,139 @@
+<%- include('partials/publico-inicio') %>
+<%
+const cls = (campo) => 'form-input' + (erros[campo] ? ' invalido' : '');
+const val = (campo) => dados[campo] || '';
+%>
+<div class="bg-surface-container min-h-full py-xl px-margin-mobile">
+  <section class="w-full max-w-2xl mx-auto bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant p-lg md:p-xl">
+    <div class="text-center mb-lg">
+      <div class="inline-flex items-center justify-center w-12 h-12 bg-primary-container rounded-full mb-md text-on-primary-container">
+        <span class="material-symbols-outlined" style="font-size:28px;">person_add</span>
+      </div>
+      <h1 class="font-headline-md text-headline-md text-on-surface mb-xs">Criar conta</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">Cadastre-se para solicitar inscrições em eventos e acompanhar seu orçamento.</p>
+    </div>
+
+    <%- include('partials/flash') %>
+    <% if (Object.keys(erros).length) { %>
+      <div class="flex items-start gap-sm px-md py-sm mb-lg rounded-lg border bg-error-container border-error/30 text-on-error-container" role="alert">
+        <span class="material-symbols-outlined text-[20px]">error</span>
+        <p class="font-body-sm text-body-sm pt-0.5">Corrija os campos destacados abaixo para concluir o cadastro.</p>
+      </div>
+    <% } %>
+
+    <form action="/registro" method="POST" class="space-y-xl" novalidate>
+      <fieldset class="space-y-md">
+        <legend class="font-label-md text-label-md text-primary uppercase tracking-wide mb-sm">Dados pessoais</legend>
+        <div>
+          <label class="form-label" for="nome_completo">Nome completo <span class="obrigatorio">*</span></label>
+          <input class="<%= cls('nome_completo') %>" id="nome_completo" name="nome_completo" value="<%= val('nome_completo') %>" placeholder="Dr. João Silva" required minlength="3" maxlength="250" autocomplete="name">
+          <%- include('partials/erro-campo', { campo: 'nome_completo' }) %>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+          <div>
+            <label class="form-label" for="crm_matricula">CRM / Matrícula <span class="obrigatorio">*</span></label>
+            <input class="<%= cls('crm_matricula') %>" id="crm_matricula" name="crm_matricula" value="<%= val('crm_matricula') %>" placeholder="000000/SP ou MAT-0000" required maxlength="250">
+            <%- include('partials/erro-campo', { campo: 'crm_matricula' }) %>
+          </div>
+          <div>
+            <label class="form-label" for="telefone">Telefone <span class="obrigatorio">*</span></label>
+            <input class="<%= cls('telefone') %>" id="telefone" name="telefone" value="<%= val('telefone') %>" placeholder="(11) 98765-4321" required type="tel" maxlength="20" autocomplete="tel" data-mascara="telefone">
+            <%- include('partials/erro-campo', { campo: 'telefone' }) %>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+          <div>
+            <label class="form-label" for="id_depto">Departamento <span class="obrigatorio">*</span></label>
+            <select class="<%= cls('id_depto') %>" id="id_depto" name="id_depto" required>
+              <option value="">Selecione...</option>
+              <% departamentos.forEach(function (d) { %>
+                <option value="<%= d.id_depto %>" <%= String(dados.id_depto) === String(d.id_depto) ? 'selected' : '' %>><%= d.nome_depto %></option>
+              <% }); %>
+            </select>
+            <%- include('partials/erro-campo', { campo: 'id_depto' }) %>
+          </div>
+          <div>
+            <label class="form-label" for="cargo">Cargo <span class="text-on-surface-variant font-normal">(opcional)</span></label>
+            <input class="<%= cls('cargo') %>" id="cargo" name="cargo" value="<%= val('cargo') %>" placeholder="Ex: Enfermeira Chefe" maxlength="250" autocomplete="organization-title">
+            <%- include('partials/erro-campo', { campo: 'cargo' }) %>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="space-y-md">
+        <legend class="font-label-md text-label-md text-primary uppercase tracking-wide mb-sm">Dados de acesso</legend>
+        <div>
+          <label class="form-label" for="email">E-mail corporativo <span class="obrigatorio">*</span></label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">mail</span>
+            <input class="<%= cls('email') %> form-input-icone" id="email" name="email" type="email" value="<%= val('email') %>" placeholder="joao.silva@empresa.com.br" required maxlength="250" autocomplete="email">
+          </div>
+          <%- include('partials/erro-campo', { campo: 'email' }) %>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+          <div>
+            <label class="form-label" for="senha">Senha <span class="obrigatorio">*</span></label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">lock</span>
+              <input class="<%= cls('senha') %> form-input-icone pr-10" id="senha" name="senha" type="password" placeholder="Mínimo 8 caracteres" required minlength="8" maxlength="72" autocomplete="new-password">
+              <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 btn-icone" data-mostrar="senha" aria-label="Mostrar senha"><span class="material-symbols-outlined text-[20px]">visibility</span></button>
+            </div>
+            <%- include('partials/erro-campo', { campo: 'senha' }) %>
+            <% if (!erros.senha) { %><p class="form-ajuda">Use pelo menos 8 caracteres, com letras e números.</p><% } %>
+          </div>
+          <div>
+            <label class="form-label" for="confirmar_senha">Confirmar senha <span class="obrigatorio">*</span></label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">lock</span>
+              <input class="<%= cls('confirmar_senha') %> form-input-icone" id="confirmar_senha" name="confirmar_senha" type="password" placeholder="Repita a senha" required autocomplete="new-password">
+            </div>
+            <%- include('partials/erro-campo', { campo: 'confirmar_senha' }) %>
+          </div>
+        </div>
+        <div>
+          <label class="flex items-start gap-sm cursor-pointer">
+            <input class="h-4 w-4 mt-1" type="checkbox" name="termos" value="1" <%= dados.termos ? 'checked' : '' %> required>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Declaro que as informações acima são verdadeiras e que sou colaborador(a) da instituição.</span>
+          </label>
+          <%- include('partials/erro-campo', { campo: 'termos' }) %>
+        </div>
+      </fieldset>
+
+      <div class="flex flex-col-reverse sm:flex-row gap-md sm:items-center sm:justify-between pt-md border-t border-outline-variant/40">
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Já tem conta? <a href="/login" class="text-primary font-medium hover:underline">Entrar</a></p>
+        <button class="btn btn-primario" type="submit"><span class="material-symbols-outlined text-[18px]">person_add</span>Criar minha conta</button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<script>
+  // mostrar/ocultar senha
+  document.querySelectorAll('[data-mostrar]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var campo = document.getElementById(btn.dataset.mostrar);
+      var visivel = campo.type === 'text';
+      campo.type = visivel ? 'password' : 'text';
+      btn.querySelector('span').textContent = visivel ? 'visibility' : 'visibility_off';
+    });
+  });
+  // máscara de telefone: (11) 98765-4321
+  document.querySelectorAll('[data-mascara="telefone"]').forEach(function (campo) {
+    campo.addEventListener('input', function () {
+      var d = campo.value.replace(/\D/g, '').slice(0, 11);
+      var r = d.length > 10 ? d.replace(/^(\d{2})(\d{5})(\d{0,4})$/, '($1) $2-$3')
+            : d.length > 6 ? d.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3')
+            : d.length > 2 ? d.replace(/^(\d{2})(\d{0,5})$/, '($1) $2')
+            : d;
+      campo.value = r;
+    });
+  });
+  // validação no navegador antes de enviar (o servidor valida de novo)
+  document.querySelector('form').addEventListener('submit', function (e) {
+    var s = document.getElementById('senha'), c = document.getElementById('confirmar_senha');
+    c.setCustomValidity(s.value && s.value !== c.value ? 'As senhas não conferem.' : '');
+    if (!this.checkValidity()) { e.preventDefault(); this.reportValidity(); }
+  });
+  document.getElementById('confirmar_senha').addEventListener('input', function () { this.setCustomValidity(''); });
+</script>
+<%- include('partials/publico-fim') %>
