@@ -64,7 +64,6 @@ export const InscricaoController = controller({
     const v = new Validador(req.body);
     v.campo('id_evento', 'Evento').obrigatorio().em(form.eventos.map((e) => e.id_evento));
     v.campo('id_tier', 'Tier').obrigatorio().em(form.tiers.map((t) => t.id_tier));
-    v.campo('justificativa', 'Justificativa').obrigatorio().min(10).max(500);
     if (form.admin) v.campo('id_usuario', 'Participante').obrigatorio().em(form.usuarios.map((u) => u.id_usuario));
 
     const renderErro = (erroGeral) =>
@@ -79,7 +78,6 @@ export const InscricaoController = controller({
         id_evento: idEvento,
         id_usuario: idUsuario,
         id_tier: Number(req.body.id_tier),
-        justificativa: req.body.justificativa.trim(),
       });
     } catch (err) {
       const msg = err.tipo === 'UNIQUE' ? 'Este colaborador já possui inscrição neste evento.' : mensagemErroBanco(err);
@@ -146,11 +144,8 @@ export const InscricaoController = controller({
     if (!insc) throw naoEncontrado('Solicitação');
 
     const acao = req.body.acao;
-    const comentario = (req.body.comentario || '').trim();
     const erros = {};
     if (!['aprovar', 'rejeitar'].includes(acao)) erros.acao = 'Ação inválida.';
-    if (acao === 'rejeitar' && comentario.length < 5) erros.comentario = 'Informe o motivo da rejeição (mínimo 5 caracteres).';
-    if (comentario.length > 500) erros.comentario = 'O comentário deve ter no máximo 500 caracteres.';
 
     if (Object.keys(erros).length) {
       const orcamento = await OrcamentoModel.doDepartamentoNoCicloAtivo(insc.id_depto);
@@ -160,7 +155,7 @@ export const InscricaoController = controller({
     }
 
     const novo = acao === 'aprovar' ? 'APROVADO' : 'REJEITADO';
-    await InscricaoModel.alterarStatus(insc.id_inscricao, novo, comentario);
+    await InscricaoModel.alterarStatus(insc.id_inscricao, novo);
     req.flash('sucesso', `Solicitação de ${insc.nome_completo} ${acao === 'aprovar' ? 'aprovada' : 'rejeitada'}.`);
     res.redirect('/aprovacoes');
   },

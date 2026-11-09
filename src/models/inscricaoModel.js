@@ -2,13 +2,14 @@ import { query, execute, transaction } from '../config/database.js';
 
 export const STATUS_INSCRICAO = ['SOLICITADO', 'APROVADO', 'PAGO', 'REJEITADO'];
 
+/** Status que consomem orçamento do departamento. */
 const CONSOME_ORCAMENTO = ['APROVADO', 'PAGO'];
 
 const SELECT_INSCRICAO = `
   SELECT i.idInscricao AS id_inscricao, i.status, t.preco AS valor, i.data_inscricao,
          i.idEvento AS id_evento, e.nome AS evento, e.data_inicio, e.data_termino, e.local AS localizacao,
          i.idTier AS id_tier, t.nome AS tier,
-         i.idUsuario AS id_usuario, u.nomeCompleto AS nome_completo, u.CRM_matricula AS cargo, u.idDepto AS id_depto, d.nomeDepto AS nome_depto
+         i.idUsuario AS id_usuario, u.nomeCompleto AS nome_completo, u.idDepto AS id_depto, d.nomeDepto AS nome_depto
   FROM inscricao i
   JOIN evento e         ON e.idEvento  = i.idEvento
   JOIN tier_inscricao t ON t.idTier    = i.idTier
@@ -39,6 +40,7 @@ function erroRegra(mensagem) {
   return e;
 }
 
+/** Soma (ou subtrai) um valor do orçamento do departamento no ciclo ATIVO. */
 async function ajustarOrcamento(tx, idDepto, delta) {
   if (!delta) return;
   await tx.execute(
@@ -48,6 +50,9 @@ async function ajustarOrcamento(tx, idDepto, delta) {
   );
 }
 
+/**
+ * Estorna do orçamento as inscrições aprovadas/pagas que serão apagadas em cascata.
+ */
 export async function estornarInscricoes(tx, campo, id) {
   const coluna = campo === 'id_evento' ? 'i.idEvento' : 'i.idUsuario';
   const rows = await tx.query(
@@ -104,6 +109,9 @@ export const InscricaoModel = {
     return rows[0] || null;
   },
 
+  /**
+   * Cria a inscrição validando as regras de negócio e capacidades.
+   */
   async criar({ id_evento, id_usuario, id_tier }) {
     return transaction(async (tx) => {
       const [evento] = await tx.query(
@@ -149,6 +157,9 @@ export const InscricaoModel = {
     });
   },
 
+  /**
+   * Altera o status e mantém o orçamento do departamento sincronizado.
+   */
   async alterarStatus(id, novoStatus) {
     return transaction(async (tx) => {
       const [insc] = await tx.query(
