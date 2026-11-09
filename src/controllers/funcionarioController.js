@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { UsuarioModel } from '../models/UsuarioModel.js';
 import { InscricaoModel } from '../models/InscricaoModel.js';
 import { OrcamentoModel } from '../models/OrcamentoModel.js';
-//import { DepartamentoModel, PerfilModel } from '../models/CadastrosModel.js';
+import { DepartamentoModel, PerfilModel } from '../models/CadastrosModel.js';
 import { ehAdmin, PERFIL_ADMIN } from '../middlewares/auth.js';
 import { SALT_ROUNDS, validarSenha } from './authController.js';
 import { Validador } from '../utils/validador.js';
@@ -23,7 +23,6 @@ async function validarUsuario(body, { perfis, departamentos }, existente = null)
   v.campo('id_perfil', 'Perfil de acesso').obrigatorio().em(perfis.map((p) => p.id_perfil));
   v.campo('id_depto', 'Departamento').obrigatorio().em(departamentos.map((d) => d.id_depto));
   v.campo('status', 'Status').obrigatorio().em(['ATIVO', 'INATIVO']);
-  // senha obrigatória no cadastro; na edição só se quiser trocar
   if (!existente || body.senha) validarSenha(v, 'senha', existente ? 'Nova senha' : 'Senha provisória');
 
   if (!v.erros.email && (await UsuarioModel.emailEmUso(body.email.trim(), existente?.id_login ?? null))) {
@@ -74,11 +73,10 @@ export const FuncionarioController = controller({
     });
   },
 
-  /** Perfil: admin vê qualquer um; colaborador vê apenas o próprio. */
   async perfil(req, res) {
     const u = await carregar(req);
-    const logado = req.session.usuario;
-    if (!ehAdmin(logado) && logado.id_usuario !== u.id_usuario) {
+    const logado = req.session?.usuario;
+    if (!ehAdmin(logado) && logado?.id_usuario !== u.id_usuario) {
       throw new ErroHttp(403, 'Você só pode visualizar o seu próprio perfil.');
     }
     const [inscricoes, orcamento] = await Promise.all([
@@ -96,7 +94,7 @@ export const FuncionarioController = controller({
   },
 
   meuPerfil(req, res) {
-    res.redirect(`/funcionarios/${req.session.usuario.id_usuario}`);
+    res.redirect(`/funcionarios/${req.session?.usuario?.id_usuario}`);
   },
 
   async novo(req, res) {
@@ -127,7 +125,6 @@ export const FuncionarioController = controller({
     const ops = await opcoes();
     const v = await validarUsuario(req.body, ops, u);
 
-    // impede que o sistema fique sem administrador ativo
     const perfilAdmin = ops.perfis.find((p) => p.tipo === PERFIL_ADMIN);
     const deixaDeSerAdmin = u.perfil === PERFIL_ADMIN && (Number(req.body.id_perfil) !== perfilAdmin?.id_perfil || req.body.status !== 'ATIVO');
     if (deixaDeSerAdmin && (await UsuarioModel.contarAdmins()) <= 1) {
@@ -139,8 +136,7 @@ export const FuncionarioController = controller({
     }
     await UsuarioModel.atualizar(u.id_usuario, await normalizar(req.body));
 
-    // se o admin editou a própria conta, atualiza os dados da sessão
-    if (u.id_usuario === req.session.usuario.id_usuario) {
+    if (u.id_usuario === req.session?.usuario?.id_usuario) {
       const atualizado = await UsuarioModel.buscarPorId(u.id_usuario);
       Object.assign(req.session.usuario, {
         nome: atualizado.nome_completo, email: atualizado.email, perfil: atualizado.perfil, id_depto: atualizado.id_depto,
@@ -152,7 +148,7 @@ export const FuncionarioController = controller({
 
   async excluir(req, res) {
     const u = await carregar(req);
-    if (u.id_usuario === req.session.usuario.id_usuario) {
+    if (u.id_usuario === req.session?.usuario?.id_usuario) {
       req.flash('erro', 'Você não pode excluir a sua própria conta.');
       return res.redirect(`/funcionarios/${u.id_usuario}`);
     }

@@ -75,7 +75,7 @@ function normalizarErro(err) {
   const code = String(err.code || '');
   if (code === '23505' || code === 'ER_DUP_ENTRY') err.tipo = 'UNIQUE';
   else if (code === '23503' || code.startsWith('ER_ROW_IS_REFERENCED') || code.startsWith('ER_NO_REFERENCED_ROW')) err.tipo = 'FK';
-  else if (code === '23514' || code === 'ER_CHECK_CONSTRAINT_VIOLATED') err.tipo = 'CHECK';
+  else if (code === '23514' || code.startsWith('ER_CHECK_CONSTRAINT_VIOLATED')) err.tipo = 'CHECK';
   else if (code === 'P0001' || err.sqlState === '45000') err.tipo = 'REGRA'; // mensagens de triggers
   return err;
 }
@@ -102,7 +102,11 @@ function criarExecutor(conn) {
     async insert(sql, params, idColuna) {
       if (isPostgres) {
         const r = await bruto(`${sql} RETURNING ${idColuna}`, params);
-        return r.rows[0][idColuna];
+        const row = r.rows[0];
+        if (!row) return null;
+        // Procura a chave de forma case-insensitive para evitar problemas com colunas camelCase no Postgres
+        const chave = Object.keys(row).find((k) => k.toLowerCase() === idColuna.toLowerCase());
+        return chave ? row[chave] : Object.values(row)[0];
       }
       return (await bruto(sql, params)).insertId;
     },

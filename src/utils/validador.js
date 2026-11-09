@@ -15,6 +15,9 @@ export class Validador {
   constructor(dados = {}) {
     this.dados = dados;
     this.erros = {};
+    this.nome = null;
+    this.rotulo = null;
+    this.valor = '';
   }
 
   campo(nome, rotulo) {
@@ -25,7 +28,9 @@ export class Validador {
   }
 
   erro(mensagem) {
-    if (!this.erros[this.nome]) this.erros[this.nome] = mensagem;
+    if (this.nome && !this.erros[this.nome]) {
+      this.erros[this.nome] = mensagem;
+    }
     return this;
   }
 

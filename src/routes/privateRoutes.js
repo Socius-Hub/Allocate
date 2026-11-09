@@ -15,6 +15,7 @@ import { OrcamentoController } from '../controllers/orcamentoController.js';
 import { ConfiguracaoController } from '../controllers/configuracaoController.js';
 
 const router = Router();
+
 router.use(
   ['/dashboard', '/eventos', '/inscricoes', '/aprovacoes', '/perfil', '/funcionarios',
    '/orcamento-departamento', '/simulador-orcamento', '/configuracoes'],
@@ -74,17 +75,11 @@ router.post('/simulador-orcamento/cenarios', OrcamentoController.criarCenario);
 router.post('/simulador-orcamento/cenarios/:id/itens', OrcamentoController.adicionarItem);
 router.post('/simulador-orcamento/itens/:idItem/excluir', OrcamentoController.removerItem);
 router.post('/simulador-orcamento/cenarios/:id/status', exigirAdmin, OrcamentoController.statusCenario);
-router.post('/simulador-orcamento/cenarios/:id/excluir', OrcamentoController.excluirCenario);
+router.post('/simulador-orcamento/cenarios/:id/excluir', exigirAdmin, OrcamentoController.excluirCenario);
 
 // Configurações
 router.get('/configuracoes', ConfiguracaoController.index);
 router.post('/configuracoes/senha', ConfiguracaoController.alterarSenha);
-//router.post('/configuracoes/categorias', exigirAdmin, ConfiguracaoController.salvarCategoria);
-//router.post('/configuracoes/categorias/:id', exigirAdmin, ConfiguracaoController.salvarCategoria);
-//router.post('/configuracoes/categorias/:id/excluir', exigirAdmin, ConfiguracaoController.excluirCategoria);
-//router.post('/configuracoes/departamentos', exigirAdmin, ConfiguracaoController.salvarDepartamento);
-//router.post('/configuracoes/departamentos/:id', exigirAdmin, ConfiguracaoController.salvarDepartamento);
-//router.post('/configuracoes/departamentos/:id/excluir', exigirAdmin, ConfiguracaoController.excluirDepartamento);
 router.post('/configuracoes/ciclos', exigirAdmin, ConfiguracaoController.salvarCiclo);
 router.post('/configuracoes/ciclos/:id', exigirAdmin, ConfiguracaoController.salvarCiclo);
 router.post('/configuracoes/ciclos/:id/excluir', exigirAdmin, ConfiguracaoController.excluirCiclo);

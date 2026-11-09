@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { UsuarioModel } from '../models/UsuarioModel.js';
-//import { DepartamentoModel, PerfilModel } from '../models/CadastrosModel.js';
+import { DepartamentoModel, PerfilModel } from '../models/CadastrosModel.js';
 import { Validador } from '../utils/validador.js';
 import { controller } from '../utils/http.js';
 
@@ -8,10 +8,8 @@ export const SALT_ROUNDS = 10;
 const PERFIL_PADRAO_REGISTRO = 'Usuário';
 const HASH_FALSO = bcrypt.hashSync('senha-inexistente', SALT_ROUNDS);
 
-/** Só permite redirecionar para caminhos internos (evita open redirect). */
 const destinoSeguro = (url) => (typeof url === 'string' && url.startsWith('/') && !url.startsWith('//') ? url : '/dashboard');
 
-/** Regras de senha usadas no registro, cadastro e troca de senha. */
 export function validarSenha(v, campo = 'senha', rotulo = 'Senha') {
   v.campo(campo, rotulo).obrigatorio().min(8).max(72);
   if (!v.erros[campo] && !(/[A-Za-z]/.test(v.valor) && /\d/.test(v.valor))) {
@@ -19,7 +17,6 @@ export function validarSenha(v, campo = 'senha', rotulo = 'Senha') {
   }
 }
 
-/** Inicia a sessão do usuário (regenera o id para evitar session fixation). */
 function iniciarSessao(req, dados) {
   return new Promise((resolve, reject) => {
     req.session.regenerate((err) => {
@@ -31,7 +28,6 @@ function iniciarSessao(req, dados) {
 }
 
 export const AuthController = controller({
-  /* ---------------------------- LOGIN ---------------------------- */
   telaLogin(req, res) {
     res.render('login', { titulo: 'Entrar', voltar: req.query.voltar || '' });
   },
@@ -48,7 +44,6 @@ export const AuthController = controller({
     if (!v.valido) return renderErro(null);
 
     const conta = await UsuarioModel.buscarParaLogin(email.trim());
-    // compara mesmo quando o e-mail não existe, para não revelar quais e-mails estão cadastrados
     const senhaOk = await bcrypt.compare(senha, conta?.senha_hash || HASH_FALSO);
 
     if (!conta || !senhaOk) return renderErro('E-mail ou senha inválidos.');
@@ -76,7 +71,6 @@ export const AuthController = controller({
     });
   },
 
-  /* --------------------------- REGISTRO -------------------------- */
   async telaRegistro(req, res) {
     res.render('registro', { titulo: 'Criar conta', departamentos: await DepartamentoModel.listar() });
   },

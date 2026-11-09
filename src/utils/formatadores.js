@@ -9,13 +9,17 @@ const numeroBR = (v, casas = 2) =>
 
 const paraData = (d) => {
   if (!d) return null;
-  if (d instanceof Date) return d;
+  if (d instanceof Date) return isNaN(d.getTime()) ? null : d;
+  
   // 'AAAA-MM-DD' (coluna DATE) -> data local, sem deslocamento de fuso
   if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
     const [a, m, dia] = d.split('-').map(Number);
-    return new Date(a, m - 1, dia);
+    const dataLocal = new Date(a, m - 1, dia);
+    return isNaN(dataLocal.getTime()) ? null : dataLocal;
   }
-  return new Date(d);
+  
+  const dataParsed = new Date(d);
+  return isNaN(dataParsed.getTime()) ? null : dataParsed;
 };
 
 const dois = (n) => String(n).padStart(2, '0');
@@ -66,20 +70,20 @@ export const fmt = {
   /** Valor para <input type="datetime-local"> */
   inputDataHora(d) {
     const x = paraData(d);
-    if (!x || isNaN(x)) return d || '';
+    if (!x) return typeof d === 'string' ? d : '';
     return `${x.getFullYear()}-${dois(x.getMonth() + 1)}-${dois(x.getDate())}T${dois(x.getHours())}:${dois(x.getMinutes())}`;
   },
 
   /** Valor para <input type="date"> */
   inputData(d) {
     const x = paraData(d);
-    if (!x || isNaN(x)) return d || '';
+    if (!x) return typeof d === 'string' ? d : '';
     return `${x.getFullYear()}-${dois(x.getMonth() + 1)}-${dois(x.getDate())}`;
   },
 
   /** "Dra. Ana Silva" -> "AS" */
   iniciais(nome = '') {
-    const partes = String(nome).replace(/^(dr|dra|enf)\.?\s+/i, '').trim().split(/\s+/);
+    const partes = String(nome).replace(/^(dr|dra|enf|prof)\.?\s+/i, '').trim().split(/\s+/);
     return ((partes[0]?.[0] || '') + (partes.length > 1 ? partes[partes.length - 1][0] : '')).toUpperCase();
   },
 

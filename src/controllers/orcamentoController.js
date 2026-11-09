@@ -1,11 +1,10 @@
 import { CicloModel, OrcamentoModel, CenarioModel, STATUS_CENARIO } from '../models/OrcamentoModel.js';
-//import { DepartamentoModel } from '../models/CadastrosModel.js';
+import { DepartamentoModel } from '../models/CadastrosModel.js';
 import { UsuarioModel } from '../models/UsuarioModel.js';
 import { Validador } from '../utils/validador.js';
 import { paraNumero } from '../utils/formatadores.js';
 import { controller, idParam, naoEncontrado, mensagemErroBanco, ErroHttp } from '../utils/http.js';
 
-/** Ciclo escolhido em ?ciclo= ou, por padrão, o ciclo ativo (ou o mais recente). */
 async function escolherCiclo(req, ciclos) {
   const id = idParam(req.query.ciclo);
   return ciclos.find((c) => c.id_ciclo === id) || ciclos.find((c) => c.status === 'ATIVO') || ciclos[0] || null;
@@ -34,12 +33,10 @@ export const OrcamentoController = controller({
       departamentos,
       usuarios,
       edicao: linhas.find((l) => l.id_orcamento_depto === idEdicao) || null,
-      // departamentos que ainda não têm orçamento neste ciclo
       deptosLivres: departamentos.filter((d) => !linhas.some((l) => l.id_depto === d.id_depto)),
     });
   },
 
-  /** Cria ou atualiza o orçamento de um departamento no ciclo (admin). */
   async salvar(req, res) {
     const ciclo = await CicloModel.buscarPorId(idParam(req.body.id_ciclo));
     if (!ciclo) throw naoEncontrado('Ciclo');
@@ -86,7 +83,6 @@ export const OrcamentoController = controller({
     res.redirect(`/orcamento-departamento?ciclo=${orc.id_ciclo}`);
   },
 
-  /** Exporta o relatório do ciclo em CSV (abre no Excel). */
   async exportar(req, res) {
     const ciclos = await CicloModel.listar();
     const ciclo = await escolherCiclo(req, ciclos);
@@ -102,10 +98,9 @@ export const OrcamentoController = controller({
     ].join('\r\n');
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="orcamento-${ciclo.nome.replace(/\W+/g, '-')}.csv"`);
-    res.send('﻿' + corpo); // BOM para o Excel reconhecer acentos
+    res.send('﻿' + corpo);
   },
 
-  /* ------------------------------ SIMULADOR ------------------------------ */
   async simulador(req, res) {
     const [cenarios, ciclos] = await Promise.all([CenarioModel.listar(), CicloModel.listar()]);
     const id = idParam(req.query.cenario);

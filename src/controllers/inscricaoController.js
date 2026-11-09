@@ -8,7 +8,7 @@ import { fmt } from '../utils/formatadores.js';
 import { controller, idParam, naoEncontrado, paginacao, montarQuery, mensagemErroBanco, ErroHttp } from '../utils/http.js';
 
 async function dadosFormulario(req, idEvento) {
-  const admin = ehAdmin(req.session.usuario);
+  const admin = ehAdmin(req.session?.usuario);
   const [eventos, usuarios] = await Promise.all([
     EventoModel.abertosParaInscricao(),
     admin ? UsuarioModel.listarAtivos() : [],
@@ -19,11 +19,10 @@ async function dadosFormulario(req, idEvento) {
 }
 
 export const InscricaoController = controller({
-  /** Admin vê todas as inscrições; colaborador vê apenas as próprias. */
   async listar(req, res) {
-    const admin = ehAdmin(req.session.usuario);
+    const admin = ehAdmin(req.session?.usuario);
     const status = STATUS_INSCRICAO.includes(req.query.status) ? req.query.status : '';
-    const filtros = { status, id_usuario: admin ? null : req.session.usuario.id_usuario };
+    const filtros = { status, id_usuario: admin ? null : req.session?.usuario?.id_usuario };
     const { pagina, porPagina, offset } = paginacao(req);
     const [inscricoes, total, contagem] = await Promise.all([
       InscricaoModel.listar(filtros, { limite: porPagina, offset }),
@@ -51,17 +50,16 @@ export const InscricaoController = controller({
       titulo: 'Nova Inscrição',
       pagina: 'inscricoes',
       ...dados,
-      dados: { id_usuario: req.session.usuario.id_usuario, id_tier: dados.tiers[0]?.id_tier },
+      dados: { id_usuario: req.session?.usuario?.id_usuario, id_tier: dados.tiers[0]?.id_tier },
     });
   },
 
   async criar(req, res) {
-    const usuario = req.session.usuario;
+    const usuario = req.session?.usuario;
     const idEvento = idParam(req.body.id_evento);
     const form = await dadosFormulario(req, idEvento);
 
-    // colaborador comum só pode se inscrever; admin pode inscrever qualquer pessoa
-    const idUsuario = form.admin ? idParam(req.body.id_usuario) : usuario.id_usuario;
+    const idUsuario = form.admin ? idParam(req.body.id_usuario) : usuario?.id_usuario;
 
     const v = new Validador(req.body);
     v.campo('id_evento', 'Evento').obrigatorio().em(form.eventos.map((e) => e.id_evento));
@@ -92,7 +90,6 @@ export const InscricaoController = controller({
     res.redirect('/inscricoes');
   },
 
-  /** Admin: altera o status diretamente (ex: marcar como paga). */
   async alterarStatus(req, res) {
     const insc = await InscricaoModel.buscarPorId(idParam(req.params.id));
     if (!insc) throw naoEncontrado('Inscrição');
@@ -102,12 +99,11 @@ export const InscricaoController = controller({
     res.redirect(req.get('Referrer')?.includes('/eventos/') ? `/eventos/${insc.id_evento}` : '/inscricoes');
   },
 
-  /** Admin exclui qualquer inscrição; colaborador só cancela a própria enquanto "Solicitada". */
   async excluir(req, res) {
-    const usuario = req.session.usuario;
+    const usuario = req.session?.usuario;
     const insc = await InscricaoModel.buscarPorId(idParam(req.params.id));
     if (!insc) throw naoEncontrado('Inscrição');
-    const podeExcluir = ehAdmin(usuario) || (insc.id_usuario === usuario.id_usuario && insc.status === 'SOLICITADO');
+    const podeExcluir = ehAdmin(usuario) || (insc.id_usuario === usuario?.id_usuario && insc.status === 'SOLICITADO');
     if (!podeExcluir) {
       req.flash('erro', 'Você só pode cancelar suas próprias inscrições que ainda não foram analisadas.');
       return res.redirect('/inscricoes');
@@ -117,7 +113,6 @@ export const InscricaoController = controller({
     res.redirect('/inscricoes');
   },
 
-  /* --------------------------- APROVAÇÕES (admin) --------------------------- */
   async filaAprovacoes(req, res) {
     const { pagina, porPagina, offset } = paginacao(req);
     const [pendentes, total, totalSolicitado] = await Promise.all([

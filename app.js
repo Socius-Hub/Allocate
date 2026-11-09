@@ -4,9 +4,9 @@ import { fileURLToPath } from 'node:url';
 import express from 'express';
 
 import { DB_CLIENT } from './src/config/database.js';
-import { inicializarBanco } from './src/config/initDb.js';
+import { inicializarBanco } from './src/config/initDB.js'; // Corrigido para initDB.js
 import { criarSessao } from './src/config/session.js';
-import { variaveisGlobais } from './src/middlewares/locals.js';
+import { variaveisGlobais } from './src/middlewares/variaveisGlobais.js'; // Corrigido para variaveisGlobais.js
 import { paginaNaoEncontrada, tratarErros } from './src/middlewares/erros.js';
 import { fmt } from './src/utils/formatadores.js';
 import publicRoutes from './src/routes/publicRoutes.js';
@@ -38,7 +38,7 @@ app.use(privateRoutes);
 
 // Erros
 app.use(paginaNaoEncontrada);
-app.use(tratarErros);
+app.use(tr ,tratarErros); // Nota: mantenha apenas tratarErros
 
 // Inicialização
 async function iniciar() {

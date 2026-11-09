@@ -1,6 +1,6 @@
 import { EventoModel, TierModel, STATUS_EVENTO, STATUS_TIER } from '../models/EventoModel.js';
 import { InscricaoModel } from '../models/InscricaoModel.js';
-//import { CategoriaModel, DepartamentoModel } from '../models/CadastrosModel.js';
+import { CategoriaModel, DepartamentoModel } from '../models/CadastrosModel.js';
 import { Validador } from '../utils/validador.js';
 import { fmt, paraNumero, paraDataHoraSQL } from '../utils/formatadores.js';
 import { controller, idParam, naoEncontrado, paginacao, montarQuery, mensagemErroBanco } from '../utils/http.js';
@@ -10,7 +10,6 @@ async function opcoesFormulario() {
   return { categorias, departamentos, statusEvento: STATUS_EVENTO };
 }
 
-/** Valida e normaliza os campos do formulário de evento. */
 function validarEvento(body, { categorias, departamentos }, inscritos = 0) {
   const v = new Validador(body);
   v.campo('nome', 'Nome do evento').obrigatorio().min(3).max(250);
@@ -156,7 +155,6 @@ export const EventoController = controller({
     }
   },
 
-  /* ----------------------------- TIERS ----------------------------- */
   async tiers(req, res) {
     const evento = await carregarEvento(req);
     const tiers = await TierModel.listarPorEvento(evento.id_evento);

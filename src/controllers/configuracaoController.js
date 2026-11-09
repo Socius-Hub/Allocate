@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-//import { CategoriaModel, DepartamentoModel } from '../models/CadastrosModel.js';
+import { CategoriaModel, DepartamentoModel } from '../models/CadastrosModel.js';
 import { CicloModel, STATUS_CICLO } from '../models/OrcamentoModel.js';
 import { UsuarioModel } from '../models/UsuarioModel.js';
 import { ehAdmin } from '../middlewares/auth.js';
@@ -8,10 +8,6 @@ import { Validador } from '../utils/validador.js';
 import { paraNumero } from '../utils/formatadores.js';
 import { controller, idParam, naoEncontrado, mensagemErroBanco } from '../utils/http.js';
 
-/**
- * Gera as ações salvar/excluir para um cadastro simples.
- * Erros de validação e de banco voltam como mensagem flash.
- */
 function crudSimples({ model, nome, validar, normalizar, mensagemDuplicado }) {
   return {
     async salvar(req, res) {
@@ -51,15 +47,14 @@ function crudSimples({ model, nome, validar, normalizar, mensagemDuplicado }) {
   };
 }
 
-/*const categorias = crudSimples({
+const categorias = crudSimples({
   model: CategoriaModel,
   nome: 'Categoria',
   mensagemDuplicado: 'Já existe uma categoria com esse nome.',
   validar: (v) => {
     v.campo('categoria', 'Nome da categoria').obrigatorio().max(250);
-    v.campo('descricao', 'Descrição').max(250);
   },
-  normalizar: (b) => ({ categoria: b.categoria.trim(), descricao: b.descricao?.trim() }),
+  normalizar: (b) => ({ categoria: b.categoria.trim() }),
 });
 
 const departamentos = crudSimples({
@@ -68,10 +63,9 @@ const departamentos = crudSimples({
   mensagemDuplicado: 'Já existe um departamento com esse nome.',
   validar: (v) => {
     v.campo('nome_depto', 'Nome do departamento').obrigatorio().max(250);
-    v.campo('descricao', 'Descrição').max(250);
   },
-  normalizar: (b) => ({ nome_depto: b.nome_depto.trim(), descricao: b.descricao?.trim() }),
-});*/
+  normalizar: (b) => ({ nome_depto: b.nome_depto.trim() }),
+});
 
 const ciclos = crudSimples({
   model: CicloModel,
@@ -87,7 +81,7 @@ const ciclos = crudSimples({
 
 export const ConfiguracaoController = controller({
   async index(req, res) {
-    const admin = ehAdmin(req.session.usuario);
+    const admin = ehAdmin(req.session?.usuario);
     const [cats, deps, cics] = admin
       ? await Promise.all([CategoriaModel.listar(), DepartamentoModel.listar(), CicloModel.listar()])
       : [[], [], []];
@@ -102,7 +96,7 @@ export const ConfiguracaoController = controller({
   },
 
   async alterarSenha(req, res) {
-    const usuario = req.session.usuario;
+    const usuario = req.session?.usuario;
     const v = new Validador(req.body);
     v.campo('senha_atual', 'Senha atual').obrigatorio();
     validarSenha(v, 'nova_senha', 'Nova senha');
@@ -121,10 +115,10 @@ export const ConfiguracaoController = controller({
     res.redirect('/configuracoes');
   },
 
-  //salvarCategoria: categorias.salvar,
-  //excluirCategoria: categorias.excluir,
-  //salvarDepartamento: departamentos.salvar,
-  //excluirDepartamento: departamentos.excluir,
+  salvarCategoria: categorias.salvar,
+  excluirCategoria: categorias.excluir,
+  salvarDepartamento: departamentos.salvar,
+  excluirDepartamento: departamentos.excluir,
   salvarCiclo: ciclos.salvar,
   excluirCiclo: ciclos.excluir,
 });
