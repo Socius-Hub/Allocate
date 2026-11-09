@@ -47,7 +47,7 @@ export const AuthController = controller({
     const senhaOk = await bcrypt.compare(senha, conta?.senha_hash || HASH_FALSO);
 
     if (!conta || !senhaOk) return renderErro('E-mail ou senha inválidos.');
-    if (conta.status_login !== 'ATIVO' || conta.status_usuario !== 'ATIVO') {
+    if (conta.status_login !== 'ativo' && conta.status_login !== 'ATIVO') {
       return renderErro('Sua conta está inativa ou bloqueada. Procure um administrador.');
     }
 
@@ -83,7 +83,6 @@ export const AuthController = controller({
     v.campo('nome_completo', 'Nome completo').obrigatorio().min(3).max(250);
     v.campo('crm_matricula', 'CRM / Matrícula').obrigatorio().max(250);
     v.campo('telefone', 'Telefone').obrigatorio().telefone();
-    v.campo('cargo', 'Cargo').max(250);
     v.campo('id_depto', 'Departamento').obrigatorio().em(departamentos.map((d) => d.id_depto));
     v.campo('email', 'E-mail').obrigatorio().email().max(250);
     validarSenha(v);
@@ -109,7 +108,6 @@ export const AuthController = controller({
         nome_completo: dados.nome_completo.trim(),
         crm_matricula: dados.crm_matricula.trim(),
         telefone: dados.telefone.trim(),
-        cargo: dados.cargo?.trim(),
         id_perfil: perfil.id_perfil,
         id_depto: Number(dados.id_depto),
       });

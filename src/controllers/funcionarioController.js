@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { UsuarioModel } from '../models/UsuarioModel.js';
-import { InscricaoModel } from '../models/InscricaoModel.js';
+import { InscricaoModel } from '../models/inscricaoModel.js';
 import { OrcamentoModel } from '../models/OrcamentoModel.js';
 import { DepartamentoModel, PerfilModel } from '../models/CadastrosModel.js';
 import { ehAdmin, PERFIL_ADMIN } from '../middlewares/auth.js';
@@ -18,7 +18,6 @@ async function validarUsuario(body, { perfis, departamentos }, existente = null)
   v.campo('nome_completo', 'Nome completo').obrigatorio().min(3).max(250);
   v.campo('crm_matricula', 'CRM / Matrícula').obrigatorio().max(250);
   v.campo('telefone', 'Telefone').obrigatorio().telefone();
-  v.campo('cargo', 'Cargo').max(250);
   v.campo('email', 'E-mail').obrigatorio().email().max(250);
   v.campo('id_perfil', 'Perfil de acesso').obrigatorio().em(perfis.map((p) => p.id_perfil));
   v.campo('id_depto', 'Departamento').obrigatorio().em(departamentos.map((d) => d.id_depto));
@@ -35,7 +34,6 @@ const normalizar = async (b) => ({
   nome_completo: b.nome_completo.trim(),
   crm_matricula: b.crm_matricula.trim(),
   telefone: b.telefone.trim(),
-  cargo: b.cargo?.trim(),
   email: b.email.trim(),
   id_perfil: Number(b.id_perfil),
   id_depto: Number(b.id_depto),

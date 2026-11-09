@@ -38,7 +38,7 @@ app.use(privateRoutes);
 
 // Erros
 app.use(paginaNaoEncontrada);
-app.use(tr ,tratarErros); // Nota: mantenha apenas tratarErros
+app.use(tratarErros);
 
 // Inicialização
 async function iniciar() {

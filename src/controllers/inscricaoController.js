@@ -1,4 +1,4 @@
-import { InscricaoModel, STATUS_INSCRICAO } from '../models/InscricaoModel.js';
+import { InscricaoModel, STATUS_INSCRICAO } from '../models/inscricaoModel.js';
 import { EventoModel, TierModel } from '../models/EventoModel.js';
 import { UsuarioModel } from '../models/UsuarioModel.js';
 import { OrcamentoModel } from '../models/OrcamentoModel.js';

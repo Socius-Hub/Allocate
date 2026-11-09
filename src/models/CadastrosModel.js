@@ -1,24 +1,32 @@
 import { query, insert, execute } from '../config/database.js';
 
 export const CategoriaModel = {
-  listar: () => query('SELECT id_cat_evento, categoria FROM categoria_evento ORDER BY categoria'),
+  listar: () => query('SELECT idCatEvento AS id_cat_evento, categoria, descricao FROM categoria_evento ORDER BY categoria'),
+  
   async buscarPorId(id) {
-    const [r] = await query('SELECT id_cat_evento, categoria FROM categoria_evento WHERE id_cat_evento = ?', [id]);
+    const [r] = await query('SELECT idCatEvento AS id_cat_evento, categoria, descricao FROM categoria_evento WHERE idCatEvento = ?', [id]);
     return r || null;
   },
-  criar: (d) => insert('INSERT INTO categoria_evento (categoria) VALUES (?)', [d.categoria], 'id_cat_evento'),
-  atualizar: (id, d) => execute('UPDATE categoria_evento SET categoria = ? WHERE id_cat_evento = ?', [d.categoria, id]),
-  excluir: (id) => execute('DELETE FROM categoria_evento WHERE id_cat_evento = ?', [id]),
+
+  criar: (d) => insert('INSERT INTO categoria_evento (categoria, descricao) VALUES (?, ?)', [d.categoria, d.descricao || null], 'idCatEvento'),
+
+  atualizar: (id, d) => execute('UPDATE categoria_evento SET categoria = ?, descricao = ? WHERE idCatEvento = ?', [d.categoria, d.descricao || null, id]),
+
+  excluir: (id) => execute('DELETE FROM categoria_evento WHERE idCatEvento = ?', [id]),
 };
 
 export const DepartamentoModel = {
   listar: () => query('SELECT idDepto AS id_depto, nomeDepto AS nome_depto FROM departamento ORDER BY nomeDepto'),
+  
   async buscarPorId(id) {
     const [r] = await query('SELECT idDepto AS id_depto, nomeDepto AS nome_depto FROM departamento WHERE idDepto = ?', [id]);
     return r || null;
   },
+
   criar: (d) => insert('INSERT INTO departamento (nomeDepto) VALUES (?)', [d.nome_depto], 'idDepto'),
+
   atualizar: (id, d) => execute('UPDATE departamento SET nomeDepto = ? WHERE idDepto = ?', [d.nome_depto, id]),
+
   excluir: (id) => execute('DELETE FROM departamento WHERE idDepto = ?', [id]),
 };
 

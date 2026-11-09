@@ -1,5 +1,5 @@
 import { EventoModel } from '../models/EventoModel.js';
-import { InscricaoModel } from '../models/InscricaoModel.js';
+import { InscricaoModel } from '../models/inscricaoModel.js';
 import { CicloModel, OrcamentoModel } from '../models/OrcamentoModel.js';
 import { controller } from '../utils/http.js';
 
