@@ -77,8 +77,9 @@ CREATE TABLE evento(
     idCatEvento INT NOT NULL,
     capacidade INT NOT NULL,
     descricao VARCHAR(250),
-    custo_estimado decimal(10,2) NOT NULL,
-	CONSTRAINT fk_catEvento foreign key (idCatEvento) REFERENCES categoria_evento(idCatEvento),
+    custo_estimado DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PLANEJAMENTO',
+    CONSTRAINT fk_catEvento FOREIGN KEY (idCatEvento) REFERENCES categoria_evento(idCatEvento),
     CONSTRAINT chk_evento_datas CHECK (data_termino >= data_inicio),
     CONSTRAINT chk_evento_capacidade CHECK (capacidade > 0)
 );
