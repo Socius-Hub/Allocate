@@ -1,5 +1,5 @@
 import { CicloModel, OrcamentoModel, CenarioModel, STATUS_CENARIO } from '../models/OrcamentoModel.js';
-import { DepartamentoModel } from '../models/CadastrosModel.js';
+//import { DepartamentoModel } from '../models/CadastrosModel.js';
 import { UsuarioModel } from '../models/UsuarioModel.js';
 import { Validador } from '../utils/validador.js';
 import { paraNumero } from '../utils/formatadores.js';

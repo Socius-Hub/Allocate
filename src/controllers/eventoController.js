@@ -1,6 +1,6 @@
 import { EventoModel, TierModel, STATUS_EVENTO, STATUS_TIER } from '../models/EventoModel.js';
 import { InscricaoModel } from '../models/InscricaoModel.js';
-import { CategoriaModel, DepartamentoModel } from '../models/CadastrosModel.js';
+//import { CategoriaModel, DepartamentoModel } from '../models/CadastrosModel.js';
 import { Validador } from '../utils/validador.js';
 import { fmt, paraNumero, paraDataHoraSQL } from '../utils/formatadores.js';
 import { controller, idParam, naoEncontrado, paginacao, montarQuery, mensagemErroBanco } from '../utils/http.js';

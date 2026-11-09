@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { CategoriaModel, DepartamentoModel } from '../models/CadastrosModel.js';
+//import { CategoriaModel, DepartamentoModel } from '../models/CadastrosModel.js';
 import { CicloModel, STATUS_CICLO } from '../models/OrcamentoModel.js';
 import { UsuarioModel } from '../models/UsuarioModel.js';
 import { ehAdmin } from '../middlewares/auth.js';
@@ -51,7 +51,7 @@ function crudSimples({ model, nome, validar, normalizar, mensagemDuplicado }) {
   };
 }
 
-const categorias = crudSimples({
+/*const categorias = crudSimples({
   model: CategoriaModel,
   nome: 'Categoria',
   mensagemDuplicado: 'Já existe uma categoria com esse nome.',
@@ -71,7 +71,7 @@ const departamentos = crudSimples({
     v.campo('descricao', 'Descrição').max(250);
   },
   normalizar: (b) => ({ nome_depto: b.nome_depto.trim(), descricao: b.descricao?.trim() }),
-});
+});*/
 
 const ciclos = crudSimples({
   model: CicloModel,
@@ -121,10 +121,10 @@ export const ConfiguracaoController = controller({
     res.redirect('/configuracoes');
   },
 
-  salvarCategoria: categorias.salvar,
-  excluirCategoria: categorias.excluir,
-  salvarDepartamento: departamentos.salvar,
-  excluirDepartamento: departamentos.excluir,
+  //salvarCategoria: categorias.salvar,
+  //excluirCategoria: categorias.excluir,
+  //salvarDepartamento: departamentos.salvar,
+  //excluirDepartamento: departamentos.excluir,
   salvarCiclo: ciclos.salvar,
   excluirCiclo: ciclos.excluir,
 });

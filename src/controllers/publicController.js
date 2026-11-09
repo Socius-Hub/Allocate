@@ -1,5 +1,5 @@
 import { EventoModel, TierModel } from '../models/EventoModel.js';
-import { CategoriaModel } from '../models/CadastrosModel.js';
+//import { CategoriaModel } from '../models/CadastrosModel.js';
 import { controller, idParam, naoEncontrado, paginacao, montarQuery } from '../utils/http.js';
 
 /** Páginas acessíveis sem login. */

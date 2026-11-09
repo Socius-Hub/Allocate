@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { UsuarioModel } from '../models/UsuarioModel.js';
-import { DepartamentoModel, PerfilModel } from '../models/CadastrosModel.js';
+//import { DepartamentoModel, PerfilModel } from '../models/CadastrosModel.js';
 import { Validador } from '../utils/validador.js';
 import { controller } from '../utils/http.js';
 

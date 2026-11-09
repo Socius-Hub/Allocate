@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { UsuarioModel } from '../models/UsuarioModel.js';
 import { InscricaoModel } from '../models/InscricaoModel.js';
 import { OrcamentoModel } from '../models/OrcamentoModel.js';
-import { DepartamentoModel, PerfilModel } from '../models/CadastrosModel.js';
+//import { DepartamentoModel, PerfilModel } from '../models/CadastrosModel.js';
 import { ehAdmin, PERFIL_ADMIN } from '../middlewares/auth.js';
 import { SALT_ROUNDS, validarSenha } from './authController.js';
 import { Validador } from '../utils/validador.js';
