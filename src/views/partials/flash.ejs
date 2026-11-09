@@ -1,0 +1,11 @@
+<% if (flash && flash.length) { %>
+  <div class="space-y-sm mb-lg" role="status">
+    <% flash.forEach(function (f) { const ok = f.tipo === 'sucesso'; %>
+      <div class="flex items-start gap-sm px-md py-sm rounded-lg border <%= ok ? 'bg-[#ecfdf3] border-[#a6f4c5] text-[#027a48]' : 'bg-error-container border-error/30 text-on-error-container' %>">
+        <span class="material-symbols-outlined text-[20px]"><%= ok ? 'check_circle' : 'error' %></span>
+        <p class="font-body-sm text-body-sm flex-1 pt-0.5"><%= f.mensagem %></p>
+        <button type="button" class="opacity-60 hover:opacity-100" onclick="this.parentElement.remove()" aria-label="Fechar"><span class="material-symbols-outlined text-[18px]">close</span></button>
+      </div>
+    <% }); %>
+  </div>
+<% } %>

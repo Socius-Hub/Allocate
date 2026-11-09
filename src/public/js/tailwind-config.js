@@ -19,7 +19,7 @@ tailwind.config = {
       "secondary": "#8a5100", "primary-fixed-dim": "#64dd9a", "on-primary-fixed-variant": "#00522f",
       "on-surface": "#111c2d", "surface-container-lowest": "#ffffff"
     },
-    borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" },
+    borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "9999px" },
     spacing: { "margin-mobile": "16px", "margin-desktop": "32px", gutter: "24px", xs: "4px", sm: "8px", md: "16px", lg: "24px", xl: "32px", xxl: "48px", unit: "4px" },
     fontFamily: {
       "body-md": ["Geist","sans-serif"], "headline-sm": ["Geist","sans-serif"], "headline-md": ["Geist","sans-serif"],

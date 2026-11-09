@@ -1,0 +1,17 @@
+  </main>
+</div>
+
+<script>
+  // menu lateral no celular
+  function alternarMenu() {
+    document.getElementById('menu-lateral').classList.toggle('aberto');
+    document.getElementById('menu-fundo').classList.toggle('aberto');
+  }
+  // confirmação antes de excluir: <form data-confirmar="Mensagem">
+  document.addEventListener('submit', function (e) {
+    var msg = e.target.getAttribute('data-confirmar');
+    if (msg && !confirm(msg)) e.preventDefault();
+  });
+</script>
+</body>
+</html>

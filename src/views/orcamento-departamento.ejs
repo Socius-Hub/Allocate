@@ -1,87 +1,147 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <%- include('partials/head') %>
-</head>
-<body class="bg-background text-on-background font-body-md antialiased">
-
-<%- include('partials/menu-lateral') %>
-
-<div class="md:ml-64 min-h-screen flex flex-col">
-  <%- include('partials/cabecalho') %>
-
-  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl gap-4">
-      <div><h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background">Orçamento por Departamento</h2><p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Acompanhamento consolidado de limites, valores utilizados e disponíveis.</p></div>
-      <select class="border border-outline-variant bg-surface-container-lowest rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:ring-primary focus:border-primary outline-none"><option>Q3 2024</option><option>Q4 2024</option><option>Q1 2025</option></select>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm md:col-span-12 p-lg flex flex-col md:flex-row justify-between items-center gap-6">
-        <div><h3 class="font-headline-sm text-headline-sm text-on-background mb-1">Orçamento Total Global</h3><p class="font-body-sm text-body-sm text-on-surface-variant">Ciclo atual: Q4 2024</p></div>
-        <div class="flex gap-8 w-full md:w-auto overflow-x-auto">
-          <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Limite Total</span><span class="font-headline-md text-headline-md text-on-background mt-1">R$ 15,4M</span></div>
-          <div class="w-px h-12 bg-outline-variant hidden md:block"></div>
-          <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Utilizado</span><span class="font-headline-md text-headline-md text-secondary-container mt-1">R$ 10,2M</span></div>
-          <div class="w-px h-12 bg-outline-variant hidden md:block"></div>
-          <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Disponível</span><span class="font-headline-md text-headline-md text-primary mt-1">R$ 5,2M</span></div>
-        </div>
-      </div>
-
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm md:col-span-8 p-lg flex flex-col h-[400px]">
-        <div class="flex justify-between items-center mb-4"><h3 class="font-headline-sm text-headline-sm text-on-background">Comparativo por Área</h3></div>
-        <div class="flex-grow relative w-full h-full"><canvas id="barChart"></canvas></div>
-      </div>
-
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm md:col-span-4 p-lg flex flex-col h-[400px]">
-        <h3 class="font-headline-sm text-headline-sm text-on-background mb-4">Distribuição de Recursos</h3>
-        <div class="flex-grow relative w-full h-full flex items-center justify-center"><canvas id="doughnutChart"></canvas></div>
-        <div class="mt-4 flex justify-center gap-4 flex-wrap">
-          <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-primary"></div><span class="font-label-sm text-label-sm text-on-surface-variant">Clínica</span></div>
-          <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-secondary-container"></div><span class="font-label-sm text-label-sm text-on-surface-variant">TI</span></div>
-          <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-outline-variant"></div><span class="font-label-sm text-label-sm text-on-surface-variant">RH</span></div>
-        </div>
-      </div>
-
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm md:col-span-12 p-0 overflow-hidden">
-        <div class="p-lg border-b border-outline-variant"><h3 class="font-headline-sm text-headline-sm text-on-background">Áreas com Atenção</h3><p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Departamentos próximos ou acima do limite orçamentário.</p></div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead><tr class="bg-surface border-b border-outline-variant font-label-md text-label-md text-on-surface-variant"><th class="py-3 px-lg font-medium">Departamento</th><th class="py-3 px-lg font-medium">Líder</th><th class="py-3 px-lg font-medium text-right">Limite</th><th class="py-3 px-lg font-medium text-right">Utilizado</th><th class="py-3 px-lg font-medium text-center">Status</th></tr></thead>
-            <tbody class="font-body-sm text-body-sm text-on-background">
-              <tr class="border-b border-outline-variant"><td class="py-4 px-lg font-medium">Tecnologia (TI)</td><td class="py-4 px-lg">Carlos Reis</td><td class="py-4 px-lg text-right">R$ 2,5M</td><td class="py-4 px-lg text-right">R$ 2,4M</td><td class="py-4 px-lg text-center"><span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold bg-error-container text-on-error-container">96% UTILIZADO</span></td></tr>
-              <tr class="border-b border-outline-variant"><td class="py-4 px-lg font-medium">Marketing</td><td class="py-4 px-lg">Ana Silva</td><td class="py-4 px-lg text-right">R$ 1,2M</td><td class="py-4 px-lg text-right">R$ 1,0M</td><td class="py-4 px-lg text-center"><span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold bg-secondary-fixed-dim/30 text-secondary">83% UTILIZADO</span></td></tr>
-              <tr><td class="py-4 px-lg font-medium">Operações Clínicas</td><td class="py-4 px-lg">Marcos Ferreira</td><td class="py-4 px-lg text-right">R$ 5,0M</td><td class="py-4 px-lg text-right">R$ 2,5M</td><td class="py-4 px-lg text-center"><span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold bg-primary-container/10 text-primary">50% UTILIZADO</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const primaryColor = '#006a3f', secondaryColor = '#fc9912', outlineColor = '#bccabe';
-      new Chart(document.getElementById('barChart').getContext('2d'), {
-        type: 'bar',
-        data: { labels: ['TI','Clínica','RH','Mkt','Pesquisa','Adm'],
-          datasets: [
-            { label: 'Utilizado', data: [2.4,2.5,0.8,1.0,1.5,2.0], backgroundColor: secondaryColor, borderRadius: 4 },
-            { label: 'Disponível', data: [0.1,2.5,0.4,0.2,0.5,1.0], backgroundColor: primaryColor, borderRadius: 4 }
-          ]},
-        options: { responsive:true, maintainAspectRatio:false,
-          plugins:{ legend:{position:'top', align:'end', labels:{usePointStyle:true, boxWidth:8}}},
-          scales:{ x:{stacked:true, grid:{display:false}}, y:{stacked:true, ticks:{callback:v=>v+'M'}} } }
-      });
-      new Chart(document.getElementById('doughnutChart').getContext('2d'), {
-        type: 'doughnut',
-        data: { labels:['Clínica','TI','RH','Outros'], datasets:[{ data:[45,25,15,15], backgroundColor:[primaryColor, secondaryColor, outlineColor, '#d9e3fb'], borderWidth:2, borderColor:'#fff' }]},
-        options: { responsive:true, maintainAspectRatio:false, cutout:'70%', plugins:{legend:{display:false}} }
-      });
-    });
-    </script>
-  </main>
+<%- include('partials/app-inicio') %>
+<%
+const dadosGrafico = linhas.map(function (l) { return { nome: l.departamento, utilizado: l.utilizado, disponivel: Math.max(0, l.disponivel), limite: l.limite }; });
+const jsonSeguro = (x) => JSON.stringify(x).replace(/</g, '\\u003c');
+const limiteCiclo = ciclo ? Number(ciclo.limite_total) : 0;
+const naoDistribuido = limiteCiclo - resumo.limite;
+%>
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl gap-4">
+  <div><h2 class="font-display-lg-mobile text-display-lg-mobile md:text-[40px] md:leading-[48px] text-on-background">Orçamento por Departamento</h2><p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Acompanhamento consolidado de limites, valores utilizados e disponíveis.</p></div>
+  <div class="flex gap-sm items-center flex-wrap">
+    <form method="GET" action="/orcamento-departamento">
+      <select name="ciclo" class="form-input" onchange="this.form.submit()" aria-label="Ciclo orçamentário">
+        <% ciclos.forEach(function (c) { %><option value="<%= c.id_ciclo %>" <%= ciclo && ciclo.id_ciclo === c.id_ciclo ? 'selected' : '' %>><%= c.nome %> (<%= fmt.status(c.status).rotulo %>)</option><% }); %>
+      </select>
+    </form>
+    <% if (ciclo) { %><a href="/orcamento-departamento/exportar?ciclo=<%= ciclo.id_ciclo %>" class="btn btn-secundario"><span class="material-symbols-outlined text-[18px]">download</span>CSV</a><% } %>
+  </div>
 </div>
 
-</body>
-</html>
+<% if (!ciclo) { %>
+  <div class="cartao p-xl text-center text-on-surface-variant">
+    <span class="material-symbols-outlined text-4xl">account_balance_wallet</span>
+    <p class="mt-sm">Nenhum ciclo orçamentário cadastrado.</p>
+    <% if (isAdmin) { %><a href="/configuracoes#ciclos" class="btn btn-primario mt-md">Cadastrar ciclo</a><% } %>
+  </div>
+<% } else { %>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+  <section class="cartao md:col-span-12 p-lg flex flex-col lg:flex-row justify-between lg:items-center gap-6">
+    <div>
+      <h3 class="font-headline-sm text-headline-sm text-on-background mb-1">Ciclo <%= ciclo.nome %></h3>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">Limite global do ciclo: <strong><%= fmt.moeda(limiteCiclo) %></strong><% if (naoDistribuido > 0) { %> · <%= fmt.moedaCurta(naoDistribuido) %> ainda não distribuído<% } else if (naoDistribuido < 0) { %> · <span class="text-error">distribuição excede o limite em <%= fmt.moedaCurta(-naoDistribuido) %></span><% } %></p>
+    </div>
+    <div class="flex gap-8 w-full lg:w-auto overflow-x-auto">
+      <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Distribuído</span><span class="font-headline-md text-headline-md text-on-background mt-1"><%= fmt.moedaCurta(resumo.limite) %></span></div>
+      <div class="w-px h-12 bg-outline-variant hidden md:block"></div>
+      <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Utilizado</span><span class="font-headline-md text-headline-md text-secondary mt-1"><%= fmt.moedaCurta(resumo.utilizado) %></span></div>
+      <div class="w-px h-12 bg-outline-variant hidden md:block"></div>
+      <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Disponível</span><span class="font-headline-md text-headline-md text-primary mt-1"><%= fmt.moedaCurta(resumo.disponivel) %></span></div>
+    </div>
+  </section>
+
+  <% if (linhas.length) { %>
+    <section class="cartao md:col-span-8 p-lg flex flex-col h-[400px]">
+      <h3 class="font-headline-sm text-headline-sm text-on-background mb-4">Comparativo por Área</h3>
+      <div class="flex-grow relative w-full min-h-0"><canvas id="barChart" aria-label="Gráfico de barras: utilizado e disponível por departamento" role="img"></canvas></div>
+    </section>
+    <section class="cartao md:col-span-4 p-lg flex flex-col h-[400px]">
+      <h3 class="font-headline-sm text-headline-sm text-on-background mb-4">Distribuição do Limite</h3>
+      <div class="flex-grow relative w-full min-h-0 flex items-center justify-center"><canvas id="doughnutChart" aria-label="Gráfico de rosca: limite por departamento" role="img"></canvas></div>
+    </section>
+  <% } %>
+
+  <section class="cartao md:col-span-12 overflow-hidden">
+    <div class="p-lg border-b border-outline-variant flex flex-wrap justify-between gap-md items-center">
+      <div><h3 class="font-headline-sm text-headline-sm text-on-background">Departamentos</h3><p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Ordenados pelo percentual utilizado (status: Crítico ≥ 90%, Atenção ≥ 75%).</p></div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="tabela min-w-[760px]">
+        <thead><tr><th>Departamento</th><th>Líder</th><th class="text-right">Limite</th><th class="text-right">Utilizado</th><th class="text-right">Disponível</th><th class="text-center">Status</th><% if (isAdmin) { %><th class="text-right">Ações</th><% } %></tr></thead>
+        <tbody>
+          <% if (!linhas.length) { %><tr><td colspan="7" class="text-center text-on-surface-variant py-lg">Nenhum departamento com orçamento neste ciclo.</td></tr><% } %>
+          <% linhas.forEach(function (l) { const s = fmt.status(l.status_alerta); const emEdicao = edicao && edicao.id_orcamento_depto === l.id_orcamento_depto; %>
+            <% if (emEdicao) { %>
+              <tr class="bg-primary-container/5">
+                <td colspan="<%= isAdmin ? 7 : 6 %>">
+                  <form action="/orcamento-departamento/<%= l.id_orcamento_depto %>" method="POST" class="grid grid-cols-1 md:grid-cols-5 gap-sm items-end">
+                    <input type="hidden" name="id_ciclo" value="<%= ciclo.id_ciclo %>">
+                    <div><span class="form-label"><%= l.departamento %></span><span class="text-xs text-on-surface-variant">Editando orçamento</span></div>
+                    <div><label class="form-label" for="lider-<%= l.id_orcamento_depto %>">Líder</label>
+                      <select class="form-input" id="lider-<%= l.id_orcamento_depto %>" name="id_usuario"><option value="">—</option><% usuarios.forEach(function (u) { %><option value="<%= u.id_usuario %>" <%= l.lider === u.nome_completo ? 'selected' : '' %>><%= u.nome_completo %></option><% }); %></select></div>
+                    <div><label class="form-label" for="lim-<%= l.id_orcamento_depto %>">Limite (R$)</label><input class="form-input" id="lim-<%= l.id_orcamento_depto %>" name="limite" type="number" step="0.01" min="0" value="<%= l.limite %>" required></div>
+                    <div><label class="form-label" for="uti-<%= l.id_orcamento_depto %>">Utilizado (R$)</label><input class="form-input" id="uti-<%= l.id_orcamento_depto %>" name="utilizado" type="number" step="0.01" min="0" value="<%= l.utilizado %>"></div>
+                    <div class="flex gap-sm"><a href="/orcamento-departamento?ciclo=<%= ciclo.id_ciclo %>" class="btn btn-neutro flex-1">Cancelar</a><button class="btn btn-primario flex-1">Salvar</button></div>
+                  </form>
+                </td>
+              </tr>
+            <% } else { %>
+              <tr>
+                <td class="font-medium"><%= l.departamento %></td>
+                <td><%= l.lider || '—' %></td>
+                <td class="text-right whitespace-nowrap"><%= fmt.moedaCurta(l.limite) %></td>
+                <td class="text-right whitespace-nowrap"><%= fmt.moedaCurta(l.utilizado) %></td>
+                <td class="text-right whitespace-nowrap <%= l.disponivel < 0 ? 'text-error' : '' %>"><%= fmt.moedaCurta(l.disponivel) %></td>
+                <td class="text-center"><span class="badge border <%= s.classe %>"><%= fmt.numero(l.percentual_utilizado, 0) %>% · <%= s.rotulo %></span></td>
+                <% if (isAdmin) { %>
+                  <td class="text-right whitespace-nowrap">
+                    <a href="/orcamento-departamento?ciclo=<%= ciclo.id_ciclo %>&editar=<%= l.id_orcamento_depto %>" class="btn-icone inline-flex" title="Editar" aria-label="Editar orçamento de <%= l.departamento %>"><span class="material-symbols-outlined text-[20px]">edit</span></a>
+                    <form action="/orcamento-departamento/<%= l.id_orcamento_depto %>/excluir" method="POST" class="inline" data-confirmar="Remover o orçamento de <%= l.departamento %> deste ciclo?">
+                      <button class="btn-icone perigo" title="Remover" aria-label="Remover orçamento de <%= l.departamento %>"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                    </form>
+                  </td>
+                <% } %>
+              </tr>
+            <% } %>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <% if (isAdmin && deptosLivres.length) { %>
+      <form action="/orcamento-departamento" method="POST" class="p-lg border-t border-outline-variant bg-surface-container-low grid grid-cols-1 md:grid-cols-5 gap-sm items-end">
+        <input type="hidden" name="id_ciclo" value="<%= ciclo.id_ciclo %>">
+        <div><label class="form-label" for="novo-depto">Adicionar departamento</label><select class="form-input" id="novo-depto" name="id_depto" required><% deptosLivres.forEach(function (d) { %><option value="<%= d.id_depto %>"><%= d.nome_depto %></option><% }); %></select></div>
+        <div><label class="form-label" for="novo-lider">Líder</label><select class="form-input" id="novo-lider" name="id_usuario"><option value="">—</option><% usuarios.forEach(function (u) { %><option value="<%= u.id_usuario %>"><%= u.nome_completo %></option><% }); %></select></div>
+        <div><label class="form-label" for="novo-limite">Limite (R$)</label><input class="form-input" id="novo-limite" name="limite" type="number" step="0.01" min="0" placeholder="0,00" required></div>
+        <div><label class="form-label" for="novo-utilizado">Utilizado (R$)</label><input class="form-input" id="novo-utilizado" name="utilizado" type="number" step="0.01" min="0" placeholder="0,00"></div>
+        <button class="btn btn-primario"><span class="material-symbols-outlined text-[18px]">add</span>Adicionar</button>
+      </form>
+    <% } %>
+  </section>
+</div>
+
+<% if (linhas.length) { %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+  (function () {
+    var dados = <%- jsonSeguro(dadosGrafico) %>;
+    var paleta = ['#006a3f', '#fc9912', '#31835e', '#8a5100', '#64dd9a', '#bccabe', '#693c00', '#86d7ac'];
+    var milhoes = function (v) { return 'R$ ' + (v / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + 'M'; };
+    new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels: dados.map(function (d) { return d.nome; }),
+        datasets: [
+          { label: 'Utilizado', data: dados.map(function (d) { return d.utilizado; }), backgroundColor: '#fc9912', borderRadius: 4 },
+          { label: 'Disponível', data: dados.map(function (d) { return d.disponivel; }), backgroundColor: '#006a3f', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8 } },
+                   tooltip: { callbacks: { label: function (c) { return c.dataset.label + ': ' + milhoes(c.raw); } } } },
+        scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, ticks: { callback: milhoes } } }
+      }
+    });
+    new Chart(document.getElementById('doughnutChart'), {
+      type: 'doughnut',
+      data: { labels: dados.map(function (d) { return d.nome; }),
+              datasets: [{ data: dados.map(function (d) { return d.limite; }), backgroundColor: paleta, borderWidth: 2, borderColor: '#fff' }] },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '65%',
+                 plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } },
+                            tooltip: { callbacks: { label: function (c) { return c.label + ': ' + milhoes(c.raw); } } } } }
+    });
+  })();
+</script>
+<% } %>
+<% } %>
+<%- include('partials/app-fim') %>

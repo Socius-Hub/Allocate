@@ -1,0 +1,17 @@
+<% const vagas = Math.max(0, e.capacidade - e.inscritos); %>
+<a href="/catalogo/<%= e.id_evento %>" class="cartao p-lg flex flex-col gap-md hover:border-primary hover:shadow-md transition-all group">
+  <div class="flex items-start justify-between gap-sm">
+    <span class="badge border bg-primary-container/10 text-primary border-primary/20"><%= e.categoria %></span>
+    <% const s = fmt.status(e.status); %>
+    <span class="badge border <%= s.classe %>"><%= s.rotulo %></span>
+  </div>
+  <div class="flex-1">
+    <h3 class="font-headline-sm text-[20px] leading-7 font-semibold text-on-surface group-hover:text-primary transition-colors"><%= e.nome %></h3>
+    <% if (e.descricao) { %><p class="font-body-sm text-body-sm text-on-surface-variant mt-xs line-clamp-2"><%= e.descricao %></p><% } %>
+  </div>
+  <div class="space-y-xs font-body-sm text-body-sm text-on-surface-variant">
+    <p class="flex items-center gap-xs"><span class="material-symbols-outlined text-[18px]">calendar_today</span><%= fmt.periodo(e.data_inicio, e.data_termino) %></p>
+    <p class="flex items-center gap-xs"><span class="material-symbols-outlined text-[18px]">location_on</span><span class="truncate"><%= e.localizacao %></span></p>
+    <p class="flex items-center gap-xs"><span class="material-symbols-outlined text-[18px]">group</span><%= vagas > 0 ? vagas + ' vaga(s) disponível(is)' : 'Vagas esgotadas' %></p>
+  </div>
+</a>

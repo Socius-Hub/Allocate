@@ -1,72 +1,85 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <%- include('partials/head') %>
-</head>
-<body class="bg-background text-on-background font-body-md antialiased">
+<%- include('partials/app-inicio') %>
+<% const cls = (campo) => 'form-input' + (erros[campo] ? ' invalido' : ''); %>
+<div class="max-w-4xl mx-auto">
+  <div class="flex items-center justify-between mb-xl gap-md">
+    <div><h1 class="font-headline-md text-headline-md text-on-surface mb-xs">Nova Inscrição</h1><p class="font-body-md text-body-md text-on-surface-variant">Selecione o evento e a categoria de inscrição desejada.</p></div>
+    <a href="/inscricoes" class="flex items-center gap-sm text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">close</span><span class="font-label-md text-label-md hidden md:inline">Cancelar</span></a>
+  </div>
 
-<%- include('partials/menu-lateral') %>
+  <% if (locals.erroGeral) { %>
+    <div class="flex items-start gap-sm px-md py-sm mb-lg rounded-lg border bg-error-container border-error/30 text-on-error-container" role="alert"><span class="material-symbols-outlined text-[20px]">error</span><p class="font-body-sm text-body-sm pt-0.5"><%= erroGeral %></p></div>
+  <% } %>
 
-<div class="md:ml-64 min-h-screen flex flex-col">
-  <%- include('partials/cabecalho') %>
-
-  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
-    <div class="max-w-4xl mx-auto">
-      <div class="flex items-center justify-between mb-xl">
-        <div><h1 class="font-headline-md text-headline-md text-on-surface mb-xs">Nova Inscrição</h1><p class="font-body-md text-body-md text-on-surface-variant">Selecione o evento e a categoria de inscrição desejada.</p></div>
-        <a href="/inscricoes-lista" class="flex items-center gap-sm text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">close</span><span class="font-label-md text-label-md hidden md:inline">Cancelar</span></a>
-      </div>
-
-      <form class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-lg md:p-xl space-y-xl" onsubmit="event.preventDefault(); location.href='/inscricoes-lista';">
-        <div class="space-y-md">
-          <h2 class="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant pb-sm">Detalhes do Evento</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
-            <div><label class="font-label-md text-label-md text-on-surface-variant block mb-xs">Evento Ativo</label>
-              <select class="w-full px-md py-sm border border-outline-variant rounded-lg bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary font-body-md text-body-md">
-                <option disabled selected value="">Selecione um evento...</option>
-                <option>Congresso Nacional de Medicina 2024</option><option>Workshop de Gestão Clínica</option><option>Simpósio de Inovação em Saúde</option>
-              </select>
-            </div>
-            <div><label class="font-label-md text-label-md text-on-surface-variant block mb-xs">Participante</label>
-              <div class="relative"><input class="w-full pl-10 px-md py-sm border border-outline-variant rounded-lg bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary font-body-md text-body-md" placeholder="Buscar funcionário..." type="text"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-md">
-          <h2 class="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant pb-sm">Seleção de Categoria (Tier)</h2>
-          <p class="font-body-sm text-body-sm text-on-surface-variant">Escolha o pacote de inscrição para o evento selecionado.</p>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
-            <label class="border border-outline-variant rounded-xl p-lg bg-surface-container-lowest cursor-pointer flex flex-col h-full relative hover:border-primary transition-all">
-              <input type="radio" name="tier" class="absolute top-4 right-4 accent-primary w-5 h-5">
-              <h3 class="font-headline-sm text-headline-sm text-primary mb-xs">Básico</h3>
-              <p class="font-body-sm text-body-sm text-on-surface-variant mb-md flex-1">Acesso às palestras principais e feira de expositores.</p>
-              <span class="font-headline-md text-headline-md text-on-surface block mb-xs">R$ 150</span>
-            </label>
-            <label class="border-2 border-primary rounded-xl p-lg bg-primary-container/5 cursor-pointer flex flex-col h-full relative">
-              <span class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-secondary text-on-secondary px-sm py-1 rounded-full font-label-sm shadow-sm whitespace-nowrap">Mais Popular</span>
-              <input type="radio" name="tier" checked class="absolute top-4 right-4 accent-primary w-5 h-5">
-              <h3 class="font-headline-sm text-headline-sm text-primary mb-xs">Completo</h3>
-              <p class="font-body-sm text-body-sm text-on-surface-variant mb-md flex-1">Acesso total, workshops práticos e material exclusivo.</p>
-              <span class="font-headline-md text-headline-md text-on-surface block mb-xs">R$ 300</span>
-            </label>
-            <label class="border border-outline-variant rounded-xl p-lg bg-surface-container-lowest cursor-pointer flex flex-col h-full relative hover:border-primary transition-all">
-              <input type="radio" name="tier" class="absolute top-4 right-4 accent-primary w-5 h-5">
-              <h3 class="font-headline-sm text-headline-sm text-primary mb-xs">VIP</h3>
-              <p class="font-body-sm text-body-sm text-on-surface-variant mb-md flex-1">Experiência premium com networking exclusivo e assentos reservados.</p>
-              <span class="font-headline-md text-headline-md text-on-surface block mb-xs">R$ 500</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="pt-lg border-t border-outline-variant flex items-center justify-end gap-md">
-          <button class="px-lg py-sm rounded-lg font-label-md text-label-md text-primary border border-primary hover:bg-primary-container/10 transition-colors" type="button">Salvar Rascunho</button>
-          <button class="px-lg py-sm rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-surface-tint transition-colors shadow-sm flex items-center gap-sm" type="submit">Confirmar Inscrição<span class="material-symbols-outlined text-[18px]">arrow_forward</span></button>
-        </div>
-      </form>
+  <% if (!eventos.length) { %>
+    <div class="cartao p-xl text-center text-on-surface-variant">
+      <span class="material-symbols-outlined text-4xl">event_busy</span>
+      <p class="mt-sm">Não há eventos com inscrições abertas no momento.</p>
+      <a href="/eventos" class="btn btn-secundario mt-md">Ver eventos</a>
     </div>
-  </main>
-</div>
+  <% } else { %>
+  <!-- Escolher o evento recarrega a página (GET ?evento=) para mostrar os tiers dele -->
+  <form action="/inscricoes" method="POST" class="cartao p-lg md:p-xl space-y-xl" novalidate>
+    <section class="space-y-md">
+      <h2 class="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant pb-sm">Detalhes do Evento</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+        <div>
+          <label class="form-label" for="id_evento">Evento com inscrições abertas <span class="obrigatorio">*</span></label>
+          <select class="<%= cls('id_evento') %>" id="id_evento" name="id_evento" required
+                  onchange="location.href = '/inscricoes/nova?evento=' + encodeURIComponent(this.value)">
+            <option value="">Selecione um evento...</option>
+            <% eventos.forEach(function (e) { %><option value="<%= e.id_evento %>" <%= evento && evento.id_evento === e.id_evento ? 'selected' : '' %>><%= e.nome %> — <%= fmt.dataCurta(e.data_inicio) %></option><% }); %>
+          </select>
+          <%- include('partials/erro-campo', { campo: 'id_evento' }) %>
+        </div>
+        <div>
+          <label class="form-label" for="id_usuario">Participante <span class="obrigatorio">*</span></label>
+          <% if (admin) { %>
+            <select class="<%= cls('id_usuario') %>" id="id_usuario" name="id_usuario" required>
+              <% usuarios.forEach(function (u) { %><option value="<%= u.id_usuario %>" <%= String(dados.id_usuario) === String(u.id_usuario) ? 'selected' : '' %>><%= u.nome_completo %> (<%= u.nome_depto %>)</option><% }); %>
+            </select>
+            <%- include('partials/erro-campo', { campo: 'id_usuario' }) %>
+          <% } else { %>
+            <input class="form-input bg-surface-container-low" id="id_usuario" value="<%= usuarioLogado.nome %>" disabled>
+            <p class="form-ajuda">A inscrição será feita no seu nome.</p>
+          <% } %>
+        </div>
+      </div>
+    </section>
 
-</body>
-</html>
+    <section class="space-y-md">
+      <h2 class="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant pb-sm">Seleção de Categoria (Tier)</h2>
+      <% if (!evento) { %>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Selecione um evento para ver os tiers disponíveis.</p>
+      <% } else if (!tiers.length) { %>
+        <p class="font-body-sm text-body-sm text-error">Este evento não possui tiers com inscrições abertas.</p>
+      <% } else { %>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Escolha o pacote de inscrição para <strong><%= evento.nome %></strong>.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+          <% tiers.forEach(function (t) { const livres = t.capacidade - t.inscritos; const esgotado = livres <= 0; %>
+            <label class="border rounded-xl p-lg flex flex-col h-full relative transition-all has-[:checked]:border-2 has-[:checked]:border-primary has-[:checked]:bg-primary-container/5 <%= esgotado ? 'opacity-50 cursor-not-allowed border-outline-variant' : 'cursor-pointer border-outline-variant hover:border-primary' %>">
+              <input type="radio" name="id_tier" value="<%= t.id_tier %>" class="absolute top-4 right-4 w-5 h-5" <%= esgotado ? 'disabled' : '' %> <%= String(dados.id_tier) === String(t.id_tier) && !esgotado ? 'checked' : '' %> required>
+              <h3 class="font-headline-sm text-[20px] text-primary mb-xs pr-8"><%= t.nome %></h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mb-md flex-1"><%= t.descricao || '' %></p>
+              <span class="font-headline-md text-headline-md text-on-surface block mb-xs"><%= Number(t.preco) === 0 ? 'Gratuito' : fmt.moeda(t.preco) %></span>
+              <span class="font-label-sm text-label-sm <%= esgotado ? 'text-error' : 'text-secondary' %>"><%= esgotado ? 'Esgotado' : livres + ' vaga(s)' %><%= t.prazo ? ' · até ' + fmt.data(t.prazo) : '' %></span>
+            </label>
+          <% }); %>
+        </div>
+        <%- include('partials/erro-campo', { campo: 'id_tier' }) %>
+      <% } %>
+    </section>
+
+    <section class="space-y-md">
+      <label class="form-label" for="justificativa">Justificativa da solicitação <span class="obrigatorio">*</span></label>
+      <textarea class="<%= cls('justificativa') %>" id="justificativa" name="justificativa" rows="3" minlength="10" maxlength="500" placeholder="Explique por que este evento é importante para sua atuação..." required><%= dados.justificativa || '' %></textarea>
+      <%- include('partials/erro-campo', { campo: 'justificativa' }) %>
+    </section>
+
+    <div class="pt-lg border-t border-outline-variant flex flex-col-reverse sm:flex-row sm:items-center justify-end gap-md">
+      <a href="/inscricoes" class="btn btn-neutro">Cancelar</a>
+      <button class="btn btn-primario" type="submit" <%= !evento || !tiers.length ? 'disabled' : '' %>>Confirmar Inscrição<span class="material-symbols-outlined text-[18px]">arrow_forward</span></button>
+    </div>
+  </form>
+  <% } %>
+</div>
+<%- include('partials/app-fim') %>

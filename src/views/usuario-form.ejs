@@ -1,0 +1,84 @@
+<%- include('partials/app-inicio') %>
+<%
+const editando = !!u;
+const cls = (campo) => 'form-input' + (erros[campo] ? ' invalido' : '');
+const val = (campo) => (dados[campo] === undefined || dados[campo] === null) ? '' : dados[campo];
+%>
+<div class="max-w-2xl mx-auto">
+  <nav class="flex items-center gap-xs text-on-surface-variant font-label-sm mb-sm" aria-label="Trilha">
+    <a class="hover:text-primary" href="/funcionarios">Perfis de Equipe</a><span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <% if (editando) { %><a class="hover:text-primary" href="/funcionarios/<%= u.id_usuario %>"><%= u.nome_completo %></a><span class="material-symbols-outlined text-[14px]">chevron_right</span><% } %>
+    <span class="text-on-surface"><%= editando ? 'Editar' : 'Novo' %></span>
+  </nav>
+  <h1 class="font-headline-md text-headline-md text-on-surface mb-xs"><%= editando ? 'Editar Usuário' : 'Novo Acesso' %></h1>
+  <p class="font-body-sm text-body-sm text-on-surface-variant mb-lg"><%= editando ? 'Atualize os dados e o perfil de acesso deste usuário.' : 'Preencha os dados abaixo para cadastrar um novo usuário no sistema.' %></p>
+
+  <form action="<%= editando ? '/funcionarios/' + u.id_usuario : '/funcionarios' %>" method="POST" class="cartao p-lg md:p-xl flex flex-col gap-lg" novalidate>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+      <div>
+        <label class="form-label" for="nome_completo">Nome Completo <span class="obrigatorio">*</span></label>
+        <input class="<%= cls('nome_completo') %>" id="nome_completo" name="nome_completo" value="<%= val('nome_completo') %>" placeholder="Dr. João Silva" required maxlength="250">
+        <%- include('partials/erro-campo', { campo: 'nome_completo' }) %>
+      </div>
+      <div>
+        <label class="form-label" for="crm_matricula">CRM / Matrícula <span class="obrigatorio">*</span></label>
+        <input class="<%= cls('crm_matricula') %>" id="crm_matricula" name="crm_matricula" value="<%= val('crm_matricula') %>" placeholder="000000/SP" required maxlength="250">
+        <%- include('partials/erro-campo', { campo: 'crm_matricula' }) %>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+      <div>
+        <label class="form-label" for="email">E-mail Corporativo <span class="obrigatorio">*</span></label>
+        <input class="<%= cls('email') %>" id="email" name="email" type="email" value="<%= val('email') %>" placeholder="joao.silva@empresa.com.br" required maxlength="250">
+        <%- include('partials/erro-campo', { campo: 'email' }) %>
+      </div>
+      <div>
+        <label class="form-label" for="telefone">Telefone <span class="obrigatorio">*</span></label>
+        <input class="<%= cls('telefone') %>" id="telefone" name="telefone" type="tel" value="<%= val('telefone') %>" placeholder="(11) 98765-4321" required maxlength="20">
+        <%- include('partials/erro-campo', { campo: 'telefone' }) %>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+      <div>
+        <label class="form-label" for="id_depto">Departamento <span class="obrigatorio">*</span></label>
+        <select class="<%= cls('id_depto') %>" id="id_depto" name="id_depto" required>
+          <option value="">Selecione...</option>
+          <% departamentos.forEach(function (d) { %><option value="<%= d.id_depto %>" <%= String(val('id_depto')) === String(d.id_depto) ? 'selected' : '' %>><%= d.nome_depto %></option><% }); %>
+        </select>
+        <%- include('partials/erro-campo', { campo: 'id_depto' }) %>
+      </div>
+      <div>
+        <label class="form-label" for="cargo">Cargo</label>
+        <input class="<%= cls('cargo') %>" id="cargo" name="cargo" value="<%= val('cargo') %>" placeholder="Ex: Coordenadora de RH" maxlength="250">
+        <%- include('partials/erro-campo', { campo: 'cargo' }) %>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+      <div>
+        <label class="form-label" for="id_perfil">Perfil de Acesso <span class="obrigatorio">*</span></label>
+        <select class="<%= cls('id_perfil') %>" id="id_perfil" name="id_perfil" required>
+          <% perfis.forEach(function (p) { %><option value="<%= p.id_perfil %>" <%= String(val('id_perfil')) === String(p.id_perfil) ? 'selected' : '' %>><%= p.tipo %></option><% }); %>
+        </select>
+        <%- include('partials/erro-campo', { campo: 'id_perfil' }) %>
+      </div>
+      <div>
+        <label class="form-label" for="status">Status <span class="obrigatorio">*</span></label>
+        <select class="<%= cls('status') %>" id="status" name="status" required>
+          <option value="ATIVO" <%= val('status') === 'ATIVO' ? 'selected' : '' %>>Ativo</option>
+          <option value="INATIVO" <%= val('status') === 'INATIVO' ? 'selected' : '' %>>Inativo (não consegue entrar)</option>
+        </select>
+        <%- include('partials/erro-campo', { campo: 'status' }) %>
+      </div>
+    </div>
+    <div>
+      <label class="form-label" for="senha"><%= editando ? 'Nova senha' : 'Senha provisória' %> <% if (!editando) { %><span class="obrigatorio">*</span><% } %></label>
+      <input class="<%= cls('senha') %>" id="senha" name="senha" type="password" autocomplete="new-password" minlength="8" maxlength="72" <%= editando ? '' : 'required' %> placeholder="<%= editando ? 'Deixe em branco para manter a atual' : 'Mínimo 8 caracteres, com letras e números' %>">
+      <%- include('partials/erro-campo', { campo: 'senha' }) %>
+    </div>
+    <div class="flex flex-col-reverse md:flex-row gap-md justify-end mt-md pt-md border-t border-outline-variant/30">
+      <a href="<%= editando ? '/funcionarios/' + u.id_usuario : '/funcionarios' %>" class="btn btn-neutro">Cancelar</a>
+      <button class="btn btn-primario" type="submit"><span class="material-symbols-outlined text-[18px]"><%= editando ? 'save' : 'person_add' %></span><%= editando ? 'Salvar Alterações' : 'Criar Usuário' %></button>
+    </div>
+  </form>
+</div>
+<%- include('partials/app-fim') %>

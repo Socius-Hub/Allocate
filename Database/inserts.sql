@@ -1,10 +1,26 @@
-# INSERTS
--- -----------------------------------------------------------------------------------------------
+/*
+
+	Allocate dados iniciais - (funciona em PostgreSQL e MySQL)
+    
+    Proj. de Extensão III - 4° Bimestre TADs - 2026
+
+    OBS: Este script insere dados iniciais de teste no banco de dados para o sistema Allocate, incluindo perfis de acesso, departamentos, categorias de eventos, usuários, eventos, inscrições e orçamentos.
+
+
+
+    Usuários de teste:
+        admin@allocate.com        / admin123  (Administrador)
+        ana.souza@allocate.com    / senha123  (Usuário)
+        roberto.lima@allocate.com / senha123  (Usuário)
+        carlos.reis@allocate.com  / senha123  (Usuário)
+  
+*/
+
 
 -- Perfil de Acesso
 INSERT INTO perfil_acesso (tipo) VALUES 
-('Usuário'),
-('Administrador');
+('Administrador'), 
+('Usuário');
 
 -- Departamento
 INSERT INTO departamento (nomeDepto) VALUES 
@@ -19,10 +35,11 @@ INSERT INTO categoria_evento (categoria, descricao) VALUES
 ('Simpósio', 'Apresentação de pesquisas e debates científicos');
 
 -- Login
-INSERT INTO login (email, senha_hash, status, criado_em, ultimo_login) VALUES 
-('carlos.reis@allocate.com', '111', 'ativo', '2024-01-10 08:30:00', '2024-10-25 14:20:00'),
-('ana.silva@allocate.com', '222', 'ativo', '2024-02-15 10:00:00', '2024-10-24 09:15:00'),
-('marcos.ferreira@allocate.com', '333', 'inativo', '2024-03-20 11:45:00', '2024-05-10 16:00:00');
+INSERT INTO login (email, senha_hash, status) VALUES 
+('admin@allocate.com',        '$2b$10$jJzWYAy11Zz7xFSwfzlaGeWIckkbOW9tXAXwuGJ0NZrDDfB7KA7pK', 'ATIVO'),
+('ana.souza@allocate.com',    '$2b$10$/6.un5QXW5YajSeHgjyX3.QbnTF2HwYRb.BtjfeQV3N87LpEgpmve', 'ATIVO'),
+('roberto.lima@allocate.com', '$2b$10$/6.un5QXW5YajSeHgjyX3.QbnTF2HwYRb.BtjfeQV3N87LpEgpmve', 'ATIVO'),
+('carlos.reis@allocate.com',  '$2b$10$/6.un5QXW5YajSeHgjyX3.QbnTF2HwYRb.BtjfeQV3N87LpEgpmve', 'ATIVO');
 
 -- Usuários
 INSERT INTO usuario (nomeCompleto, CRM_matricula, telefone, idPerfil, idLogin, idDepto, status) VALUES 

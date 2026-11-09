@@ -1,76 +1,88 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <%- include('partials/head') %>
-</head>
-<body class="bg-background text-on-background font-body-md antialiased">
-
-<%- include('partials/menu-lateral') %>
-
-<div class="md:ml-64 min-h-screen flex flex-col">
-  <%- include('partials/cabecalho') %>
-
-  <main class="flex-1 mt-20 p-margin-mobile md:p-margin-desktop w-full max-w-[1600px] mx-auto">
-    <div class="mb-xl">
-      <h2 class="font-headline-md text-headline-md text-on-background">Bem-vinda de volta, Dra. Maria</h2>
-      <p class="font-body-md text-body-md text-on-surface-variant mt-1">Aqui está um resumo do orçamento e das atividades recentes.</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-gutter">
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
-        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Orçamento Total</p>
-        <p class="font-headline-sm text-headline-sm text-on-surface">R$ 15,4M</p>
-      </div>
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
-        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Utilizado</p>
-        <p class="font-headline-sm text-headline-sm text-secondary-container">R$ 10,2M</p>
-      </div>
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
-        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Disponível</p>
-        <p class="font-headline-sm text-headline-sm text-primary">R$ 5,2M</p>
-      </div>
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
-        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Aprovações Pendentes</p>
-        <p class="font-headline-sm text-headline-sm text-on-surface">12</p>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
-      <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-lg">
-        <div class="flex justify-between items-center mb-md">
-          <h3 class="font-headline-sm text-headline-sm text-on-background">Próximos Eventos</h3>
-          <a href="/eventos" class="font-label-sm text-label-sm text-primary hover:underline">Ver todos</a>
-        </div>
-        <div class="divide-y divide-outline-variant/30">
-          <a href="/evento-detalhes" class="flex items-center justify-between py-3 hover:bg-surface-container-low/50 -mx-2 px-2 rounded transition-colors">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary"><span class="material-symbols-outlined">science</span></div>
-              <div><p class="font-medium text-on-surface">Congresso Nacional de Medicina 2024</p><p class="font-label-sm text-label-sm text-on-surface-variant">15-18 Out · São Paulo, SP</p></div>
-            </div>
-            <span class="inline-flex items-center px-2 py-1 rounded-md bg-tertiary-fixed/30 text-tertiary font-label-sm text-[11px]">Em Planejamento</span>
-          </a>
-          <a href="/evento-detalhes" class="flex items-center justify-between py-3 hover:bg-surface-container-low/50 -mx-2 px-2 rounded transition-colors">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface-variant"><span class="material-symbols-outlined">groups</span></div>
-              <div><p class="font-medium text-on-surface">Treinamento BLS Avançado - Turma B</p><p class="font-label-sm text-label-sm text-on-surface-variant">22 Out · Centro de Simulação</p></div>
-            </div>
-            <span class="inline-flex items-center px-2 py-1 rounded-md bg-[#fff4e5] text-[#b26b00] font-label-sm text-[11px]">Pendente</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-lg">
-        <h3 class="font-headline-sm text-headline-sm text-on-background mb-md">Atalhos Rápidos</h3>
-        <div class="space-y-sm">
-          <a href="/inscricao-nova" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">confirmation_number</span>Nova Inscrição</a>
-          <a href="/aprovacoes" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">rule</span>Revisar Aprovações</a>
-          <a href="/simulador-orcamento" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">calculate</span>Simular Orçamento</a>
-          <a href="/evento-novo" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">event</span>Criar Evento</a>
-        </div>
-      </div>
-    </div>
-  </main>
+<%- include('partials/app-inicio') %>
+<% const pctUso = fmt.percentual(resumo.utilizado, resumo.limite); %>
+<div class="mb-xl">
+  <h2 class="font-headline-md text-headline-md text-on-background">Olá, <%= usuarioLogado.nome %></h2>
+  <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+    Resumo do orçamento <%= ciclo ? '(' + ciclo.nome + ')' : '' %> e das atividades recentes.
+  </p>
 </div>
 
-</body>
-</html>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-gutter">
+  <div class="cartao p-lg">
+    <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Orçamento Total</p>
+    <p class="font-headline-sm text-headline-sm text-on-surface"><%= fmt.moedaCurta(resumo.limite) %></p>
+    <p class="font-label-sm text-label-sm text-on-surface-variant mt-1"><%= ciclo ? 'Ciclo ' + ciclo.nome : 'Nenhum ciclo ativo' %></p>
+  </div>
+  <div class="cartao p-lg">
+    <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Utilizado</p>
+    <p class="font-headline-sm text-headline-sm text-secondary"><%= fmt.moedaCurta(resumo.utilizado) %></p>
+    <div class="w-full bg-surface-variant h-1.5 rounded-full mt-sm overflow-hidden"><div class="h-full rounded-full <%= pctUso >= 90 ? 'bg-error' : 'bg-secondary-container' %>" style="width: <%= Math.min(pctUso, 100) %>%"></div></div>
+  </div>
+  <div class="cartao p-lg">
+    <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Disponível</p>
+    <p class="font-headline-sm text-headline-sm text-primary"><%= fmt.moedaCurta(resumo.disponivel) %></p>
+    <p class="font-label-sm text-label-sm text-on-surface-variant mt-1"><%= 100 - Math.min(pctUso, 100) %>% do limite</p>
+  </div>
+  <a href="<%= isAdmin ? '/aprovacoes' : '/inscricoes' %>" class="cartao p-lg hover:border-primary transition-colors">
+    <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Aprovações Pendentes</p>
+    <p class="font-headline-sm text-headline-sm text-on-surface"><%= pendentes %></p>
+    <p class="font-label-sm text-label-sm text-primary mt-1"><%= isAdmin ? 'Revisar fila →' : 'Ver inscrições →' %></p>
+  </a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+  <section class="lg:col-span-2 cartao p-lg">
+    <div class="flex justify-between items-center mb-md">
+      <h3 class="font-headline-sm text-headline-sm text-on-background">Próximos Eventos</h3>
+      <a href="/eventos" class="font-label-sm text-label-sm text-primary hover:underline">Ver todos (<%= contagemEventos.TODOS %>)</a>
+    </div>
+    <% if (proximos.length) { %>
+      <div class="divide-y divide-outline-variant/30">
+        <% proximos.forEach(function (e) { const s = fmt.status(e.status); %>
+          <a href="/eventos/<%= e.id_evento %>" class="flex items-center justify-between gap-md py-3 hover:bg-surface-container-low/50 -mx-2 px-2 rounded transition-colors">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-10 h-10 shrink-0 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary"><span class="material-symbols-outlined">event</span></div>
+              <div class="min-w-0"><p class="font-medium text-on-surface truncate"><%= e.nome %></p><p class="font-label-sm text-label-sm text-on-surface-variant truncate"><%= fmt.periodo(e.data_inicio, e.data_termino) %> · <%= e.localizacao %></p></div>
+            </div>
+            <span class="badge border <%= s.classe %>"><%= s.rotulo %></span>
+          </a>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <p class="font-body-sm text-body-sm text-on-surface-variant py-md">Nenhum evento futuro cadastrado. <a href="/eventos/novo" class="text-primary hover:underline">Criar evento</a></p>
+    <% } %>
+  </section>
+
+  <section class="cartao p-lg">
+    <h3 class="font-headline-sm text-headline-sm text-on-background mb-md">Atalhos Rápidos</h3>
+    <div class="space-y-sm">
+      <a href="/inscricoes/nova" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">confirmation_number</span>Nova Inscrição</a>
+      <% if (isAdmin) { %><a href="/aprovacoes" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">rule</span>Revisar Aprovações</a><% } %>
+      <a href="/simulador-orcamento" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">calculate</span>Simular Orçamento</a>
+      <a href="/eventos/novo" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">event</span>Criar Evento</a>
+      <a href="/catalogo" class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface"><span class="material-symbols-outlined text-primary">public</span>Catálogo Público</a>
+    </div>
+  </section>
+
+  <section class="lg:col-span-3 cartao overflow-hidden">
+    <div class="p-lg flex justify-between items-center border-b border-outline-variant/40">
+      <h3 class="font-headline-sm text-headline-sm text-on-background">Minhas Inscrições</h3>
+      <a href="/inscricoes" class="font-label-sm text-label-sm text-primary hover:underline">Ver todas</a>
+    </div>
+    <% if (minhasInscricoes.length) { %>
+      <div class="overflow-x-auto">
+        <table class="tabela">
+          <thead><tr><th>Evento</th><th>Data</th><th>Tier</th><th>Valor</th><th>Status</th></tr></thead>
+          <tbody>
+            <% minhasInscricoes.forEach(function (i) { const s = fmt.status(i.status); %>
+              <tr><td class="font-medium"><%= i.evento %></td><td class="text-on-surface-variant"><%= fmt.data(i.data_inicio) %></td><td><%= i.tier %></td><td><%= fmt.moeda(i.valor) %></td><td><span class="badge border <%= s.classe %>"><%= s.rotulo %></span></td></tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p class="p-lg font-body-sm text-body-sm text-on-surface-variant">Você ainda não possui inscrições. <a href="/inscricoes/nova" class="text-primary hover:underline">Solicitar inscrição</a></p>
+    <% } %>
+  </section>
+</div>
+<%- include('partials/app-fim') %>

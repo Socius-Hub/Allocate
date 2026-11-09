@@ -1,0 +1,39 @@
+<%- include('../partials/publico-inicio') %>
+<section class="max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop py-xl">
+  <h1 class="font-headline-md text-headline-md text-on-surface">Catálogo de Eventos</h1>
+  <p class="font-body-md text-body-md text-on-surface-variant mb-lg">Eventos abertos ou em planejamento. Faça login para solicitar sua inscrição.</p>
+
+  <form method="GET" action="/catalogo" class="cartao p-md flex flex-col md:flex-row gap-md mb-lg" role="search">
+    <div class="relative flex-1">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+      <input class="form-input form-input-icone" name="busca" value="<%= query.busca || '' %>" placeholder="Buscar por nome ou local..." type="search" aria-label="Buscar">
+    </div>
+    <select class="form-input md:w-56" name="categoria" aria-label="Categoria">
+      <option value="">Todas as categorias</option>
+      <% categorias.forEach(function (c) { %>
+        <option value="<%= c.id_cat_evento %>" <%= String(query.categoria) === String(c.id_cat_evento) ? 'selected' : '' %>><%= c.categoria %></option>
+      <% }); %>
+    </select>
+    <button class="btn btn-primario" type="submit"><span class="material-symbols-outlined text-[18px]">filter_list</span>Filtrar</button>
+    <% if (query.busca || query.categoria) { %><a href="/catalogo" class="btn btn-neutro">Limpar</a><% } %>
+  </form>
+
+  <% if (eventos.length) { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+      <% eventos.forEach(function (e) { %><%- include('../partials/cartao-evento', { e }) %><% }); %>
+    </div>
+    <% if (totalPaginas > 1) { %>
+      <nav class="flex justify-center gap-1 mt-xl" aria-label="Paginação">
+        <% for (let p = 1; p <= totalPaginas; p++) { %>
+          <a href="/catalogo<%= linkPagina(p) %>" class="w-9 h-9 flex items-center justify-center rounded-md font-label-md <%= p === pagina ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:bg-surface-container' %>"><%= p %></a>
+        <% } %>
+      </nav>
+    <% } %>
+  <% } else { %>
+    <div class="cartao p-xl text-center text-on-surface-variant">
+      <span class="material-symbols-outlined text-4xl">search_off</span>
+      <p class="mt-sm">Nenhum evento encontrado com esses filtros.</p>
+    </div>
+  <% } %>
+</section>
+<%- include('../partials/publico-fim') %>

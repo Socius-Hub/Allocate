@@ -1,0 +1,124 @@
+<%- include('partials/app-inicio') %>
+<%
+const editando = !!evento;
+const cls = (campo) => 'form-input' + (erros[campo] ? ' invalido' : '');
+const val = (campo) => (dados[campo] === undefined || dados[campo] === null) ? '' : dados[campo];
+const acao = editando ? '/eventos/' + evento.id_evento : '/eventos';
+const cancelar = editando ? '/eventos/' + evento.id_evento : '/eventos';
+const rotulosStatus = { PLANEJAMENTO: 'Em planejamento', ATIVO: 'Ativo (inscrições abertas)', CONCLUIDO: 'Concluído', CANCELADO: 'Cancelado' };
+%>
+<div class="flex justify-between items-start mb-xl gap-md flex-wrap">
+  <div>
+    <% if (editando) { %>
+      <nav class="flex items-center gap-2 mb-2 text-on-surface-variant font-label-sm" aria-label="Trilha">
+        <a class="hover:text-primary" href="/eventos">Eventos</a><span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <a class="hover:text-primary" href="/eventos/<%= evento.id_evento %>"><%= evento.nome %></a><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="text-primary">Editar</span>
+      </nav>
+    <% } %>
+    <h1 class="font-headline-md text-headline-md text-on-surface"><%= editando ? 'Editar Evento' : 'Criar Novo Evento' %></h1>
+    <p class="font-body-md text-body-md text-on-surface-variant mt-1">Configure os detalhes logísticos e orçamentários do evento.</p>
+  </div>
+</div>
+
+<% if (Object.keys(erros).length) { %>
+  <div class="flex items-start gap-sm px-md py-sm mb-lg rounded-lg border bg-error-container border-error/30 text-on-error-container max-w-4xl" role="alert">
+    <span class="material-symbols-outlined text-[20px]">error</span><p class="font-body-sm text-body-sm pt-0.5">Não foi possível salvar. Corrija os campos destacados.</p>
+  </div>
+<% } %>
+
+<form action="<%= acao %>" method="POST" class="space-y-gutter max-w-4xl" novalidate>
+  <section class="cartao overflow-hidden">
+    <div class="px-lg md:px-xl py-lg border-b border-outline-variant bg-surface flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[18px]">info</span></div>
+      <h3 class="font-headline-sm text-headline-sm text-on-surface">Informações do Evento</h3>
+    </div>
+    <div class="p-lg md:p-xl space-y-lg">
+      <div>
+        <label class="form-label" for="nome">Nome do Evento <span class="obrigatorio">*</span></label>
+        <input class="<%= cls('nome') %>" id="nome" name="nome" value="<%= val('nome') %>" placeholder="Ex: Simpósio Anual de Cardiologia" required minlength="3" maxlength="250">
+        <%- include('partials/erro-campo', { campo: 'nome' }) %>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+        <div>
+          <label class="form-label" for="data_inicio">Início <span class="obrigatorio">*</span></label>
+          <input class="<%= cls('data_inicio') %>" id="data_inicio" name="data_inicio" type="datetime-local" value="<%= val('data_inicio') %>" required>
+          <%- include('partials/erro-campo', { campo: 'data_inicio' }) %>
+        </div>
+        <div>
+          <label class="form-label" for="data_termino">Término <span class="obrigatorio">*</span></label>
+          <input class="<%= cls('data_termino') %>" id="data_termino" name="data_termino" type="datetime-local" value="<%= val('data_termino') %>" required>
+          <%- include('partials/erro-campo', { campo: 'data_termino' }) %>
+        </div>
+      </div>
+      <div>
+        <label class="form-label" for="localizacao">Local Principal <span class="obrigatorio">*</span></label>
+        <input class="<%= cls('localizacao') %>" id="localizacao" name="localizacao" value="<%= val('localizacao') %>" placeholder="Ex: Campinas HQ - Auditório A" required maxlength="250">
+        <%- include('partials/erro-campo', { campo: 'localizacao' }) %>
+      </div>
+    </div>
+  </section>
+
+  <section class="cartao overflow-hidden">
+    <div class="px-lg md:px-xl py-lg border-b border-outline-variant bg-surface flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[18px]">subject</span></div>
+      <h3 class="font-headline-sm text-headline-sm text-on-surface">Classificação e Detalhes</h3>
+    </div>
+    <div class="p-lg md:p-xl space-y-lg">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        <div>
+          <label class="form-label" for="id_cat_evento">Categoria <span class="obrigatorio">*</span></label>
+          <select class="<%= cls('id_cat_evento') %>" id="id_cat_evento" name="id_cat_evento" required>
+            <option value="">Selecione...</option>
+            <% categorias.forEach(function (c) { %><option value="<%= c.id_cat_evento %>" <%= String(val('id_cat_evento')) === String(c.id_cat_evento) ? 'selected' : '' %>><%= c.categoria %></option><% }); %>
+          </select>
+          <%- include('partials/erro-campo', { campo: 'id_cat_evento' }) %>
+        </div>
+        <div>
+          <label class="form-label" for="capacidade">Capacidade Máxima <span class="obrigatorio">*</span></label>
+          <input class="<%= cls('capacidade') %>" id="capacidade" name="capacidade" type="number" min="1" step="1" value="<%= val('capacidade') %>" placeholder="0" required>
+          <%- include('partials/erro-campo', { campo: 'capacidade' }) %>
+        </div>
+        <div>
+          <label class="form-label" for="status">Status <span class="obrigatorio">*</span></label>
+          <select class="<%= cls('status') %>" id="status" name="status" required>
+            <% statusEvento.forEach(function (s) { %><option value="<%= s %>" <%= val('status') === s ? 'selected' : '' %>><%= rotulosStatus[s] %></option><% }); %>
+          </select>
+          <%- include('partials/erro-campo', { campo: 'status' }) %>
+        </div>
+      </div>
+      <div>
+        <label class="form-label" for="descricao">Descrição</label>
+        <textarea class="<%= cls('descricao') %>" id="descricao" name="descricao" rows="4" maxlength="2000" placeholder="Contexto, público-alvo ou requisitos específicos para este evento..."><%= val('descricao') %></textarea>
+        <%- include('partials/erro-campo', { campo: 'descricao' }) %>
+      </div>
+    </div>
+  </section>
+
+  <section class="cartao overflow-hidden">
+    <div class="px-lg md:px-xl py-lg border-b border-outline-variant bg-surface flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[18px]">account_balance_wallet</span></div>
+      <h3 class="font-headline-sm text-headline-sm text-on-surface">Orçamento</h3>
+    </div>
+    <div class="p-lg md:p-xl grid grid-cols-1 md:grid-cols-2 gap-gutter">
+      <div>
+        <label class="form-label" for="custo_estimado">Custo Estimado (R$) <span class="obrigatorio">*</span></label>
+        <input class="<%= cls('custo_estimado') %>" id="custo_estimado" name="custo_estimado" type="number" min="0" step="0.01" value="<%= val('custo_estimado') %>" placeholder="0,00" required>
+        <%- include('partials/erro-campo', { campo: 'custo_estimado' }) %>
+      </div>
+      <div>
+        <label class="form-label" for="id_depto">Centro de Custo (departamento)</label>
+        <select class="<%= cls('id_depto') %>" id="id_depto" name="id_depto">
+          <option value="">Não definido</option>
+          <% departamentos.forEach(function (d) { %><option value="<%= d.id_depto %>" <%= String(val('id_depto')) === String(d.id_depto) ? 'selected' : '' %>><%= d.nome_depto %></option><% }); %>
+        </select>
+        <%- include('partials/erro-campo', { campo: 'id_depto' }) %>
+      </div>
+    </div>
+  </section>
+
+  <div class="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-md pt-lg border-t border-outline-variant">
+    <a href="<%= cancelar %>" class="btn btn-neutro">Cancelar</a>
+    <button class="btn btn-primario" type="submit"><span class="material-symbols-outlined text-[18px]"><%= editando ? 'save' : 'add_task' %></span><%= editando ? 'Salvar Alterações' : 'Criar Evento' %></button>
+  </div>
+</form>
+<%- include('partials/app-fim') %>

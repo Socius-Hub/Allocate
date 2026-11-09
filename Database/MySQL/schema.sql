@@ -3,8 +3,6 @@
 	Allocate schema - MySQL
     
     Proj. de Extensão III - 4° Bimestre TADs - 2026
-    
-    Criado por:
 
     OBS: Este script cria a estrutura de banco de dados para o sistema Allocate, incluindo tabelas, índices, views e triggers.
 
