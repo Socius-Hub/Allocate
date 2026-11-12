@@ -2,17 +2,14 @@ import pkg from 'pg';
 const { Pool } = pkg;
 
 export const DB_CLIENT = 'postgres';
+export const isPostgres = true;
 
-// O Render fornece a DATABASE_URL pronta para uso
-const pool = new Pool({
+export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
 export async function query(sql, params = []) {
-  // Nota: Se preferir manter os parâmetros com '?', 
-  // o Postgres usa '$1, $2'. Caso queira uma conversão automática simples 
-  // ou se já usar os placeholders corretos, ajuste aqui.
   const client = await pool.connect();
   try {
     const result = await client.query(sql, params);
@@ -35,7 +32,6 @@ export async function execute(sql, params = []) {
 export async function insert(sql, params = [], primaryKeyName = 'id') {
   const client = await pool.connect();
   try {
-    // Adiciona RETURNING id para retornar o ID inserido no Postgres
     const querySql = `${sql} RETURNING ${primaryKeyName}`;
     const result = await client.query(querySql, params);
     return result.rows[0][primaryKeyName];
