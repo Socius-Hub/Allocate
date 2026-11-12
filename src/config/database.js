@@ -1,54 +1,15 @@
-import pkg from 'pg';
-const { Pool } = pkg;
-
-export const DB_CLIENT = 'postgres';
-export const isPostgres = true;
-
-export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
-
-/**
- * Converte interrogações (?) em parâmetros posisionais do Postgres ($1, $2, $3...)
- */
-function prepararQuery(sql) {
-  let index = 0;
-  return sql.replace(/\?/g, () => `$${++index}`);
-}
-
-export async function query(sql, params = []) {
-  const client = await pool.connect();
-  try {
-    const formattedSql = prepararQuery(sql);
-    const result = await client.query(formattedSql, params);
-    return result.rows;
-  } finally {
-    client.release();
-  }
-}
-
-export async function execute(sql, params = []) {
-  const client = await pool.connect();
-  try {
-    const formattedSql = prepararQuery(sql);
-    const result = await client.query(formattedSql, params);
-    return result.rowCount;
-  } finally {
-    client.release();
-  }
-}
-
 export async function insert(sql, params = [], primaryKeyName = 'id') {
   const client = await pool.connect();
   try {
     let formattedSql = prepararQuery(sql);
-    // Adiciona RETURNING no final para capturar o ID gerado pelo Postgres
     if (!formattedSql.toUpperCase().includes('RETURNING')) {
       formattedSql = `${formattedSql} RETURNING ${primaryKeyName}`;
     }
     const result = await client.query(formattedSql, params);
-    return result.rows[0][primaryKeyName];
+    const row = result.rows[0];
+    if (!row) return null;
+    // Retorna o valor da primeira coluna retornada pelo PostgreSQL, independentemente do casing
+    return row[Object.keys(row)[0]];
   } finally {
     client.release();
   }
@@ -73,7 +34,9 @@ export async function transaction(callback) {
           fmtSql = `${fmtSql} RETURNING ${pk}`;
         }
         const res = await client.query(fmtSql, params);
-        return res.rows[0][pk];
+        const row = res.rows[0];
+        if (!row) return null;
+        return row[Object.keys(row)[0]]; // Captura dinâmica do ID
       }
     };
     const resultado = await callback(tx);
