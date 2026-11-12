@@ -19,11 +19,11 @@ export async function inicializarBanco() {
           idLogin SERIAL PRIMARY KEY,
           email VARCHAR(250) NOT NULL UNIQUE,
           senha_hash VARCHAR(250) NOT NULL,
-          status VARCHAR(20) DEFAULT 'ativo' NOT NULL,
+          status VARCHAR(20) DEFAULT 'ATIVO' NOT NULL,
           criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           ultimo_login TIMESTAMP NULL,
           CONSTRAINT chk_email_valido CHECK (email LIKE '%@%.%'),
-          CONSTRAINT chk_login_status CHECK (status IN ('ativo', 'inativo', 'bloqueado'))
+          CONSTRAINT chk_login_status CHECK (status IN ('ativo', 'inativo', 'bloqueado', 'ATIVO', 'INATIVO', 'BLOQUEADO'))
       );
 
       CREATE TABLE IF NOT EXISTS usuario (
@@ -151,7 +151,7 @@ export async function inicializarBanco() {
     await pool.query(schemaSql);
     console.log('[db] Estrutura de tabelas garantida com sucesso.');
 
-    // Inserção segura de dados iniciais (Seeds) caso a tabela esteja vazia
+    // Inserção segura de dados iniciais (Seeds) caso a tabela perfil_acesso esteja vazia
     const [{ count }] = (await pool.query('SELECT COUNT(*) AS count FROM perfil_acesso')).rows;
     if (Number(count) === 0) {
       console.log('[db] A inserir dados iniciais (seeds)...');
