@@ -162,3 +162,162 @@ CREATE INDEX IF NOT EXISTS idx_inscricao_status ON inscricao(status);
 CREATE INDEX IF NOT EXISTS idx_orcamento_depto_ciclo ON orcamento_departamento(idDepto, idCiclo);
 CREATE INDEX IF NOT EXISTS idx_cenario_status_ciclo ON cenario_orcamento(status, idCiclo);
 CREATE INDEX IF NOT EXISTS idx_item_cenario_funcao ON item_cenario_orcamento(funcao);
+
+
+
+-- VIEWS
+-------------------------------------------------------------------------------------------------
+
+DROP VIEW IF EXISTS vw_orcamento_departamentos, vw_inscricoes_completas, vw_eventos_detalhes, vw_usuarios_detalhes;
+
+-- VIEW DE USUARIO
+CREATE OR REPLACE VIEW vw_usuarios_detalhes AS
+SELECT 
+    u.idUsuario,
+    u.nomeCompleto,
+    u.CRM_matricula,
+    u.telefone,
+    u.status,
+    p.tipo AS perfil,
+    d.nomeDepto AS departamento
+FROM usuario u
+INNER JOIN perfil_acesso p ON u.idPerfil = p.idPerfil
+INNER JOIN departamento d ON u.idDepto = d.idDepto;
+
+-- SELECT * FROM vw_usuarios_detalhes;
+
+
+-- VIEW DE DETALHES COMPLETOS DOS EVENTOS
+CREATE OR REPLACE VIEW vw_eventos_detalhes AS
+SELECT 
+    e.idEvento,
+    e.nome AS nome_evento,
+    e.data_inicio,
+    e.data_termino,
+    e.local,
+    c.categoria AS categoria_evento,
+    e.capacidade,
+    e.custo_estimado
+FROM evento e
+INNER JOIN categoria_evento c ON e.idCatEvento = c.idCatEvento;
+
+-- SELECT * FROM vw_eventos_detalhes;
+
+
+-- VIEW DAS INSCRIÇÕES COMPLETAS
+CREATE OR REPLACE VIEW vw_inscricoes_completas AS
+SELECT 
+    i.idInscricao,
+    i.data_inscricao,
+    i.status AS status_inscricao,
+    u.nomeCompleto AS usuario,
+    u.CRM_matricula,
+    e.nome AS evento,
+    e.data_inicio AS data_evento,
+    t.nome AS tier_inscricao,
+    t.preco AS valor_pago
+FROM inscricao i
+INNER JOIN usuario u ON i.idUsuario = u.idUsuario
+INNER JOIN evento e ON i.idEvento = e.idEvento
+LEFT JOIN tier_inscricao t ON i.idTier = t.idTier;
+
+-- SELECT * FROM vw_inscricoes_completas;
+
+
+-- VIEW PARA RELATÓRIOS E CONSULTAS DE ORÇAMENTO
+CREATE OR REPLACE VIEW vw_orcamento_departamentos AS
+SELECT 
+    od.idOrcamentoDepto,
+    c.nome AS ciclo,
+    d.nomeDepto AS departamento,
+    u.nomeCompleto AS lider,
+    od.limite,
+    od.utilizado,
+    (od.limite - od.utilizado) AS disponivel,
+    ROUND((od.utilizado / NULLIF(od.limite, 0)) * 100, 2) AS percentual_utilizado,
+    CASE 
+        WHEN (od.utilizado / NULLIF(od.limite, 0)) >= 0.90 THEN 'CRÍTICO'
+        WHEN (od.utilizado / NULLIF(od.limite, 0)) >= 0.75 THEN 'ATENÇÃO'
+        ELSE 'NORMAL'
+    END AS status_alerta
+FROM orcamento_departamento od
+JOIN departamento d ON od.idDepto = d.idDepto
+JOIN ciclo_orcamento c ON od.idCiclo = c.idCiclo
+LEFT JOIN usuario u ON od.idUsuario = u.idUsuario;
+
+-- SELECT * FROM vw_orcamento_departamentos;
+
+
+-- TRIGGERS
+-- -------------------------------------------------------------------------------------------------
+
+
+-- TRIGGER DE VALIDAÇÃO DE CAPACIDADE DE INSCRIÇÃO
+CREATE OR REPLACE FUNCTION fn_valida_capacidade_inscricao()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_capacidade_evento INT;
+    v_total_inscritos INT;
+    v_capacidade_tier INT;
+    v_total_inscritos_tier INT;
+BEGIN
+    -- Verifica capacidade total do evento
+    SELECT capacidade INTO v_capacidade_evento 
+    FROM evento 
+    WHERE idEvento = NEW.idEvento;
+
+    SELECT COUNT(*) INTO v_total_inscritos 
+    FROM inscricao 
+    WHERE idEvento = NEW.idEvento AND status != 'REJEITADO';
+
+    IF v_total_inscritos >= v_capacidade_evento THEN
+        RAISE EXCEPTION 'Erro: A capacidade máxima deste evento foi esgotada!';
+    END IF;
+
+    -- Se a inscrição possuir um Tier associado, valida a capacidade do Tier
+    IF NEW.idTier IS NOT NULL THEN
+        SELECT capacidade INTO v_capacidade_tier 
+        FROM tier_inscricao 
+        WHERE idTier = NEW.idTier;
+
+        SELECT COUNT(*) INTO v_total_inscritos_tier 
+        FROM inscricao 
+        WHERE idEvento = NEW.idEvento AND idTier = NEW.idTier AND status != 'REJEITADO';
+
+        IF v_total_inscritos_tier >= v_capacidade_tier THEN
+            RAISE EXCEPTION 'Erro: A capacidade máxima esgotada para este Tier de inscrição!';
+        END IF;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_valida_capacidade_inscricao ON inscricao;
+CREATE TRIGGER trg_valida_capacidade_inscricao
+BEFORE INSERT ON inscricao
+FOR EACH ROW
+EXECUTE FUNCTION fn_valida_capacidade_inscricao();
+
+
+-- TRIGGER DE VALIDAÇÃO DE ORÇAMENTO (ITENS DO CENÁRIO)
+CREATE OR REPLACE FUNCTION fn_valida_item_cenario_bi()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.quantidade <= 0 THEN
+        RAISE EXCEPTION 'Erro: A quantidade de recursos no simulador deve ser maior que zero.';
+    END IF;
+    
+    IF NEW.custo_mensal_est < 0 THEN
+        RAISE EXCEPTION 'Erro: O custo mensal estimado não pode ser negativo.';
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_valida_item_cenario_bi ON item_cenario_orcamento;
+CREATE TRIGGER trg_valida_item_cenario_bi
+BEFORE INSERT ON item_cenario_orcamento
+FOR EACH ROW
+EXECUTE FUNCTION fn_valida_item_cenario_bi();
