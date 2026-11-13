@@ -1,6 +1,17 @@
 <%- include('partials/publico-inicio') %>
-<div class="bg-surface-container min-h-full flex items-center justify-center py-xl px-margin-mobile">
-  <section class="w-full max-w-md bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant p-lg md:p-xl">
+
+<!-- Container principal modificado: adicionado 'relative', 'overflow-hidden' e 'min-h-screen' -->
+<div class="relative min-h-screen flex items-center justify-center py-xl px-margin-mobile overflow-hidden">
+  
+  <!-- 1. Camada da Imagem de Fundo -->
+  <!-- O 'scale-110' evita que as bordas da imagem fiquem esbranquiçadas por causa do desfoque -->
+  <div class="absolute inset-0 z-0 bg-[url('/images.unimed-dashboard.jpeg')] bg-cover bg-center blur-xl scale-110"></div>
+  
+  <!-- 2. (Opcional) Camada de escurecimento para dar contraste ao card -->
+  <div class="absolute inset-0 z-0 bg-black/30"></div>
+
+  <!-- 3. Seu Card de Login: Adicionado 'relative z-10' para ficar na frente do fundo -->
+  <section class="relative z-10 w-full max-w-md bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant p-lg md:p-xl">
     <div class="text-center mb-lg">
       <div class="inline-flex items-center justify-center w-12 h-12 bg-primary-container rounded-full mb-md text-on-primary-container">
         <span class="material-symbols-outlined" style="font-size:28px;">medical_services</span>
@@ -10,11 +21,19 @@
     </div>
 
     <% if (query.saiu) { %>
-      <div class="flex items-center gap-sm px-md py-sm mb-lg rounded-lg border bg-[#ecfdf3] border-[#a6f4c5] text-[#027a48]"><span class="material-symbols-outlined text-[20px]">check_circle</span><p class="font-body-sm text-body-sm">Você saiu da sua conta.</p></div>
+      <div class="flex items-center gap-sm px-md py-sm mb-lg rounded-lg border bg-[#ecfdf3] border-[#a6f4c5] text-[#027a48]">
+        <span class="material-symbols-outlined text-[20px]">check_circle</span>
+        <p class="font-body-sm text-body-sm">Você saiu da sua conta.</p>
+      </div>
     <% } %>
+    
     <%- include('partials/flash') %>
+    
     <% if (locals.erroGeral) { %>
-      <div class="flex items-center gap-sm px-md py-sm mb-lg rounded-lg border bg-error-container border-error/30 text-on-error-container" role="alert"><span class="material-symbols-outlined text-[20px]">error</span><p class="font-body-sm text-body-sm"><%= erroGeral %></p></div>
+      <div class="flex items-center gap-sm px-md py-sm mb-lg rounded-lg border bg-error-container border-error/30 text-on-error-container" role="alert">
+        <span class="material-symbols-outlined text-[20px]">error</span>
+        <p class="font-body-sm text-body-sm"><%= erroGeral %></p>
+      </div>
     <% } %>
 
     <form action="/login" method="POST" class="space-y-lg">
@@ -40,7 +59,10 @@
 
     <div class="mt-lg pt-lg border-t border-outline-variant/40 text-center font-body-sm text-body-sm text-on-surface-variant space-y-xs">
       <p>Ainda não tem conta? <a href="/registro" class="text-primary font-medium hover:underline">Cadastre-se</a></p>
-      <p class="flex items-center justify-center gap-xs"><span class="material-symbols-outlined text-[16px]">lock</span>Conexão segura. Acesso restrito a colaboradores autorizados.</p>
+      <p class="flex items-center justify-center gap-xs">
+        <span class="material-symbols-outlined text-[16px]">lock</span>
+        Conexão segura. Acesso restrito a colaboradores autorizados.
+      </p>
     </div>
   </section>
 </div>
