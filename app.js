@@ -42,11 +42,13 @@ app.use(tratarErros);
 
 // Inicialização
 async function iniciar() {
-  if (process.env.DB_AUTO_INIT !== 'false') {
+  if (!process.env.DATABASE_URL) {
+    console.error('[db] DATABASE_URL não definido. Configure o arquivo .env (veja .env.example).');
+  } else if (process.env.DB_AUTO_INIT !== 'false') {
     try {
       await inicializarBanco();
     } catch (err) {
-      console.error(`[db] Não foi possível preparar o banco (${DB_CLIENT}):`, err.message);
+      console.error(`[db] Não foi possível preparar o banco (${DB_CLIENT}):`, err.message || err.code || err);
       console.error('[db] Verifique as variáveis de ambiente no arquivo .env (veja .env.example).');
     }
   }

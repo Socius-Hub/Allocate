@@ -40,11 +40,11 @@ export const OrcamentoModel = {
     query(`SELECT o.idOrcamentoDepto AS id_orcamento_depto, o.idDepto AS id_depto, o.idCiclo AS id_ciclo,
                   o.idUsuario AS id_usuario, o.limite, o.utilizado,
                   (o.limite - o.utilizado) AS disponivel,
-                  ROUND((o.utilizado / o.limite) * 100, 2) AS percentual_utilizado,
+                  COALESCE(ROUND((o.utilizado / NULLIF(o.limite, 0)) * 100, 2), 0) AS percentual_utilizado,
                   d.nomeDepto AS departamento, u.nomeCompleto AS lider,
                   CASE 
                     WHEN o.utilizado > o.limite THEN 'CRITICO'
-                    WHEN (o.utilizado / o.limite) >= 0.85 THEN 'ATENCAO'
+                    WHEN (o.utilizado / NULLIF(o.limite, 0)) >= 0.85 THEN 'ATENCAO'
                     ELSE 'NORMAL'
                   END AS status_alerta
            FROM orcamento_departamento o

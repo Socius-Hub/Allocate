@@ -43,8 +43,8 @@ export const UsuarioModel = {
   },
 
   async emailEmUso(email, ignorarIdLogin = null) {
-    const rows = await query('SELECT idLogin FROM login WHERE LOWER(email) = LOWER(?)', [email]);
-    return rows.some((r) => r.idLogin !== ignorarIdLogin);
+    const rows = await query('SELECT idLogin AS id_login FROM login WHERE LOWER(email) = LOWER(?)', [email]);
+    return rows.some((r) => r.id_login !== ignorarIdLogin);
   },
 
   async criar(d) {
@@ -89,7 +89,7 @@ export const UsuarioModel = {
 
   async atualizar(id, d) {
     return transaction(async (tx) => {
-      const [u] = await tx.query('SELECT idLogin FROM usuario WHERE idUsuario = ?', [id]);
+      const [u] = await tx.query('SELECT idLogin AS id_login FROM usuario WHERE idUsuario = ?', [id]);
       if (!u) return false;
       await tx.execute(
         `UPDATE usuario SET nomeCompleto = ?, CRM_matricula = ?, telefone = ?,
@@ -97,9 +97,9 @@ export const UsuarioModel = {
          WHERE idUsuario = ?`,
         [d.nome_completo, d.crm_matricula, d.telefone, d.id_perfil, d.id_depto, d.status, id]
       );
-      await tx.execute('UPDATE login SET email = ? WHERE idLogin = ?', [d.email.toLowerCase(), u.idLogin]);
+      await tx.execute('UPDATE login SET email = ? WHERE idLogin = ?', [d.email.toLowerCase(), u.id_login]);
       if (d.senhaHash) {
-        await tx.execute('UPDATE login SET senha_hash = ? WHERE idLogin = ?', [d.senhaHash, u.idLogin]);
+        await tx.execute('UPDATE login SET senha_hash = ? WHERE idLogin = ?', [d.senhaHash, u.id_login]);
       }
       return true;
     });
@@ -116,10 +116,10 @@ export const UsuarioModel = {
 
   async excluir(id) {
     return transaction(async (tx) => {
-      const [u] = await tx.query('SELECT idLogin FROM usuario WHERE idUsuario = ?', [id]);
+      const [u] = await tx.query('SELECT idLogin AS id_login FROM usuario WHERE idUsuario = ?', [id]);
       if (!u) return false;
       await estornarInscricoes(tx, 'id_usuario', id);
-      return (await tx.execute('DELETE FROM login WHERE idLogin = ?', [u.idLogin])) > 0;
+      return (await tx.execute('DELETE FROM login WHERE idLogin = ?', [u.id_login])) > 0;
     });
   },
 

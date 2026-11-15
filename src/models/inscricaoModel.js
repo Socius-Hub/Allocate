@@ -51,18 +51,20 @@ async function ajustarOrcamento(tx, idDepto, delta) {
 }
 
 /**
- * Estorna do orçamento as inscrições aprovadas/pagas que serão apagadas em cascata.
+ * Antes de excluir um evento ou usuário: estorna do orçamento as inscrições aprovadas/pagas
+ * e apaga todas as inscrições ligadas a ele (a FK de inscricao não tem ON DELETE CASCADE).
  */
 export async function estornarInscricoes(tx, campo, id) {
-  const coluna = campo === 'id_evento' ? 'i.idEvento' : 'i.idUsuario';
+  const coluna = campo === 'id_evento' ? 'idEvento' : 'idUsuario';
   const rows = await tx.query(
-    `SELECT t.preco AS valor, u.idDepto AS id_depto FROM inscricao i 
+    `SELECT t.preco AS valor, u.idDepto AS id_depto FROM inscricao i
      JOIN tier_inscricao t ON t.idTier = i.idTier
      JOIN usuario u ON u.idUsuario = i.idUsuario
-     WHERE ${coluna} = ? AND i.status IN ('APROVADO', 'PAGO')`,
+     WHERE i.${coluna} = ? AND i.status IN ('APROVADO', 'PAGO')`,
     [id]
   );
   for (const r of rows) await ajustarOrcamento(tx, r.id_depto, -r.valor);
+  await tx.execute(`DELETE FROM inscricao WHERE ${coluna} = ?`, [id]);
 }
 
 export const InscricaoModel = {

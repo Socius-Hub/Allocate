@@ -222,7 +222,13 @@ export const EventoController = controller({
       req.flash('erro', `O tier "${tier.nome}" possui ${tier.inscritos} inscrição(ões). Exclua-as ou altere o status do tier para "Encerrado".`);
       return res.redirect(`/eventos/${evento.id_evento}/tiers`);
     }
-    await TierModel.excluir(tier.id_tier);
+    try {
+      await TierModel.excluir(tier.id_tier);
+    } catch (err) {
+      if (err.tipo !== 'FK') throw err;
+      req.flash('erro', `O tier "${tier.nome}" possui inscrições rejeitadas vinculadas. Altere o status do tier para "Encerrado".`);
+      return res.redirect(`/eventos/${evento.id_evento}/tiers`);
+    }
     req.flash('sucesso', `Tier "${tier.nome}" excluído.`);
     res.redirect(`/eventos/${evento.id_evento}/tiers`);
   },
