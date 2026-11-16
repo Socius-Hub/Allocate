@@ -327,7 +327,7 @@ export const EventoController = controller({
       return res.redirect(`/eventos/${evento.id_evento}/tiers`);
     }
     await TierModel.excluir(tier.id_tier);
-    req.flash("sucesso", `Tier "${tier.nome}" excluído.`);
+    req.flash('sucesso', `Tier "${tier.nome}" excluído.`);
     res.redirect(`/eventos/${evento.id_evento}/tiers`);
   },
 });

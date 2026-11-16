@@ -76,17 +76,15 @@ app.use(tratarErros);
 /* Função assíncrona responsável por preparar a base de dados (caso a auto-inicialização esteja ativa)
 e colocar o servidor Express a escutar conexões na porta especificada */
 async function iniciar() {
-  if (process.env.DB_AUTO_INIT !== "false") {
+
+  if (!process.env.DATABASE_URL) {
+    console.error('[db] DATABASE_URL não definido. Configure o arquivo .env (veja .env.example).');
+  } else if (process.env.DB_AUTO_INIT !== 'false') {
     try {
       await inicializarBanco();
     } catch (err) {
-      console.error(
-        `[db] Não foi possível preparar o banco (${DB_CLIENT}):`,
-        err.message,
-      );
-      console.error(
-        "[db] Verifique as variáveis de ambiente no arquivo .env (veja .env.example).",
-      );
+      console.error(`[db] Não foi possível preparar o banco (${DB_CLIENT}):`, err.message || err.code || err);
+      console.error('[db] Verifique as variáveis de ambiente no arquivo .env (veja .env.example).');
     }
   }
   app.listen(PORT, () =>

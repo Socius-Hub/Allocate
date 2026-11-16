@@ -59,11 +59,8 @@ export const UsuarioModel = {
 
   //Verifica se um determinado e-mail já está em uso por outro registo de login
   async emailEmUso(email, ignorarIdLogin = null) {
-    const rows = await query(
-      "SELECT idLogin FROM login WHERE LOWER(email) = LOWER(?)",
-      [email],
-    );
-    return rows.some((r) => r.idLogin !== ignorarIdLogin);
+    const rows = await query('SELECT idLogin AS id_login FROM login WHERE LOWER(email) = LOWER(?)', [email]);
+    return rows.some((r) => r.id_login !== ignorarIdLogin);
   },
 
   //Cria um novo utilizador e as respetivas credenciais de login dentro de uma transação segura
@@ -130,10 +127,7 @@ export const UsuarioModel = {
   //Atualiza os dados de um utilizador e respetivas credenciais de login numa transação
   async atualizar(id, d) {
     return transaction(async (tx) => {
-      const [u] = await tx.query(
-        "SELECT idLogin FROM usuario WHERE idUsuario = ?",
-        [id],
-      );
+      const [u] = await tx.query('SELECT idLogin AS id_login FROM usuario WHERE idUsuario = ?', [id]);
       if (!u) return false;
 
       // Atualiza os dados da tabela de utilizador
@@ -151,19 +145,9 @@ export const UsuarioModel = {
           id,
         ],
       );
-
-      // Atualiza o e-mail na tabela de login
-      await tx.execute("UPDATE login SET email = ? WHERE idLogin = ?", [
-        d.email.toLowerCase(),
-        u.idLogin,
-      ]);
-
-      // Atualiza a senha apenas se houver uma nova senha encriptada informada
+      await tx.execute('UPDATE login SET email = ? WHERE idLogin = ?', [d.email.toLowerCase(), u.id_login]);
       if (d.senhaHash) {
-        await tx.execute("UPDATE login SET senha_hash = ? WHERE idLogin = ?", [
-          d.senhaHash,
-          u.idLogin,
-        ]);
+        await tx.execute('UPDATE login SET senha_hash = ? WHERE idLogin = ?', [d.senhaHash, u.id_login]);
       }
       return true;
     });
@@ -189,20 +173,10 @@ export const UsuarioModel = {
   as inscrições ativas que estivessem consumindo orçamento*/
   async excluir(id) {
     return transaction(async (tx) => {
-      const [u] = await tx.query(
-        "SELECT idLogin FROM usuario WHERE idUsuario = ?",
-        [id],
-      );
+      const [u] = await tx.query('SELECT idLogin AS id_login FROM usuario WHERE idUsuario = ?', [id]);
       if (!u) return false;
-
-      // Estorna do orçamento as inscrições do utilizador antes de apagar
-      await estornarInscricoes(tx, "id_usuario", id);
-
-      // Remove o registo de login (a tabela de utilizadores é apagada em cascata ou por dependência)
-      return (
-        (await tx.execute("DELETE FROM login WHERE idLogin = ?", [u.idLogin])) >
-        0
-      );
+      await estornarInscricoes(tx, 'id_usuario', id);
+      return (await tx.execute('DELETE FROM login WHERE idLogin = ?', [u.id_login])) > 0;
     });
   },
 

@@ -5,12 +5,27 @@
        ou o reset completo (`npm run db:reset` -> apaga todos os dados e recria com os valores iniciais) via CLI
 
  */
+import 'dotenv/config';
+import { inicializarBanco } from '../config/initDB.js';
+import { pool } from '../config/database.js';
+
+
 
 import { inicializarBanco } from "../config/initDB.js";
 import { pool } from "../config/database.js";
 
 // Lê o argumento passado via linha de comando (ex: 'init' ou 'reset'); predefinição é 'init'
 const comando = process.argv[2] || "init";
+
+if (!['init', 'reset'].includes(comando)) {
+  console.error(`[db] Comando desconhecido: "${comando}". Use "init" ou "reset".`);
+  process.exit(1);
+}
+
+if (!process.env.DATABASE_URL) {
+  console.error('[db] DATABASE_URL não definido. Configure o arquivo .env (veja .env.example).');
+  process.exit(1);
+}
 
 try {
   // Se o comando for 'reset', força a recriação completa da base de dados
@@ -27,8 +42,7 @@ try {
     );
   }
 } catch (err) {
-  // Regista falhas na consola e define o código de saída do processo como erro
-  console.error("[db] Falha:", err.message);
+  console.error('[db] Falha:', err.message || err.code || err);
   process.exitCode = 1;
 } finally {
   // Encerra adequadamente a ligação ao pool de base de dados, garantindo a terminação correta do script CLI
