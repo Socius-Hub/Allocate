@@ -1,43 +1,93 @@
-import { query, insert, execute } from '../config/database.js';
+/*
 
+  OBS: Este arquivo contém os modelos de dados para gerenciar categorias de eventos, departamentos e perfis de acesso no sistema. 
+       Ele fornece funções para listar, buscar, criar, atualizar e excluir registros dessas entidades no banco de dados.
+
+*/
+
+import { query, insert, execute } from "../config/database.js";
+
+//Modelo de dados para Categorias de Eventos
 export const CategoriaModel = {
-  listar: () => query('SELECT idCatEvento AS id_cat_evento, categoria, descricao FROM categoria_evento ORDER BY categoria'),
-  
+  listar: () =>
+    query(
+      "SELECT idCatEvento AS id_cat_evento, categoria, descricao FROM categoria_evento ORDER BY categoria",
+    ),
+
   async buscarPorId(id) {
-    const [r] = await query('SELECT idCatEvento AS id_cat_evento, categoria, descricao FROM categoria_evento WHERE idCatEvento = ?', [id]);
+    const [r] = await query(
+      "SELECT idCatEvento AS id_cat_evento, categoria, descricao FROM categoria_evento WHERE idCatEvento = ?",
+      [id],
+    );
     return r || null;
   },
 
-  criar: (d) => insert('INSERT INTO categoria_evento (categoria, descricao) VALUES (?, ?)', [d.categoria, d.descricao || null], 'idCatEvento'),
+  criar: (d) =>
+    insert(
+      "INSERT INTO categoria_evento (categoria, descricao) VALUES (?, ?)",
+      [d.categoria, d.descricao || null],
+      "idCatEvento",
+    ),
 
-  atualizar: (id, d) => execute('UPDATE categoria_evento SET categoria = ?, descricao = ? WHERE idCatEvento = ?', [d.categoria, d.descricao || null, id]),
+  atualizar: (id, d) =>
+    execute(
+      "UPDATE categoria_evento SET categoria = ?, descricao = ? WHERE idCatEvento = ?",
+      [d.categoria, d.descricao || null, id],
+    ),
 
-  excluir: (id) => execute('DELETE FROM categoria_evento WHERE idCatEvento = ?', [id]),
+  excluir: (id) =>
+    execute("DELETE FROM categoria_evento WHERE idCatEvento = ?", [id]),
 };
 
+//Modelo de dados para Departamentos
 export const DepartamentoModel = {
-  listar: () => query('SELECT idDepto AS id_depto, nomeDepto AS nome_depto FROM departamento ORDER BY nomeDepto'),
-  
+  listar: () =>
+    query(
+      "SELECT idDepto AS id_depto, nomeDepto AS nome_depto FROM departamento ORDER BY nomeDepto",
+    ),
+
   async buscarPorId(id) {
-    const [r] = await query('SELECT idDepto AS id_depto, nomeDepto AS nome_depto FROM departamento WHERE idDepto = ?', [id]);
+    const [r] = await query(
+      "SELECT idDepto AS id_depto, nomeDepto AS nome_depto FROM departamento WHERE idDepto = ?",
+      [id],
+    );
     return r || null;
   },
 
-  criar: (d) => insert('INSERT INTO departamento (nomeDepto) VALUES (?)', [d.nome_depto], 'idDepto'),
+  criar: (d) =>
+    insert(
+      "INSERT INTO departamento (nomeDepto) VALUES (?)",
+      [d.nome_depto],
+      "idDepto",
+    ),
 
-  atualizar: (id, d) => execute('UPDATE departamento SET nomeDepto = ? WHERE idDepto = ?', [d.nome_depto, id]),
+  atualizar: (id, d) =>
+    execute("UPDATE departamento SET nomeDepto = ? WHERE idDepto = ?", [
+      d.nome_depto,
+      id,
+    ]),
 
-  excluir: (id) => execute('DELETE FROM departamento WHERE idDepto = ?', [id]),
+  excluir: (id) => execute("DELETE FROM departamento WHERE idDepto = ?", [id]),
 };
 
+//Modelo de dados para Perfis de Acesso
 export const PerfilModel = {
-  listar: () => query('SELECT idPerfil AS id_perfil, tipo FROM perfil_acesso ORDER BY tipo'),
+  listar: () =>
+    query(
+      "SELECT idPerfil AS id_perfil, tipo FROM perfil_acesso ORDER BY tipo",
+    ),
   async buscarPorId(id) {
-    const [r] = await query('SELECT idPerfil AS id_perfil, tipo FROM perfil_acesso WHERE idPerfil = ?', [id]);
+    const [r] = await query(
+      "SELECT idPerfil AS id_perfil, tipo FROM perfil_acesso WHERE idPerfil = ?",
+      [id],
+    );
     return r || null;
   },
   async buscarPorTipo(tipo) {
-    const [r] = await query('SELECT idPerfil AS id_perfil, tipo FROM perfil_acesso WHERE tipo = ?', [tipo]);
+    const [r] = await query(
+      "SELECT idPerfil AS id_perfil, tipo FROM perfil_acesso WHERE tipo = ?",
+      [tipo],
+    );
     return r || null;
   },
 };

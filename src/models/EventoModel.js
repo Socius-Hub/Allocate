@@ -1,7 +1,21 @@
-import { query, insert, execute, transaction } from '../config/database.js';
-import { estornarInscricoes } from './inscricaoModel.js';
+/*
 
-export const STATUS_EVENTO = ['PLANEJAMENTO', 'ATIVO', 'CONCLUIDO', 'CANCELADO'];
+  OBS: Modelo de Eventos e Tiers de Inscrição (EventoModel & TierModel).
+       Agrupa as operações de acesso à base de dados para a gestão completa de eventos 
+       e seus tiers de inscrição, incluindo listagem, contagem, criação, atualização e exclusão.
+
+*/
+
+import { query, insert, execute, transaction } from "../config/database.js";
+import { estornarInscricoes } from "./inscricaoModel.js";
+
+//Status possíveis para um evento no sistema
+export const STATUS_EVENTO = [
+  "PLANEJAMENTO",
+  "ATIVO",
+  "CONCLUIDO",
+  "CANCELADO",
+];
 
 const SELECT_EVENTO = `
   SELECT e.idEvento AS id_evento, e.nome, e.data_inicio, e.data_termino, e.local AS localizacao, e.capacidade,
@@ -14,51 +28,75 @@ const SELECT_EVENTO = `
   LEFT JOIN usuario u ON u.idUsuario = i_depto.idUsuario
   LEFT JOIN departamento d ON d.idDepto = u.idDepto`;
 
+//Constrói dinamicamente as cláusulas WHERE e os parâmetros para filtragem de eventos
 function filtros({ status, id_cat_evento, data, busca, publico } = {}) {
   const where = [];
   const params = [];
+
   if (status) {
-    where.push('e.status = ?');
+    where.push("e.status = ?");
     params.push(status);
   }
   if (id_cat_evento) {
-    where.push('e.idCatEvento = ?');
+    where.push("e.idCatEvento = ?");
     params.push(id_cat_evento);
   }
   if (data) {
-    where.push('e.data_termino >= ?');
+    where.push("e.data_termino >= ?");
     params.push(`${data} 00:00:00`);
   }
   if (busca) {
-    where.push('(LOWER(e.nome) LIKE ? OR LOWER(e.local) LIKE ?)');
+    where.push("(LOWER(e.nome) LIKE ? OR LOWER(e.local) LIKE ?)");
     params.push(`%${busca.toLowerCase()}%`, `%${busca.toLowerCase()}%`);
   }
   if (publico) {
-    where.push("e.status IN ('ATIVO', 'PLANEJAMENTO') AND e.data_termino >= CURRENT_TIMESTAMP");
+    where.push(
+      "e.status IN ('ATIVO', 'PLANEJAMENTO') AND e.data_termino >= CURRENT_TIMESTAMP",
+    );
   }
-  return { sql: where.length ? ` WHERE ${where.join(' AND ')}` : '', params };
+  return { sql: where.length ? ` WHERE ${where.join(" AND ")}` : "", params };
 }
 
+//Mapeia e normaliza os dados de um evento para um array de parâmetros SQL
 const valores = (d) => [
-  d.nome, d.data_inicio, d.data_termino, d.localizacao, d.id_cat_evento,
-  d.capacidade, d.descricao || null, d.custo_estimado, d.status || 'PLANEJAMENTO',
+  d.nome,
+  d.data_inicio,
+  d.data_termino,
+  d.localizacao,
+  d.id_cat_evento,
+  d.capacidade,
+  d.descricao || null,
+  d.custo_estimado,
+  d.status || "PLANEJAMENTO",
 ];
 
+//Lista os eventos com base em filtros, paginação e ordenação contextual
 export const EventoModel = {
   async listar(f = {}, { limite = 10, offset = 0 } = {}) {
     const { sql, params } = filtros(f);
-    const ordem = f.publico ? 'e.data_inicio ASC' : 'e.data_inicio DESC';
-    return query(`${SELECT_EVENTO}${sql} ORDER BY ${ordem} LIMIT ? OFFSET ?`, [...params, limite, offset]);
+    const ordem = f.publico ? "e.data_inicio ASC" : "e.data_inicio DESC";
+    return query(`${SELECT_EVENTO}${sql} ORDER BY ${ordem} LIMIT ? OFFSET ?`, [
+      ...params,
+      limite,
+      offset,
+    ]);
   },
 
+  //Conta o total de eventos que correspondem aos filtros aplicados
   async contar(f = {}) {
     const { sql, params } = filtros(f);
-    const [r] = await query(`SELECT COUNT(*) AS total FROM evento e${sql}`, params);
+    const [r] = await query(
+      `SELECT COUNT(*) AS total FROM evento e${sql}`,
+      params,
+    );
     return r.total;
   },
 
+  //Agrupa e conta a quantidade de eventos por cada status existente
   async contarPorStatus() {
-    const rows = await query('SELECT status, COUNT(*) AS total FROM evento GROUP BY status');
+    const rows = await query(
+      "SELECT status, COUNT(*) AS total FROM evento GROUP BY status",
+    );
     const r = { TODOS: 0 };
     for (const s of STATUS_EVENTO) r[s] = 0;
     for (const row of rows) {
@@ -68,19 +106,21 @@ export const EventoModel = {
     return r;
   },
 
+  //Lista os próximos eventos futuros que não estejam cancelados
   async proximos(limite = 5) {
     return query(
       `${SELECT_EVENTO} WHERE e.data_termino >= CURRENT_TIMESTAMP AND e.status <> 'CANCELADO'
        ORDER BY e.data_inicio ASC LIMIT ?`,
-      [limite]
+      [limite],
     );
   },
 
+  //Lista os eventos atualmente ativos e abertos para novas inscrições
   async abertosParaInscricao() {
     return query(
       `SELECT e.idEvento AS id_evento, e.nome, e.data_inicio FROM evento e
        WHERE e.status = 'ATIVO' AND e.data_termino >= CURRENT_TIMESTAMP
-       ORDER BY e.data_inicio`
+       ORDER BY e.data_inicio`,
     );
   },
 
@@ -95,7 +135,7 @@ export const EventoModel = {
                            capacidade, descricao, custo_estimado, status)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       valores(d),
-      'idEvento'
+      "idEvento",
     ),
 
   atualizar: (id, d) =>
@@ -103,25 +143,27 @@ export const EventoModel = {
       `UPDATE evento SET nome = ?, data_inicio = ?, data_termino = ?, local = ?, idCatEvento = ?,
               capacidade = ?, descricao = ?, custo_estimado = ?, status = ?
        WHERE idEvento = ?`,
-      [...valores(d), id]
+      [...valores(d), id],
     ),
 
   excluir: (id) =>
     transaction(async (tx) => {
-      await estornarInscricoes(tx, 'id_evento', id);
-      return tx.execute('DELETE FROM evento WHERE idEvento = ?', [id]);
+      await estornarInscricoes(tx, "id_evento", id);
+      return tx.execute("DELETE FROM evento WHERE idEvento = ?", [id]);
     }),
 
+  //Calcula o valor financeiro total alocado (através de inscrições aprovadas ou pagas) em um evento
   async totalAlocado(id) {
     const [r] = await query(
       "SELECT COALESCE(SUM(t.preco), 0) AS total FROM inscricao i JOIN tier_inscricao t ON t.idTier = i.idTier WHERE i.idEvento = ? AND i.status IN ('APROVADO', 'PAGO')",
-      [id]
+      [id],
     );
     return r.total;
   },
 };
 
-export const STATUS_TIER = ['ATIVO', 'RASCUNHO', 'ENCERRADO'];
+//Status possíveis para um tier/lote de inscrição
+export const STATUS_TIER = ["ATIVO", "RASCUNHO", "ENCERRADO"];
 
 const SELECT_TIER = `
   SELECT t.idTier AS id_tier, t.nome, t.descricao, t.preco, t.capacidade, t.status, t.idEvento AS id_evento, t.prazo,
@@ -129,13 +171,18 @@ const SELECT_TIER = `
   FROM tier_inscricao t`;
 
 export const TierModel = {
-  listarPorEvento: (idEvento) => query(`${SELECT_TIER} WHERE t.idEvento = ? ORDER BY t.preco DESC, t.nome`, [idEvento]),
+  //Lista todos os tiers associados a um evento, ordenados por preço decrescente e nome
+  listarPorEvento: (idEvento) =>
+    query(`${SELECT_TIER} WHERE t.idEvento = ? ORDER BY t.preco DESC, t.nome`, [
+      idEvento,
+    ]),
 
+  //Lista os tiers que se encontram ativos e disponíveis para inscrição num evento (respeitando prazos)
   listarDisponiveis: (idEvento) =>
     query(
       `${SELECT_TIER} WHERE t.idEvento = ? AND t.status = 'ATIVO'
        AND (t.prazo IS NULL OR t.prazo >= CURRENT_DATE) ORDER BY t.preco`,
-      [idEvento]
+      [idEvento],
     ),
 
   async buscarPorId(id) {
@@ -147,16 +194,32 @@ export const TierModel = {
     insert(
       `INSERT INTO tier_inscricao (idEvento, nome, descricao, preco, capacidade, prazo, status)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [d.id_evento, d.nome, d.descricao || null, d.preco, d.capacidade, d.prazo || null, d.status],
-      'idTier'
+      [
+        d.id_evento,
+        d.nome,
+        d.descricao || null,
+        d.preco,
+        d.capacidade,
+        d.prazo || null,
+        d.status,
+      ],
+      "idTier",
     ),
 
   atualizar: (id, d) =>
     execute(
       `UPDATE tier_inscricao SET nome = ?, descricao = ?, preco = ?, capacidade = ?, prazo = ?, status = ?
        WHERE idTier = ?`,
-      [d.nome, d.descricao || null, d.preco, d.capacidade, d.prazo || null, d.status, id]
+      [
+        d.nome,
+        d.descricao || null,
+        d.preco,
+        d.capacidade,
+        d.prazo || null,
+        d.status,
+        id,
+      ],
     ),
 
-  excluir: (id) => execute('DELETE FROM tier_inscricao WHERE idTier = ?', [id]),
+  excluir: (id) => execute("DELETE FROM tier_inscricao WHERE idTier = ?", [id]),
 };

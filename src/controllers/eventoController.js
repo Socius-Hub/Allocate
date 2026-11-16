@@ -1,35 +1,72 @@
-import { EventoModel, TierModel, STATUS_EVENTO, STATUS_TIER } from '../models/EventoModel.js';
-import { InscricaoModel } from '../models/inscricaoModel.js';
-import { CategoriaModel, DepartamentoModel } from '../models/CadastrosModel.js';
-import { Validador } from '../utils/validador.js';
-import { fmt, paraNumero, paraDataHoraSQL } from '../utils/formatadores.js';
-import { controller, idParam, naoEncontrado, paginacao, montarQuery, mensagemErroBanco } from '../utils/http.js';
+/*
 
+  OBS: Este arquivo é responsável por fornecer os controladores para gerenciar eventos, incluindo a criação, 
+  edição, exclusão e visualização de detalhes de eventos, bem como a gestão de tiers de inscrição associados a cada evento.
+
+*/
+
+import {
+  EventoModel,
+  TierModel,
+  STATUS_EVENTO,
+  STATUS_TIER,
+} from "../models/EventoModel.js";
+import { InscricaoModel } from "../models/inscricaoModel.js";
+import { CategoriaModel, DepartamentoModel } from "../models/CadastrosModel.js";
+import { Validador } from "../utils/validador.js";
+import { fmt, paraNumero, paraDataHoraSQL } from "../utils/formatadores.js";
+import {
+  controller,
+  idParam,
+  naoEncontrado,
+  paginacao,
+  montarQuery,
+  mensagemErroBanco,
+} from "../utils/http.js";
+
+//Busca e consolida as opções padrão necessárias para os formulários de eventos
 async function opcoesFormulario() {
-  const [categorias, departamentos] = await Promise.all([CategoriaModel.listar(), DepartamentoModel.listar()]);
+  const [categorias, departamentos] = await Promise.all([
+    CategoriaModel.listar(),
+    DepartamentoModel.listar(),
+  ]);
   return { categorias, departamentos, statusEvento: STATUS_EVENTO };
 }
 
 function validarEvento(body, { categorias, departamentos }, inscritos = 0) {
   const v = new Validador(body);
-  v.campo('nome', 'Nome do evento').obrigatorio().min(3).max(250);
-  v.campo('data_inicio', 'Início').obrigatorio().data();
-  v.campo('data_termino', 'Término').obrigatorio().data();
-  v.campo('localizacao', 'Local').obrigatorio().max(250);
-  v.campo('id_cat_evento', 'Categoria').obrigatorio().em(categorias.map((c) => c.id_cat_evento));
-  v.campo('id_depto', 'Centro de custo').em(departamentos.map((d) => d.id_depto));
-  v.campo('capacidade', 'Capacidade').obrigatorio().numero({ min: Math.max(1, inscritos), inteiro: true });
-  v.campo('custo_estimado', 'Custo estimado').obrigatorio().numero({ min: 0 });
-  v.campo('status', 'Status').obrigatorio().em(STATUS_EVENTO);
-  v.campo('descricao', 'Descrição').max(2000);
+  v.campo("nome", "Nome do evento").obrigatorio().min(3).max(250);
+  v.campo("data_inicio", "Início").obrigatorio().data();
+  v.campo("data_termino", "Término").obrigatorio().data();
+  v.campo("localizacao", "Local").obrigatorio().max(250);
+  v.campo("id_cat_evento", "Categoria")
+    .obrigatorio()
+    .em(categorias.map((c) => c.id_cat_evento));
+  v.campo("id_depto", "Centro de custo").em(
+    departamentos.map((d) => d.id_depto),
+  );
+  v.campo("capacidade", "Capacidade")
+    .obrigatorio()
+    .numero({ min: Math.max(1, inscritos), inteiro: true });
+  v.campo("custo_estimado", "Custo estimado").obrigatorio().numero({ min: 0 });
+  v.campo("status", "Status").obrigatorio().em(STATUS_EVENTO);
+  v.campo("descricao", "Descrição").max(2000);
 
-  if (inscritos > 0 && v.erros.capacidade?.includes('mínimo')) {
+  // Validação dinâmica caso a capacidade informada seja inferior ao número de inscritos ativos
+  if (inscritos > 0 && v.erros.capacidade?.includes("mínimo")) {
     v.erros.capacidade = `O evento já tem ${inscritos} inscrito(s); a capacidade não pode ser menor.`;
   }
-  if (!v.erros.data_inicio && !v.erros.data_termino && new Date(body.data_termino) < new Date(body.data_inicio)) {
-    v.erros.data_termino = 'O término deve ser depois do início.';
+
+  // Validação de coerência entre datas de início e término
+  if (
+    !v.erros.data_inicio &&
+    !v.erros.data_termino &&
+    new Date(body.data_termino) < new Date(body.data_inicio)
+  ) {
+    v.erros.data_termino = "O término deve ser depois do início.";
   }
 
+  // Normalização e formatação dos dados validados para inserção/atualização no banco
   const dados = {
     nome: body.nome?.trim(),
     data_inicio: paraDataHoraSQL(body.data_inicio),
@@ -48,29 +85,39 @@ function validarEvento(body, { categorias, departamentos }, inscritos = 0) {
 async function carregarEvento(req) {
   const id = idParam(req.params.id);
   const evento = id && (await EventoModel.buscarPorId(id));
-  if (!evento) throw naoEncontrado('Evento');
+  if (!evento) throw naoEncontrado("Evento");
   return evento;
 }
 
+// Lista os eventos com suporte a filtros
 export const EventoController = controller({
   async listar(req, res) {
     const filtros = {
-      status: STATUS_EVENTO.includes(req.query.status) ? req.query.status : '',
+      status: STATUS_EVENTO.includes(req.query.status) ? req.query.status : "",
       id_cat_evento: idParam(req.query.categoria),
-      data: /^\d{4}-\d{2}-\d{2}$/.test(req.query.data || '') ? req.query.data : '',
-      busca: (req.query.busca || '').trim(),
+      data: /^\d{4}-\d{2}-\d{2}$/.test(req.query.data || "")
+        ? req.query.data
+        : "",
+      busca: (req.query.busca || "").trim(),
     };
     const { pagina, porPagina, offset } = paginacao(req);
+
+    // Executa buscas paralelas para recolher eventos paginados, totais e contagens por status
     const [eventos, total, contagem, categorias] = await Promise.all([
       EventoModel.listar(filtros, { limite: porPagina, offset }),
       EventoModel.contar(filtros),
       EventoModel.contarPorStatus(),
       CategoriaModel.listar(),
     ]);
-    const atual = { status: filtros.status, categoria: req.query.categoria, data: filtros.data, busca: filtros.busca };
-    res.render('eventos', {
-      titulo: 'Gestão de Eventos',
-      pagina: 'eventos',
+    const atual = {
+      status: filtros.status,
+      categoria: req.query.categoria,
+      data: filtros.data,
+      busca: filtros.busca,
+    };
+    res.render("eventos", {
+      titulo: "Gestão de Eventos",
+      pagina: "eventos",
       eventos,
       total,
       contagem,
@@ -83,6 +130,7 @@ export const EventoController = controller({
     });
   },
 
+  //Exibe os detalhes completos de um evento específico
   async detalhes(req, res) {
     const evento = await carregarEvento(req);
     const [tiers, inscricoes, alocado] = await Promise.all([
@@ -90,35 +138,56 @@ export const EventoController = controller({
       InscricaoModel.listarPorEvento(evento.id_evento),
       EventoModel.totalAlocado(evento.id_evento),
     ]);
-    res.render('evento-detalhes', { titulo: evento.nome, tituloHeader: 'Detalhes do Evento', pagina: 'eventos', evento, tiers, inscricoes, alocado });
+    res.render("evento-detalhes", {
+      titulo: evento.nome,
+      tituloHeader: "Detalhes do Evento",
+      pagina: "eventos",
+      evento,
+      tiers,
+      inscricoes,
+      alocado,
+    });
   },
 
+  //Renderiza o formulário para criação de um novo evento
   async novo(req, res) {
-    res.render('evento-form', {
-      titulo: 'Criar Evento',
-      pagina: 'eventos',
+    res.render("evento-form", {
+      titulo: "Criar Evento",
+      pagina: "eventos",
       evento: null,
-      dados: { status: 'PLANEJAMENTO' },
+      dados: { status: "PLANEJAMENTO" },
       ...(await opcoesFormulario()),
     });
   },
 
+  // Processa a criação de um novo evento após validar os dados submetidos
   async criar(req, res) {
     const opcoes = await opcoesFormulario();
     const { v, dados } = validarEvento(req.body, opcoes);
     if (!v.valido) {
-      return res.status(400).render('evento-form', { titulo: 'Criar Evento', pagina: 'eventos', evento: null, dados: req.body, erros: v.erros, ...opcoes });
+      return res.status(400).render("evento-form", {
+        titulo: "Criar Evento",
+        pagina: "eventos",
+        evento: null,
+        dados: req.body,
+        erros: v.erros,
+        ...opcoes,
+      });
     }
     const id = await EventoModel.criar(dados);
-    req.flash('sucesso', 'Evento criado com sucesso! Agora cadastre os tiers de inscrição.');
+    req.flash(
+      "sucesso",
+      "Evento criado com sucesso! Agora cadastre os tiers de inscrição.",
+    );
     res.redirect(`/eventos/${id}/tiers`);
   },
 
+  // Renderiza o formulário de edição de um evento existente com os respetivos dados atuais
   async editar(req, res) {
     const evento = await carregarEvento(req);
-    res.render('evento-form', {
-      titulo: 'Editar Evento',
-      pagina: 'eventos',
+    res.render("evento-form", {
+      titulo: "Editar Evento",
+      pagina: "eventos",
       evento,
       dados: {
         ...evento,
@@ -129,69 +198,96 @@ export const EventoController = controller({
     });
   },
 
+  //Processa a atualização dos dados de um evento existente
   async atualizar(req, res) {
     const evento = await carregarEvento(req);
     const opcoes = await opcoesFormulario();
     const { v, dados } = validarEvento(req.body, opcoes, evento.inscritos);
     if (!v.valido) {
-      return res.status(400).render('evento-form', { titulo: 'Editar Evento', pagina: 'eventos', evento, dados: req.body, erros: v.erros, ...opcoes });
+      return res.status(400).render("evento-form", {
+        titulo: "Editar Evento",
+        pagina: "eventos",
+        evento,
+        dados: req.body,
+        erros: v.erros,
+        ...opcoes,
+      });
     }
     await EventoModel.atualizar(evento.id_evento, dados);
-    req.flash('sucesso', 'Evento atualizado com sucesso.');
+    req.flash("sucesso", "Evento atualizado com sucesso.");
     res.redirect(`/eventos/${evento.id_evento}`);
   },
 
+  //Remove um evento da base de dados, tratando eventuais restrições de chave estrangeira
   async excluir(req, res) {
     const evento = await carregarEvento(req);
     try {
       await EventoModel.excluir(evento.id_evento);
-      req.flash('sucesso', `Evento "${evento.nome}" excluído.`);
-      res.redirect('/eventos');
+      req.flash("sucesso", `Evento "${evento.nome}" excluído.`);
+      res.redirect("/eventos");
     } catch (err) {
       const msg = mensagemErroBanco(err);
       if (!msg) throw err;
-      req.flash('erro', msg);
+      req.flash("erro", msg);
       res.redirect(`/eventos/${evento.id_evento}`);
     }
   },
 
+  //Lista e gera os tiers de inscrição associados a um evento
   async tiers(req, res) {
     const evento = await carregarEvento(req);
     const tiers = await TierModel.listarPorEvento(evento.id_evento);
     const idEdicao = idParam(req.query.editar);
-    const tierEdicao = idEdicao ? tiers.find((t) => t.id_tier === idEdicao) : null;
-    res.render('evento-tiers', {
-      titulo: 'Tiers de Inscrição',
-      pagina: 'eventos',
+    const tierEdicao = idEdicao
+      ? tiers.find((t) => t.id_tier === idEdicao)
+      : null;
+    res.render("evento-tiers", {
+      titulo: "Tiers de Inscrição",
+      pagina: "eventos",
       evento,
       tiers,
       tierEdicao,
       statusTier: STATUS_TIER,
-      dados: tierEdicao || { status: 'ATIVO' },
+      dados: tierEdicao || { status: "ATIVO" },
     });
   },
 
+  //Cria ou atualiza um tier de inscrição associado ao evento
   async salvarTier(req, res) {
     const evento = await carregarEvento(req);
     const idTier = idParam(req.params.idTier);
     const tiers = await TierModel.listarPorEvento(evento.id_evento);
     const tierEdicao = idTier ? tiers.find((t) => t.id_tier === idTier) : null;
-    if (idTier && !tierEdicao) throw naoEncontrado('Tier');
+    if (idTier && !tierEdicao) throw naoEncontrado("Tier");
 
     const v = new Validador(req.body);
-    v.campo('nome', 'Nome do tier').obrigatorio().max(250);
-    v.campo('descricao', 'Descrição').max(250);
-    v.campo('preco', 'Preço').obrigatorio().numero({ min: 0 });
-    v.campo('capacidade', 'Capacidade').obrigatorio().numero({ min: Math.max(1, tierEdicao?.inscritos || 0), inteiro: true });
-    v.campo('prazo', 'Prazo').data();
-    v.campo('status', 'Status').obrigatorio().em(STATUS_TIER);
-    if (!v.erros.capacidade && Number(req.body.capacidade) > evento.capacidade) {
+    v.campo("nome", "Nome do tier").obrigatorio().max(250);
+    v.campo("descricao", "Descrição").max(250);
+    v.campo("preco", "Preço").obrigatorio().numero({ min: 0 });
+    v.campo("capacidade", "Capacidade")
+      .obrigatorio()
+      .numero({ min: Math.max(1, tierEdicao?.inscritos || 0), inteiro: true });
+    v.campo("prazo", "Prazo").data();
+    v.campo("status", "Status").obrigatorio().em(STATUS_TIER);
+
+    // Impede que a capacidade do tier seja superior à capacidade máxima global do evento
+    if (
+      !v.erros.capacidade &&
+      Number(req.body.capacidade) > evento.capacidade
+    ) {
       v.erros.capacidade = `Não pode ser maior que a capacidade do evento (${evento.capacidade}).`;
     }
 
     if (!v.valido) {
-      return res.status(400).render('evento-tiers', {
-        titulo: 'Tiers de Inscrição', pagina: 'eventos', evento, tiers, tierEdicao, statusTier: STATUS_TIER, dados: req.body, erros: v.erros,
+      return res.status(400).render("evento-tiers", {
+        titulo: "Tiers de Inscrição",
+        pagina: "eventos",
+        evento,
+        tiers,
+        tierEdicao,
+        statusTier: STATUS_TIER,
+        dados: req.body,
+        erros: v.erros,
       });
     }
 
@@ -206,24 +302,32 @@ export const EventoController = controller({
     };
     if (tierEdicao) {
       await TierModel.atualizar(idTier, dados);
-      req.flash('sucesso', 'Tier atualizado.');
+      req.flash("sucesso", "Tier atualizado.");
     } else {
       await TierModel.criar(dados);
-      req.flash('sucesso', 'Tier criado.');
+      req.flash("sucesso", "Tier criado.");
     }
     res.redirect(`/eventos/${evento.id_evento}/tiers`);
   },
 
+  //Remove um tier de inscrição, garantindo que não existam inscrições ativas vinculadas ao mesmo
   async excluirTier(req, res) {
     const evento = await carregarEvento(req);
     const tier = await TierModel.buscarPorId(idParam(req.params.idTier));
-    if (!tier || tier.id_evento !== evento.id_evento) throw naoEncontrado('Tier');
+
+    if (!tier || tier.id_evento !== evento.id_evento)
+      throw naoEncontrado("Tier");
+
+    // Valida se existem inscrições associadas antes de permitir a exclusão
     if (tier.inscritos > 0) {
-      req.flash('erro', `O tier "${tier.nome}" possui ${tier.inscritos} inscrição(ões). Exclua-as ou altere o status do tier para "Encerrado".`);
+      req.flash(
+        "erro",
+        `O tier "${tier.nome}" possui ${tier.inscritos} inscrição(ões). Exclua-as ou altere o status do tier para "Encerrado".`,
+      );
       return res.redirect(`/eventos/${evento.id_evento}/tiers`);
     }
     await TierModel.excluir(tier.id_tier);
-    req.flash('sucesso', `Tier "${tier.nome}" excluído.`);
+    req.flash("sucesso", `Tier "${tier.nome}" excluído.`);
     res.redirect(`/eventos/${evento.id_evento}/tiers`);
   },
 });

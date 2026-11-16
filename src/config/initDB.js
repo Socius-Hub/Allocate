@@ -1,9 +1,16 @@
-import { pool } from './database.js';
+/*
+
+  OBS: Este arquivo é responsável por inicializar o banco de dados PostgreSQL, 
+       criando as tabelas necessárias e inserindo dados iniciais caso ainda não existam
+
+*/
+
+import { pool } from "./database.js";
 
 export async function inicializarBanco() {
   try {
-    console.log('[db] A verificar e criar tabelas no PostgreSQL...');
-    
+    console.log("[db] A verificar e criar tabelas no PostgreSQL...");
+
     const schemaSql = `
       CREATE TABLE IF NOT EXISTS perfil_acesso (
           idPerfil SERIAL PRIMARY KEY,
@@ -148,13 +155,17 @@ export async function inicializarBanco() {
       );
     `;
 
+    // Executa a criação das tabelas no banco de dados
     await pool.query(schemaSql);
-    console.log('[db] Estrutura de tabelas garantida com sucesso.');
+    console.log("[db] Estrutura de tabelas garantida com sucesso.");
 
     // Inserção segura de dados iniciais (Seeds) caso a tabela perfil_acesso esteja vazia
-    const [{ count }] = (await pool.query('SELECT COUNT(*) AS count FROM perfil_acesso')).rows;
+    const [{ count }] = (
+      await pool.query("SELECT COUNT(*) AS count FROM perfil_acesso")
+    ).rows;
+
     if (Number(count) === 0) {
-      console.log('[db] A inserir dados iniciais (seeds)...');
+      console.log("[db] A inserir dados iniciais (seeds)...");
 
       const seedsSql = `
         INSERT INTO perfil_acesso (tipo) VALUES 
@@ -223,14 +234,15 @@ export async function inicializarBanco() {
         (2, 'Técnico de TI', 'Tier 1', 1, 4500.00, '2024-10');
       `;
 
+      // Executa os scripts de seeds no banco
       await pool.query(seedsSql);
-      console.log('[db] Dados iniciais inseridos com sucesso!');
-    } else {
-      console.log('[db] O banco já possui dados cadastrados. Ignorando seeds.');
-    }
 
+      console.log("[db] Dados iniciais inseridos com sucesso!");
+    } else {
+      console.log("[db] O banco já possui dados cadastrados. Ignorando seeds.");
+    }
   } catch (err) {
-    console.error('[db] Erro ao preparar o banco:', err.message);
+    console.error("[db] Erro ao preparar o banco:", err.message);
     throw err;
   }
 }

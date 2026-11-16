@@ -1,29 +1,28 @@
-import { paraNumero } from './formatadores.js';
+/*
+ 
+  OBS: Utilitário de Validação de Formulários no Servidor (Validador).
+       Fornece uma classe fluente (Fluent API) para validação de dados recebidos em requisições HTTP (req.body),
+       permitindo aplicar regras encadeadas (como obrigatoriedade, comprimentos mínimos/máximos, e-mails, 
+       telefones, números, datas, listas permitidas e igualdade de campos) e registar erros amigáveis.
 
-/**
- * Validação simples de formulários no servidor.
- *
- *   const v = new Validador(req.body);
- *   v.campo('email', 'E-mail').obrigatorio().email();
- *   v.campo('capacidade', 'Capacidade').obrigatorio().numero({ min: 1, inteiro: true });
- *   if (!v.valido) -> renderiza o formulário com v.erros
- *
- * As regras (exceto obrigatorio) só são verificadas quando o campo foi preenchido.
- * Apenas o primeiro erro de cada campo é guardado.
  */
+
+import { paraNumero } from "./formatadores.js";
+
+// Classe responsável por validar dados de formulários de forma encadeada e acumulativa.
 export class Validador {
   constructor(dados = {}) {
     this.dados = dados;
     this.erros = {};
     this.nome = null;
     this.rotulo = null;
-    this.valor = '';
+    this.valor = "";
   }
 
   campo(nome, rotulo) {
     this.nome = nome;
     this.rotulo = rotulo;
-    this.valor = String(this.dados[nome] ?? '').trim();
+    this.valor = String(this.dados[nome] ?? "").trim();
     return this;
   }
 
@@ -35,7 +34,7 @@ export class Validador {
   }
 
   get vazio() {
-    return this.valor === '';
+    return this.valor === "";
   }
 
   obrigatorio() {
@@ -43,21 +42,27 @@ export class Validador {
   }
 
   min(n) {
-    return !this.vazio && this.valor.length < n ? this.erro(`${this.rotulo} deve ter pelo menos ${n} caracteres.`) : this;
+    return !this.vazio && this.valor.length < n
+      ? this.erro(`${this.rotulo} deve ter pelo menos ${n} caracteres.`)
+      : this;
   }
 
   max(n) {
-    return !this.vazio && this.valor.length > n ? this.erro(`${this.rotulo} deve ter no máximo ${n} caracteres.`) : this;
+    return !this.vazio && this.valor.length > n
+      ? this.erro(`${this.rotulo} deve ter no máximo ${n} caracteres.`)
+      : this;
   }
 
   email() {
-    return !this.vazio && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.valor) ? this.erro('Informe um e-mail válido.') : this;
+    return !this.vazio && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.valor)
+      ? this.erro("Informe um e-mail válido.")
+      : this;
   }
 
   telefone() {
-    const digitos = this.valor.replace(/\D/g, '');
+    const digitos = this.valor.replace(/\D/g, "");
     return !this.vazio && (digitos.length < 10 || digitos.length > 11)
-      ? this.erro('Informe um telefone válido com DDD.')
+      ? this.erro("Informe um telefone válido com DDD.")
       : this;
   }
 
@@ -65,22 +70,31 @@ export class Validador {
     if (this.vazio) return this;
     const n = paraNumero(this.valor);
     if (Number.isNaN(n)) return this.erro(`${this.rotulo} deve ser um número.`);
-    if (inteiro && !Number.isInteger(n)) return this.erro(`${this.rotulo} deve ser um número inteiro.`);
-    if (min !== undefined && n < min) return this.erro(`${this.rotulo} deve ser no mínimo ${min}.`);
-    if (max !== undefined && n > max) return this.erro(`${this.rotulo} deve ser no máximo ${max}.`);
+    if (inteiro && !Number.isInteger(n))
+      return this.erro(`${this.rotulo} deve ser um número inteiro.`);
+    if (min !== undefined && n < min)
+      return this.erro(`${this.rotulo} deve ser no mínimo ${min}.`);
+    if (max !== undefined && n > max)
+      return this.erro(`${this.rotulo} deve ser no máximo ${max}.`);
     return this;
   }
 
   data() {
-    return !this.vazio && Number.isNaN(Date.parse(this.valor)) ? this.erro(`${this.rotulo} é uma data inválida.`) : this;
+    return !this.vazio && Number.isNaN(Date.parse(this.valor))
+      ? this.erro(`${this.rotulo} é uma data inválida.`)
+      : this;
   }
 
   em(lista) {
-    return !this.vazio && !lista.map(String).includes(this.valor) ? this.erro(`${this.rotulo} possui um valor inválido.`) : this;
+    return !this.vazio && !lista.map(String).includes(this.valor)
+      ? this.erro(`${this.rotulo} possui um valor inválido.`)
+      : this;
   }
 
   igual(outroCampo, mensagem) {
-    return this.valor !== String(this.dados[outroCampo] ?? '').trim() ? this.erro(mensagem) : this;
+    return this.valor !== String(this.dados[outroCampo] ?? "").trim()
+      ? this.erro(mensagem)
+      : this;
   }
 
   get valido() {

@@ -1,37 +1,48 @@
-/**
- * Configuração da sessão (express-session).
- * - Em Postgres (Render) as sessões ficam salvas no banco (tabela "session"),
- *   então o usuário não é deslogado quando o servidor reinicia.
- * - Em MySQL (offline) usa a memória do processo, suficiente para testes.
- */
-import session from 'express-session';
-import connectPgSimple from 'connect-pg-simple';
-import { pool, isPostgres } from './database.js';
+/*
 
-const producao = process.env.NODE_ENV === 'production';
+  OBS: Este arquivo é responsável por configurar a sessão do utilizador com suporte a PostgreSQL
 
+*/
+
+import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
+import { pool, isPostgres } from "./database.js";
+
+// Verifica se a aplicação está a executar em ambiente de produção (ex: Render)
+const producao = process.env.NODE_ENV === "production";
+
+// Alerta de segurança crítico caso a chave secreta de encriptação não esteja definida no servidor
 if (producao && !process.env.SESSION_SECRET) {
-  console.warn('[sessão] SESSION_SECRET não definido! Defina essa variável de ambiente no Render.');
+  console.warn(
+    "[sessão] SESSION_SECRET não definido! Defina essa variável de ambiente no Render.",
+  );
 }
 
+// Cria e configura a instância do middleware de gestão de sessões
 export function criarSessao() {
   const opcoes = {
-    secret: process.env.SESSION_SECRET || 'dev-segredo-troque-isto',
+    secret: process.env.SESSION_SECRET || "dev-segredo-troque-isto",
     resave: false,
     saveUninitialized: false,
-    name: 'allocate.sid',
+    name: "allocate.sid",
     cookie: {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: "lax",
       secure: producao, // no Render o site é HTTPS
       maxAge: 1000 * 60 * 60 * 8, // 8 horas
     },
   };
 
+  // Se o banco de dados ativo for o PostgreSQL, redireciona o armazenamento para a tabela persistente
   if (isPostgres) {
     const PgStore = connectPgSimple(session);
-    opcoes.store = new PgStore({ pool, tableName: 'session', createTableIfMissing: true });
+    opcoes.store = new PgStore({
+      pool,
+      tableName: "session",
+      createTableIfMissing: true,
+    });
   }
 
+  // Retorna o middleware configurado para ser utilizado na aplicação Express
   return session(opcoes);
 }
