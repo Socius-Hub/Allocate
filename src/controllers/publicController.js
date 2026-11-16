@@ -44,6 +44,8 @@ export const PublicController = controller({
     // Configura a paginação exibindo 9 itens por página
     const f = { ...filtrosAtivos, publico: true };
 
+    const { pagina, porPagina, offset } = paginacao(req);
+    
     // Executa buscas paralelas para obter eventos filtrados e paginados, contagem e categorias
     const [eventos, total, categorias] = await Promise.all([
       EventoModel.listar(f, { limite: porPagina, offset }),
