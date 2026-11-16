@@ -41,7 +41,8 @@ app.locals.fmt = fmt;
 
 // CONFIG. DE SEGURANÇA E AMBIENTE
 
-// O Render e outros PaaS ficam atrás de um proxy HTTPS: necessário para ativar o cookie "secure" da sessãoapp.set("trust proxy", 1);
+// O Render e outros PaaS ficam atrás de um proxy HTTPS: necessário para ativar o cookie "secure" da sessão
+app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
 // MIDDLEWARES GLOBAIS
