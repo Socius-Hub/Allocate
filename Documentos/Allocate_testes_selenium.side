@@ -1,0 +1,1385 @@
+{
+  "id": "0dbdf593-debd-44d2-a807-3155da627f4f",
+  "version": "2.0",
+  "name": "Allocate - Testes Selenium",
+  "url": "https://allocate-7fwu.onrender.com",
+  "tests": [
+    {
+      "id": "16c2a099-29ee-419c-8d1a-1b33cc194c46",
+      "name": "Aux - Sair se estiver logado",
+      "commands": [
+        {
+          "id": "3e9c18b0-931e-4c72-ae02-373a81e923fc",
+          "comment": "",
+          "command": "setWindowSize",
+          "target": "1366x900",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "c5d8198c-dbf2-4f26-9e6b-1c36a38fa8fd",
+          "comment": "Se ja houver alguem logado, sai da conta antes do teste",
+          "command": "open",
+          "target": "/dashboard",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "9d03e862-2cef-43ec-a446-75acd8b1563c",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return document.querySelectorAll(\"form[action='/logout']\").length",
+          "targets": [],
+          "value": "logado"
+        },
+        {
+          "id": "af6399d2-46d9-4b95-a248-634566763c2f",
+          "comment": "",
+          "command": "if",
+          "target": "${logado} > 0",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "fb5469eb-8d01-4170-8295-6844848ac0ee",
+          "comment": "",
+          "command": "click",
+          "target": "css=form[action='/logout'] button",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "28327781-676a-4827-9764-6c9c21d8efb9",
+          "comment": "",
+          "command": "end",
+          "target": "",
+          "targets": [],
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "0761024e-4463-4a5f-b2e2-995ea9a3535f",
+      "name": "Aux - Login admin",
+      "commands": [
+        {
+          "id": "8db00a7a-d854-47c8-9693-4bf722f6d0f0",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Sair se estiver logado",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "99061c7a-04a5-4724-ba92-8b7af953d57e",
+          "comment": "",
+          "command": "open",
+          "target": "/login",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "0672b81f-308c-480a-801c-1bcfe60a741f",
+          "comment": "",
+          "command": "type",
+          "target": "id=email",
+          "targets": [],
+          "value": "admin@allocate.com"
+        },
+        {
+          "id": "850104c8-0ef2-4b8a-9a27-5b25ff4f464c",
+          "comment": "",
+          "command": "type",
+          "target": "id=senha",
+          "targets": [],
+          "value": "admin123"
+        },
+        {
+          "id": "21439d59-9b00-4465-b2bb-1a8ac66d3247",
+          "comment": "",
+          "command": "click",
+          "target": "css=form[action='/login'] button[type='submit']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "2d71bfb7-50a3-44d8-82f6-5b4aa342fa73",
+          "comment": "Usuario logado (botao Sair visivel)",
+          "command": "waitForElementPresent",
+          "target": "css=form[action='/logout']",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "c930d78a-3366-42da-bf7c-80b1c424f88c",
+      "name": "Aux - Login usuario",
+      "commands": [
+        {
+          "id": "169cdc29-78ec-497f-bc9e-5c0dd3074550",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Sair se estiver logado",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "96b0956b-349c-457d-b825-7a494f0cba4e",
+          "comment": "",
+          "command": "open",
+          "target": "/login",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "79a56a7b-2da0-4275-8e4d-e70fc36eaab8",
+          "comment": "",
+          "command": "type",
+          "target": "id=email",
+          "targets": [],
+          "value": "ana.souza@allocate.com"
+        },
+        {
+          "id": "0fd3ded6-ae87-47be-8a66-441f96f5c046",
+          "comment": "",
+          "command": "type",
+          "target": "id=senha",
+          "targets": [],
+          "value": "senha123"
+        },
+        {
+          "id": "c276451d-5390-474a-8af1-dac7a1e5b598",
+          "comment": "",
+          "command": "click",
+          "target": "css=form[action='/login'] button[type='submit']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "8af44ecf-e53b-4972-9267-242cff5f28b5",
+          "comment": "Usuario logado (botao Sair visivel)",
+          "command": "waitForElementPresent",
+          "target": "css=form[action='/logout']",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "52a24ebe-10e0-4dad-8e66-8695d518aa1a",
+      "name": "C01 - Login com credenciais validas",
+      "commands": [
+        {
+          "id": "97213b9f-56c6-4553-beb7-408767f9e06e",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Sair se estiver logado",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "c00c38cb-d2e2-4853-80f8-44cec24a4d30",
+          "comment": "",
+          "command": "open",
+          "target": "/login",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e290738a-5dff-456c-9f28-43322d2bc693",
+          "comment": "",
+          "command": "type",
+          "target": "id=email",
+          "targets": [],
+          "value": "admin@allocate.com"
+        },
+        {
+          "id": "3e42082b-99c7-421e-8d6a-9cc13e45e6f8",
+          "comment": "",
+          "command": "type",
+          "target": "id=senha",
+          "targets": [],
+          "value": "admin123"
+        },
+        {
+          "id": "499d7c28-fc61-4e1f-ba06-9c2ac4ebfb00",
+          "comment": "",
+          "command": "click",
+          "target": "css=form[action='/login'] button[type='submit']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "2928f708-9504-411c-92e5-b6bfb11a7ef3",
+          "comment": "Usuario logado (botao Sair visivel)",
+          "command": "waitForElementPresent",
+          "target": "css=form[action='/logout']",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "27559415-e35a-4a5e-bcba-cf83bd167c77",
+          "comment": "Painel abre com o nome do usuario",
+          "command": "waitForElementPresent",
+          "target": "xpath=//h2[contains(.,'Olá, Dr. Carlos Silva')]",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "ceed7bff-e136-4c21-8f29-36ea2a05a4e2",
+      "name": "C02 - Login com senha incorreta",
+      "commands": [
+        {
+          "id": "1f874067-1a1b-45ab-abb5-ddab64f74b9d",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Sair se estiver logado",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e8b1b3cd-9939-4e30-a949-926e44323d0f",
+          "comment": "",
+          "command": "open",
+          "target": "/login",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "22cd366d-4725-4341-90d7-493f2e516913",
+          "comment": "",
+          "command": "type",
+          "target": "id=email",
+          "targets": [],
+          "value": "admin@allocate.com"
+        },
+        {
+          "id": "a4ae6910-9b5a-4a41-a608-023f9eaabc95",
+          "comment": "",
+          "command": "type",
+          "target": "id=senha",
+          "targets": [],
+          "value": "senhaerrada"
+        },
+        {
+          "id": "a599d5c4-6336-4f0c-85ca-a72ebc2262b0",
+          "comment": "",
+          "command": "click",
+          "target": "css=form[action='/login'] button[type='submit']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "2c2042f9-51ad-44eb-a43a-58c0b88c0051",
+          "comment": "Mensagem de erro de login",
+          "command": "waitForElementPresent",
+          "target": "xpath=//*[contains(normalize-space(text()),'E-mail ou senha inválidos.')]",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "ee688b83-bd28-4fb2-acbc-582d67456875",
+          "comment": "Usuario nao foi logado",
+          "command": "assertElementNotPresent",
+          "target": "css=form[action='/logout']",
+          "targets": [],
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "4589a625-9cd3-4cba-a320-000d8289f527",
+      "name": "C03 - Cadastro de novo usuario",
+      "commands": [
+        {
+          "id": "36d06f23-d4df-478f-8356-29a4ecc6f403",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Sair se estiver logado",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "5d02d60b-295e-4336-9c2c-bc9f885bc509",
+          "comment": "",
+          "command": "open",
+          "target": "/registro",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "dbb99322-68f1-461f-84d9-4840879b9930",
+          "comment": "Gera um e-mail unico a cada execucao",
+          "command": "executeScript",
+          "target": "return 'teste' + Date.now() + '@allocate.com'",
+          "targets": [],
+          "value": "emailNovo"
+        },
+        {
+          "id": "5ad5017b-566a-4689-8324-fb255c436fb5",
+          "comment": "",
+          "command": "type",
+          "target": "id=nome_completo",
+          "targets": [],
+          "value": "Usuario de Teste Selenium"
+        },
+        {
+          "id": "c6dfa742-d89c-43b2-b160-7e4edd2d978f",
+          "comment": "",
+          "command": "type",
+          "target": "id=crm_matricula",
+          "targets": [],
+          "value": "MAT-9999"
+        },
+        {
+          "id": "1f544772-1089-459d-baf0-87586bd18a32",
+          "comment": "",
+          "command": "type",
+          "target": "id=telefone",
+          "targets": [],
+          "value": "19987654321"
+        },
+        {
+          "id": "edf4428f-60fd-449c-bec5-082490fc66ac",
+          "comment": "Escolhe o departamento pelo nome",
+          "command": "select",
+          "target": "id=id_depto",
+          "targets": [],
+          "value": "label=Marketing"
+        },
+        {
+          "id": "0c8c8d69-696e-4440-9354-0becf1b17f05",
+          "comment": "Confere que o departamento ficou selecionado",
+          "command": "assertSelectedLabel",
+          "target": "id=id_depto",
+          "targets": [],
+          "value": "Marketing"
+        },
+        {
+          "id": "b50c6f30-34c7-4930-8a60-496b885b2dfd",
+          "comment": "",
+          "command": "type",
+          "target": "id=cargo",
+          "targets": [],
+          "value": "Analista de Testes"
+        },
+        {
+          "id": "1c5fbd0c-c194-4085-9bf3-fcc8ec9df138",
+          "comment": "",
+          "command": "type",
+          "target": "id=email",
+          "targets": [],
+          "value": "${emailNovo}"
+        },
+        {
+          "id": "4c569984-0165-47bb-8c06-3dc8ffaefb81",
+          "comment": "",
+          "command": "type",
+          "target": "id=senha",
+          "targets": [],
+          "value": "Teste1234"
+        },
+        {
+          "id": "51f64529-9271-455f-a232-b94242458a32",
+          "comment": "",
+          "command": "type",
+          "target": "id=confirmar_senha",
+          "targets": [],
+          "value": "Teste1234"
+        },
+        {
+          "id": "870919bf-7f7b-404a-a613-0c60154debf4",
+          "comment": "",
+          "command": "click",
+          "target": "css=input[name='termos']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "ed7c6821-0383-48bc-939d-659dc3df849e",
+          "comment": "",
+          "command": "click",
+          "target": "css=form[action='/registro'] button[type='submit']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "cb0ec6bc-6351-4421-b047-fe79478706fb",
+          "comment": "Conta criada e usuario ja logado (botao Sair visivel)",
+          "command": "waitForElementPresent",
+          "target": "css=form[action='/logout']",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "6bafeb56-7dc4-439e-a305-39658029bf58",
+          "comment": "Painel com o nome do novo usuario",
+          "command": "waitForElementPresent",
+          "target": "xpath=//h2[contains(.,'Usuario de Teste Selenium')]",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "c802118b-f322-4a7b-b432-05aa4fa175c0",
+      "name": "C04 - Cadastro com campos obrigatorios vazios",
+      "commands": [
+        {
+          "id": "5e1c0903-4b06-4478-b873-1a914494b026",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Sair se estiver logado",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "8d2bf8da-1c2c-4ee7-968b-951a596bf489",
+          "comment": "",
+          "command": "open",
+          "target": "/registro",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e3dbfe08-1d4a-450a-adc4-4f37e1b2b91e",
+          "comment": "",
+          "command": "click",
+          "target": "css=form[action='/registro'] button[type='submit']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "0be7be0f-2d1c-42b2-bc94-41ab87b433eb",
+          "comment": "O navegador bloqueia o envio e marca o campo obrigatorio",
+          "command": "executeScript",
+          "target": "return String(document.getElementById('nome_completo').validity.valueMissing)",
+          "targets": [],
+          "value": "nomeFaltando"
+        },
+        {
+          "id": "b7a76022-3f0e-437d-be25-58e60b3461a5",
+          "comment": "",
+          "command": "assert",
+          "target": "nomeFaltando",
+          "targets": [],
+          "value": "true"
+        },
+        {
+          "id": "76a9d9ba-8ce8-4ec6-b77c-d02fb9e44344",
+          "comment": "Conta nao foi criada",
+          "command": "assertElementNotPresent",
+          "target": "css=form[action='/logout']",
+          "targets": [],
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "cb21271d-d8c2-4a71-8152-ea83663a85da",
+      "name": "C05 - Catalogo publico de eventos sem login",
+      "commands": [
+        {
+          "id": "122541f2-4394-45c2-bf56-89495a6393f7",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Sair se estiver logado",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "07f90a8d-c50c-44f5-983c-594d7bb00e2d",
+          "comment": "",
+          "command": "open",
+          "target": "/catalogo",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "3867b58b-1e7c-459a-83e2-6b1457c9f73a",
+          "comment": "Lista de eventos aparece",
+          "command": "assertElementPresent",
+          "target": "css=a[href^='/catalogo/']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "5bcee11a-3cc9-4347-a9a2-39ede1931b4e",
+          "comment": "",
+          "command": "click",
+          "target": "css=a[href^='/catalogo/']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "a2656fb5-c07c-4779-acff-3bf08b48206e",
+          "comment": "Pagina de detalhes do evento abriu",
+          "command": "waitForElementPresent",
+          "target": "css=h1",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "b6edaed8-9fdf-406c-ae2f-942f9ae78335",
+      "name": "C06 - Pagina privada sem login redireciona para o login",
+      "commands": [
+        {
+          "id": "40ef6ae7-bb4c-41e7-b0c6-2d20011604dc",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Sair se estiver logado",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "2e4b0ebf-8ee7-4d69-ab34-f1f3959c302f",
+          "comment": "",
+          "command": "open",
+          "target": "/eventos",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "6a158064-ced4-414f-9aaf-9274f4c683fa",
+          "comment": "Foi redirecionado para a tela de login",
+          "command": "waitForElementPresent",
+          "target": "css=form[action='/login']",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "a28c3002-a0f8-4b46-bcf6-7108f495aab5",
+          "comment": "Esta na tela de login",
+          "command": "assertElementPresent",
+          "target": "css=form[action='/login']",
+          "targets": [],
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "1536e109-a1e7-4baf-9230-04be99ee33ea",
+      "name": "C07 - Usuario comum nao acessa a fila de aprovacoes",
+      "commands": [
+        {
+          "id": "7ac00167-6c12-431c-a4f6-60cfcdfbefc0",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Login usuario",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "2abc46e6-e407-4fe9-8cba-928a8934a7f8",
+          "comment": "",
+          "command": "open",
+          "target": "/aprovacoes",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "06d5e74d-b663-4446-86d1-c26e6f3ad611",
+          "comment": "Acesso negado",
+          "command": "waitForElementPresent",
+          "target": "xpath=//*[contains(normalize-space(text()),'Apenas administradores podem acessar essa funcionalidade.')]",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "fdb49ea7-3715-4323-a4a5-c3907b3d9543",
+      "name": "C08 - Admin cadastra evento e tier",
+      "commands": [
+        {
+          "id": "8885e5ac-d8b4-46ba-8806-6a781ef3d739",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Login admin",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e0faeeea-aa5f-4aae-97b0-3e3b332b55be",
+          "comment": "",
+          "command": "open",
+          "target": "/eventos/novo",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "0c4b002c-02a1-4d74-b1f9-2f34358d9f0d",
+          "comment": "Gera um nome unico e guarda no navegador para os testes seguintes",
+          "command": "executeScript",
+          "target": "var n = 'Evento Teste ' + Date.now(); localStorage.setItem('allocateEvento', n); return n;",
+          "targets": [],
+          "value": "nomeEvento"
+        },
+        {
+          "id": "2df00759-af20-433c-9787-f0b1972fd063",
+          "comment": "",
+          "command": "type",
+          "target": "id=nome",
+          "targets": [],
+          "value": "${nomeEvento}"
+        },
+        {
+          "id": "bbd61fff-ed69-4d77-b960-963fc4c53ce8",
+          "comment": "Preenche as datas (campo datetime-local)",
+          "command": "executeScript",
+          "target": "document.getElementById('data_inicio').value = '2027-03-10T09:00'; document.getElementById('data_termino').value = '2027-03-12T18:00';",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "c6a8668c-c3f3-46d8-bb48-189384cd96d1",
+          "comment": "",
+          "command": "type",
+          "target": "id=localizacao",
+          "targets": [],
+          "value": "Campinas - Auditorio A"
+        },
+        {
+          "id": "ef6e8bb9-1b7d-4f7f-a4e6-20ef91b58d5d",
+          "comment": "Abre a lista de categorias (Congresso, Workshop, Simposio...)",
+          "command": "click",
+          "target": "id=id_cat_evento",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "7da0d8bf-8078-4af4-b3fa-bf77abd31dbf",
+          "comment": "Escolhe a categoria pelo nome",
+          "command": "select",
+          "target": "id=id_cat_evento",
+          "targets": [],
+          "value": "label=Congresso"
+        },
+        {
+          "id": "796347cb-a153-47d8-bff1-71eeb33b4e55",
+          "comment": "Confere que a categoria ficou selecionada",
+          "command": "assertSelectedLabel",
+          "target": "id=id_cat_evento",
+          "targets": [],
+          "value": "Congresso"
+        },
+        {
+          "id": "42e22ff8-d816-47d1-aeb8-e454467c3ee7",
+          "comment": "",
+          "command": "type",
+          "target": "id=capacidade",
+          "targets": [],
+          "value": "50"
+        },
+        {
+          "id": "a9b92f2c-beed-41d7-82e5-5db6e6939229",
+          "comment": "Evento ativo = aberto para inscricoes",
+          "command": "select",
+          "target": "id=status",
+          "targets": [],
+          "value": "value=ATIVO"
+        },
+        {
+          "id": "41e971d1-5b0a-4b0c-bf6d-c6cdbff96094",
+          "comment": "",
+          "command": "assertSelectedValue",
+          "target": "id=status",
+          "targets": [],
+          "value": "ATIVO"
+        },
+        {
+          "id": "9a2a5289-af21-4845-9dfe-626c70d7cd5e",
+          "comment": "",
+          "command": "type",
+          "target": "id=custo_estimado",
+          "targets": [],
+          "value": "1500"
+        },
+        {
+          "id": "a6e27c13-4bcb-4806-91a1-8826db62de82",
+          "comment": "",
+          "command": "click",
+          "target": "xpath=//button[contains(.,'Criar Evento')]",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "025ebe55-fe16-4849-bdcb-6b1c3f0db109",
+          "comment": "Evento criado: o sistema abre a tela de tiers",
+          "command": "waitForElementPresent",
+          "target": "xpath=//h1[contains(.,'Gerenciar Tiers de Inscrição')]",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "83981ad4-4d65-4fdc-9619-9faeb5f7e4f0",
+          "comment": "Tela de tiers do evento criado",
+          "command": "waitForElementPresent",
+          "target": "xpath=//*[contains(normalize-space(text()),'${nomeEvento}')]",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "fdbef535-1c09-41e6-9d54-73a849fd4f1f",
+          "comment": "",
+          "command": "type",
+          "target": "id=nome",
+          "targets": [],
+          "value": "Inscricao Padrao"
+        },
+        {
+          "id": "47dbe130-5bf5-486d-abeb-45e03b6c565f",
+          "comment": "",
+          "command": "type",
+          "target": "id=descricao",
+          "targets": [],
+          "value": "Acesso aos dois dias de evento"
+        },
+        {
+          "id": "67ce13c9-d5a0-46db-a15f-18a40d762b7a",
+          "comment": "",
+          "command": "type",
+          "target": "id=preco",
+          "targets": [],
+          "value": "350"
+        },
+        {
+          "id": "57d410bd-7f86-4d5c-9b47-742d451dcd4f",
+          "comment": "",
+          "command": "type",
+          "target": "id=capacidade",
+          "targets": [],
+          "value": "20"
+        },
+        {
+          "id": "4276a643-c5aa-4ac2-81b6-7fdd2b8b61c9",
+          "comment": "",
+          "command": "click",
+          "target": "xpath=//button[contains(.,'Adicionar Tier')]",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "d28a0ccd-23a6-49d0-b9d4-d72e13e0cbe5",
+          "comment": "Tier aparece na lista",
+          "command": "waitForElementPresent",
+          "target": "xpath=//*[contains(normalize-space(text()),'Inscricao Padrao')]",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "8ad1f347-62cb-4cf1-a215-d689113fbc8d",
+      "name": "C09 - Usuario solicita inscricao em evento",
+      "commands": [
+        {
+          "id": "03d4175d-1ebc-4ce3-a3c3-f9f30f2f53ec",
+          "comment": "Cria um evento novo para o usuario nao repetir inscricao",
+          "command": "run",
+          "target": "C08 - Admin cadastra evento e tier",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "69677b88-410b-495a-a963-9cea7ecdff9f",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Login usuario",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "974a8dc2-ed53-4aff-8d2b-807e13658664",
+          "comment": "",
+          "command": "open",
+          "target": "/inscricoes/nova",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "7382712f-df5d-47e9-bf10-ba39a00abc1c",
+          "comment": "Recupera o nome do evento criado no C08",
+          "command": "executeScript",
+          "target": "return localStorage.getItem('allocateEvento')",
+          "targets": [],
+          "value": "nomeEvento"
+        },
+        {
+          "id": "4c74176e-d543-420e-a650-7aa9e80991e9",
+          "comment": "Escolhe o evento criado no C08",
+          "command": "executeScript",
+          "target": "var n = localStorage.getItem('allocateEvento'); var s = document.getElementById('id_evento'); var o = Array.from(s.options).find(function (x) { return x.text.indexOf(n) === 0; }); location.href = '/inscricoes/nova?evento=' + o.value;",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "17ae3448-c7cd-4885-86f0-e6181d373c26",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "css=input[name='id_tier']",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "26c34466-cfcf-42c8-83d0-18133cff833c",
+          "comment": "",
+          "command": "click",
+          "target": "xpath=(//input[@name='id_tier' and not(@disabled)])[1]/ancestor::label",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "04b546c6-4de4-4638-8493-613813484663",
+          "comment": "",
+          "command": "type",
+          "target": "id=justificativa",
+          "targets": [],
+          "value": "Capacitacao importante para a minha area de atuacao."
+        },
+        {
+          "id": "9d0a960c-9429-4f6e-b67c-b3636fe11b92",
+          "comment": "",
+          "command": "click",
+          "target": "xpath=//button[contains(.,'Confirmar Inscrição')]",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "d215307c-7929-4775-83af-96bbf425b70b",
+          "comment": "Inscricao aparece em Minhas Inscricoes",
+          "command": "waitForElementPresent",
+          "target": "xpath=//a[contains(.,'${nomeEvento}')]",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "b92925b6-2ea6-41c2-a1e3-99900b72af92",
+      "name": "C10 - Admin aprova solicitacao pela fila",
+      "commands": [
+        {
+          "id": "3225bb30-b253-4c35-b1cc-2ca3750685a5",
+          "comment": "Garante que existe uma solicitacao pendente",
+          "command": "run",
+          "target": "C09 - Usuario solicita inscricao em evento",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "084e5d56-a951-4157-af04-5e99502011cd",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Login admin",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "5e942f93-1bf0-46f8-85af-b9dbb1213e92",
+          "comment": "Recupera o nome do evento criado no C08",
+          "command": "executeScript",
+          "target": "return localStorage.getItem('allocateEvento')",
+          "targets": [],
+          "value": "nomeEvento"
+        },
+        {
+          "id": "8d05484f-a2f7-4239-8a41-40f5b0518160",
+          "comment": "",
+          "command": "open",
+          "target": "/aprovacoes",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "53dc2247-2374-40a0-8686-60cb5856e3c4",
+          "comment": "Aprova a solicitacao do evento criado",
+          "command": "click",
+          "target": "xpath=//p[contains(.,'${nomeEvento}')]/ancestor::div[.//button[@aria-label='Aprovar']][1]//button[@aria-label='Aprovar']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "546a9f1d-aeb5-4146-90e8-6cd009f33999",
+          "comment": "Saiu da fila de pendentes",
+          "command": "waitForElementNotPresent",
+          "target": "xpath=//p[contains(.,'${nomeEvento}')]",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "d26bd7da-b579-489c-a101-15ae956de74f",
+          "comment": "",
+          "command": "open",
+          "target": "/inscricoes?status=APROVADO",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e2339275-30f0-4ca4-ad92-4a56889acba6",
+          "comment": "Inscricao aparece como aprovada",
+          "command": "waitForElementPresent",
+          "target": "xpath=//*[contains(normalize-space(text()),'${nomeEvento}')]",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "29d6ca5a-dc46-4291-ae50-98bcd63086fb",
+      "name": "C11 - Admin rejeita solicitacao pelo detalhe",
+      "commands": [
+        {
+          "id": "b48b86cb-7b0d-4e6f-98d5-a39d4109aac5",
+          "comment": "Garante que existe uma solicitacao pendente",
+          "command": "run",
+          "target": "C09 - Usuario solicita inscricao em evento",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "78a31b86-2bac-41bb-913d-517fcf13a51e",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Login admin",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "6a450b9a-743f-46d9-8cde-21f9c3253cb1",
+          "comment": "Recupera o nome do evento criado no C08",
+          "command": "executeScript",
+          "target": "return localStorage.getItem('allocateEvento')",
+          "targets": [],
+          "value": "nomeEvento"
+        },
+        {
+          "id": "43245051-1292-4108-abe9-7c99dd209a41",
+          "comment": "",
+          "command": "open",
+          "target": "/aprovacoes",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "779c667f-7abd-450b-ae37-6338d33174c2",
+          "comment": "Abre o detalhe da solicitacao do evento criado",
+          "command": "click",
+          "target": "xpath=//p[contains(.,'${nomeEvento}')]/ancestor::div[.//a[@aria-label='Ver detalhes']][1]//a[@aria-label='Ver detalhes']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "af556a31-0b86-4132-8824-f161e36ad8fc",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "xpath=//h2[contains(.,'Solicitação de Inscrição')]",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "802aa168-314a-4f4b-abe6-bfc6ece0e97b",
+          "comment": "",
+          "command": "type",
+          "target": "id=comentario",
+          "targets": [],
+          "value": "Orcamento do departamento insuficiente neste ciclo."
+        },
+        {
+          "id": "62f38009-cd28-43f3-ade0-634fbe26647b",
+          "comment": "",
+          "command": "click",
+          "target": "css=button[value='rejeitar']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "30289967-cc13-4e2a-b799-0378594e034a",
+          "comment": "Voltou para a fila",
+          "command": "waitForElementPresent",
+          "target": "xpath=//h2[contains(.,'Fila de Aprovações')]",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "9885c685-d955-4e58-a864-2e422047a3a7",
+          "comment": "",
+          "command": "open",
+          "target": "/inscricoes?status=REJEITADO",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "21d9f22d-0233-4f66-88fe-0e6d28bda1df",
+          "comment": "Inscricao aparece como rejeitada",
+          "command": "waitForElementPresent",
+          "target": "xpath=//*[contains(normalize-space(text()),'${nomeEvento}')]",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "258a928f-c9bf-48b4-b37a-0c89e6f487a7",
+      "name": "C12 - Orcamento por departamento",
+      "commands": [
+        {
+          "id": "5794e348-d887-4975-b89d-1e82b0379744",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Login admin",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "0092efc0-18c0-482d-b36d-b196e7646f9f",
+          "comment": "",
+          "command": "open",
+          "target": "/orcamento-departamento",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "3797e0ae-915e-462c-b199-dcad72c0ee76",
+          "comment": "Botao de exportar CSV disponivel",
+          "command": "assertElementPresent",
+          "target": "css=a[href^='/orcamento-departamento/exportar']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "375e8c2b-684e-4240-abf5-05ea266d7a97",
+          "comment": "Tabela de orcamento mostra o saldo",
+          "command": "waitForElementPresent",
+          "target": "xpath=//*[contains(normalize-space(text()),'Disponível')]",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "efadf999-db55-4e4c-8db8-9cb964f89916",
+      "name": "C13 - Simulador de orcamento: criar cenario e adicionar recurso",
+      "commands": [
+        {
+          "id": "170d2ba6-8a5f-460d-b99d-e26111dd8a99",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Login admin",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "b38ef3fa-dd33-49f4-a21c-76255dcd2266",
+          "comment": "",
+          "command": "open",
+          "target": "/simulador-orcamento",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "6b34ea1e-7a1a-4557-b9b4-f0c7f4f2f886",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return 'Cenario Teste ' + Date.now()",
+          "targets": [],
+          "value": "nomeCenario"
+        },
+        {
+          "id": "a8f352c7-9dc0-4769-a76e-974c9a45d147",
+          "comment": "",
+          "command": "type",
+          "target": "id=nome_cenario",
+          "targets": [],
+          "value": "${nomeCenario}"
+        },
+        {
+          "id": "41679996-6f8b-4e87-a827-9612f7ddabf2",
+          "comment": "",
+          "command": "type",
+          "target": "id=custo_base",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "e8057f1c-cb9f-48b9-a70b-796d0ebd434c",
+          "comment": "",
+          "command": "click",
+          "target": "xpath=//button[contains(.,'Criar Cenário')]",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "d4b04878-dd8a-42a6-b84f-3d627ae14907",
+          "comment": "Cenario criado e selecionado",
+          "command": "waitForElementPresent",
+          "target": "xpath=//*[contains(normalize-space(text()),'${nomeCenario}')]",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "68be3664-97d1-4784-b273-322826c78d2c",
+          "comment": "",
+          "command": "type",
+          "target": "id=funcao",
+          "targets": [],
+          "value": "Medico Especialista"
+        },
+        {
+          "id": "3259c545-b094-43c9-b4cf-df77ca6dc09c",
+          "comment": "",
+          "command": "type",
+          "target": "id=quantidade",
+          "targets": [],
+          "value": "2"
+        },
+        {
+          "id": "ae825bae-8c77-4fff-88d7-839e908d8db8",
+          "comment": "",
+          "command": "type",
+          "target": "id=custo_mensal_est",
+          "targets": [],
+          "value": "2500"
+        },
+        {
+          "id": "e670c62b-6829-4ab9-836c-217ab2e0709b",
+          "comment": "",
+          "command": "click",
+          "target": "xpath=//button[contains(.,'Adicionar ao Cenário')]",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "b920a375-26e8-484e-82e9-3e9a8e8d41d5",
+          "comment": "Recurso aparece no cenario",
+          "command": "waitForElementPresent",
+          "target": "xpath=//*[contains(normalize-space(text()),'Medico Especialista')]",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    },
+    {
+      "id": "8bdcfa11-e348-4988-9459-924d12cfd8af",
+      "name": "C14 - Alterar senha com senha atual incorreta",
+      "commands": [
+        {
+          "id": "cceed03e-e5b2-4d65-bcb1-6c78427fb24f",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Login usuario",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "de977c31-a428-4bcd-b143-e505707912c5",
+          "comment": "",
+          "command": "open",
+          "target": "/configuracoes",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "f6032e24-e8f9-485f-abe7-395f57de790e",
+          "comment": "",
+          "command": "type",
+          "target": "id=senha_atual",
+          "targets": [],
+          "value": "senhaerrada"
+        },
+        {
+          "id": "17c18196-92a2-445a-bfd0-45174b0f7eef",
+          "comment": "",
+          "command": "type",
+          "target": "id=nova_senha",
+          "targets": [],
+          "value": "NovaSenha123"
+        },
+        {
+          "id": "ffff043f-42e6-4192-aab9-9631e2b5a5fe",
+          "comment": "",
+          "command": "type",
+          "target": "id=confirmar_senha",
+          "targets": [],
+          "value": "NovaSenha123"
+        },
+        {
+          "id": "2a226aa2-f044-4d1d-b78d-a866c27f1121",
+          "comment": "",
+          "command": "click",
+          "target": "xpath=//button[contains(.,'Alterar senha')]",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "1bfbf908-eb6e-424a-a43d-75a2e61a6746",
+          "comment": "",
+          "command": "waitForElementPresent",
+          "target": "id=senha_atual",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "bbe05cce-df0b-4393-b1a4-998a5e8b9e39",
+          "comment": "Nao mostrou sucesso",
+          "command": "assertElementNotPresent",
+          "target": "xpath=//div[@role='status']//p[contains(normalize-space(.),'Senha alterada com sucesso.')]",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "858c9a66-8c60-43f4-806a-65263e8ee6dd",
+          "comment": "Prova que a senha antiga continua valendo",
+          "command": "run",
+          "target": "Aux - Login usuario",
+          "targets": [],
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "a2a53712-a02f-499e-abfe-36bfd7235754",
+      "name": "C15 - Menu em tela de celular",
+      "commands": [
+        {
+          "id": "f20d3d28-c421-4a72-8e87-558172eb3979",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Login admin",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "c862a42f-e84d-4ad5-9f5d-e99726c5ce24",
+          "comment": "Simula a tela de um celular",
+          "command": "setWindowSize",
+          "target": "390x844",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "0988db0c-f6dd-4fb4-89d6-39ce0bd4f5e8",
+          "comment": "",
+          "command": "open",
+          "target": "/dashboard",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "4d21ce6c-60a8-41b0-9064-8ef3a22444af",
+          "comment": "",
+          "command": "click",
+          "target": "css=button[aria-label='Abrir menu']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "96614dda-d75d-4071-a252-6c4d8068f413",
+          "comment": "",
+          "command": "click",
+          "target": "css=#menu-lateral a[href='/eventos']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "d5419a2b-16aa-4441-a036-6b75299975a4",
+          "comment": "Abriu a tela de eventos",
+          "command": "waitForElementPresent",
+          "target": "xpath=//h2[normalize-space(.)='Eventos']",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "f7ab9985-799b-44eb-bfe0-16e5673478f4",
+          "comment": "",
+          "command": "setWindowSize",
+          "target": "1366x900",
+          "targets": [],
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "c991eed3-5aed-4854-93ec-bb5d110d4dc1",
+      "name": "C16 - Sair da conta",
+      "commands": [
+        {
+          "id": "9df4fd03-314c-4bea-8754-28692c741338",
+          "comment": "",
+          "command": "run",
+          "target": "Aux - Login admin",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "8d787e4a-02f3-416d-9568-5a5ddf2a9250",
+          "comment": "",
+          "command": "click",
+          "target": "css=form[action='/logout'] button",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "9c571b8a-577a-4d19-a9db-48aa09bfb99e",
+          "comment": "Usuario deslogado",
+          "command": "waitForElementNotPresent",
+          "target": "css=form[action='/logout']",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "968c85e8-fe15-42a7-8f33-2d792cec99d2",
+          "comment": "",
+          "command": "open",
+          "target": "/dashboard",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "de0610af-bbd3-49b2-b929-2e9f991feb91",
+          "comment": "Pagina privada volta a pedir login",
+          "command": "waitForElementPresent",
+          "target": "css=form[action='/login']",
+          "targets": [],
+          "value": "10000"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "646a6652-e977-4b70-9a5b-461557b4385b",
+      "name": "Suite completa",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 300,
+      "tests": [
+        "52a24ebe-10e0-4dad-8e66-8695d518aa1a",
+        "ceed7bff-e136-4c21-8f29-36ea2a05a4e2",
+        "4589a625-9cd3-4cba-a320-000d8289f527",
+        "c802118b-f322-4a7b-b432-05aa4fa175c0",
+        "cb21271d-d8c2-4a71-8152-ea83663a85da",
+        "b6edaed8-9fdf-406c-ae2f-942f9ae78335",
+        "1536e109-a1e7-4baf-9230-04be99ee33ea",
+        "fdb49ea7-3715-4323-a4a5-c3907b3d9543",
+        "8ad1f347-62cb-4cf1-a215-d689113fbc8d",
+        "b92925b6-2ea6-41c2-a1e3-99900b72af92",
+        "29d6ca5a-dc46-4291-ae50-98bcd63086fb",
+        "258a928f-c9bf-48b4-b37a-0c89e6f487a7",
+        "efadf999-db55-4e4c-8db8-9cb964f89916",
+        "8bdcfa11-e348-4988-9459-924d12cfd8af",
+        "a2a53712-a02f-499e-abfe-36bfd7235754",
+        "c991eed3-5aed-4854-93ec-bb5d110d4dc1"
+      ]
+    }
+  ],
+  "urls": [
+    "https://allocate-7fwu.onrender.com/"
+  ],
+  "plugins": []
+}
