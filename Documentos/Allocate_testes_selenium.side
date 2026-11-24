@@ -407,8 +407,48 @@
           "value": ""
         },
         {
+          "id": "4c97493d-5722-48f2-9393-619026866d86",
+          "comment": "Conta criada: volta para a tela de login com a mensagem de sucesso",
+          "command": "waitForElementPresent",
+          "target": "xpath=//p[contains(.,'Conta criada com sucesso')]",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "a875e1fc-c984-4cea-bffb-dd7b178b0bcd",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=form[action='/login']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "edc09d57-f9fb-43d6-9099-56ace786352c",
+          "comment": "Entra com a conta recem-criada",
+          "command": "type",
+          "target": "id=email",
+          "targets": [],
+          "value": "${emailNovo}"
+        },
+        {
+          "id": "1224bd6a-e1b7-44c2-ab55-f500d7849c01",
+          "comment": "",
+          "command": "type",
+          "target": "id=senha",
+          "targets": [],
+          "value": "Teste1234"
+        },
+        {
+          "id": "3e2645c3-a5d8-4437-ae8e-d1815bcf24d2",
+          "comment": "",
+          "command": "click",
+          "target": "css=form[action='/login'] button[type='submit']",
+          "targets": [],
+          "value": ""
+        },
+        {
           "id": "cb0ec6bc-6351-4421-b047-fe79478706fb",
-          "comment": "Conta criada e usuario ja logado (botao Sair visivel)",
+          "comment": "Login com a nova conta (botao Sair visivel)",
           "command": "waitForElementPresent",
           "target": "css=form[action='/logout']",
           "targets": [],

@@ -159,7 +159,7 @@ export const AuthController = controller({
 
     try {
       // Criação do registo do utilizador (a senha é guardada como hash bcrypt, nunca em texto)
-      const idUsuario = await UsuarioModel.criar({
+      await UsuarioModel.criar({
         email: dados.email.trim(),
         senhaHash: await bcrypt.hash(dados.senha, SALT_ROUNDS),
         nome_completo: dados.nome_completo.trim(),
@@ -169,23 +169,13 @@ export const AuthController = controller({
         id_depto: Number(dados.id_depto),
       });
 
-      const conta = await UsuarioModel.buscarPorId(idUsuario);
-
-      await iniciarSessao(req, {
-        id_usuario: conta.id_usuario,
-        id_login: conta.id_login,
-        nome: conta.nome_completo,
-        email: conta.email,
-        perfil: conta.perfil,
-        id_depto: conta.id_depto,
-      });
-
+      // Após o cadastro, volta para a tela de login para o usuário entrar com a nova conta
       req.flash(
         "sucesso",
-        "Conta criada com sucesso! Bem-vindo(a) ao Allocate.",
+        "Conta criada com sucesso! Entre com seu e-mail e senha.",
       );
 
-      res.redirect("/dashboard");
+      res.redirect("/login");
     } catch (err) {
       // Tratamento de exceção de violação de restrição única (UNIQUE) na base de dados
       if (err.tipo !== "UNIQUE") throw err;
