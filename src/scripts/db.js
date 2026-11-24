@@ -9,11 +9,6 @@ import 'dotenv/config';
 import { inicializarBanco } from '../config/initDB.js';
 import { pool } from '../config/database.js';
 
-
-
-import { inicializarBanco } from "../config/initDB.js";
-import { pool } from "../config/database.js";
-
 // Lê o argumento passado via linha de comando (ex: 'init' ou 'reset'); predefinição é 'init'
 const comando = process.argv[2] || "init";
 

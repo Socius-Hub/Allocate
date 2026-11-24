@@ -158,7 +158,7 @@ export const AuthController = controller({
       );
 
     try {
-      // Criação do registo do utilizador com encriptação segura por hash bcrypt
+      // Criação do registo do utilizador (a senha é guardada como hash bcrypt, nunca em texto)
       const idUsuario = await UsuarioModel.criar({
         email: dados.email.trim(),
         senhaHash: await bcrypt.hash(dados.senha, SALT_ROUNDS),

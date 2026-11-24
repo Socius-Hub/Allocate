@@ -8,7 +8,6 @@ import pkg from "pg";
 const { Pool, types } = pkg;
 
 export const DB_CLIENT = "postgres";
-export const isPostgres = true;
 
 // O Postgres devolve BIGINT (ex: COUNT(*)) e NUMERIC (ex: DECIMAL) como texto.
 // Convertendo para número evitamos somas virando concatenação ("0" + "1" = "01").
@@ -21,29 +20,19 @@ const usarSSL = process.env.DB_SSL === 'true' || (process.env.NODE_ENV === 'prod
 
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  ssl: usarSSL ? { rejectUnauthorized: false } : false,
 });
 
-/* converte interrogações (?) em parâmetros posicionais do Postgres ($1, $2, $3...)
-permitindo que o mesmo código SQL seja usado tanto para MySQL quanto para PostgreSQL. */
+/* converte interrogações (?) em parâmetros posicionais do Postgres ($1, $2, $3...) */
 function prepararQuery(sql) {
   let index = 0;
   return sql.replace(/\?/g, () => `$${++index}`);
 }
 
-export async function query(sql, params = []) {
-  const client = await pool.connect();
-  try {
-    const formattedSql = prepararQuery(sql);
-    const result = await client.query(formattedSql, params);
-    return result.rows;
-  } finally {
-    client.release();
-  }
-}
+/** Códigos de erro do Postgres -> tipos usados pelos controllers (ver utils/http.js). */
+const TIPOS_ERRO = { 23505: 'UNIQUE', 23503: 'FK', 23514: 'CHECK' };
 
-export async function execute(sql, params = []) {
-  const client = await pool.connect();
+async function executar(client, sql, params = []) {
   try {
     return await client.query(prepararQuery(sql), params);
   } catch (err) {
@@ -52,47 +41,36 @@ export async function execute(sql, params = []) {
   }
 }
 
-export async function insert(sql, params = [], primaryKeyName = 'id') {
-  const client = await pool.connect();
-  try {
-    let formattedSql = prepararQuery(sql);
-    if (!formattedSql.toUpperCase().includes('RETURNING')) {
-      formattedSql = `${formattedSql} RETURNING ${primaryKeyName}`;
-    }
-    const result = await client.query(formattedSql, params);
-    const row = result.rows[0];
-    if (!row) return null;
-    return row[Object.keys(row)[0]]; // Retorna o ID gerado independentemente do nome ou maiúsculas/minúsculas
-  } finally {
-    client.release();
-  }
+function comRetorno(sql, primaryKeyName) {
+  return sql.toUpperCase().includes('RETURNING') ? sql : `${sql} RETURNING ${primaryKeyName}`;
 }
+
+/** Retorna o ID gerado independentemente do nome ou maiúsculas/minúsculas da coluna. */
+function primeiroValor(result) {
+  const row = result.rows[0];
+  return row ? row[Object.keys(row)[0]] : null;
+}
+
+/** Operações disponíveis tanto no pool quanto dentro de uma transação. */
+function operacoes(client) {
+  return {
+    query: async (sql, params) => (await executar(client, sql, params)).rows,
+    execute: async (sql, params) => (await executar(client, sql, params)).rowCount,
+    insert: async (sql, params, primaryKeyName = 'id') =>
+      primeiroValor(await executar(client, comRetorno(sql, primaryKeyName), params)),
+  };
+}
+
+const viaPool = operacoes(pool);
+export const query = viaPool.query;
+export const execute = viaPool.execute;
+export const insert = viaPool.insert;
 
 export async function transaction(callback) {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    const tx = {
-      query: async (sql, params) => {
-        const res = await client.query(prepararQuery(sql), params);
-        return res.rows;
-      },
-      execute: async (sql, params) => {
-        const res = await client.query(prepararQuery(sql), params);
-        return res.rowCount;
-      },
-      insert: async (sql, params, pk = 'id') => {
-        let fmtSql = prepararQuery(sql);
-        if (!fmtSql.toUpperCase().includes('RETURNING')) {
-          fmtSql = `${fmtSql} RETURNING ${pk}`;
-        }
-        const res = await client.query(fmtSql, params);
-        const row = res.rows[0];
-        if (!row) return null;
-        return row[Object.keys(row)[0]];
-      }
-    };
-    const resultado = await callback(tx);
+    const resultado = await callback(operacoes(client));
     await client.query('COMMIT');
     return resultado;
   } catch (err) {

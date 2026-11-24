@@ -6,12 +6,12 @@
 
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
-import { pool, isPostgres } from "./database.js";
+import { pool } from "./database.js";
 
 // Verifica se a aplicação está a executar em ambiente de produção (ex: Render)
 const producao = process.env.NODE_ENV === "production";
 
-// Alerta de segurança crítico caso a chave secreta de encriptação não esteja definida no servidor
+// Alerta de segurança caso o segredo que assina o cookie da sessão não esteja definido no servidor
 if (producao && !process.env.SESSION_SECRET) {
   console.warn(
     "[sessão] SESSION_SECRET não definido! Defina essa variável de ambiente no Render.",
@@ -33,15 +33,13 @@ export function criarSessao() {
     },
   };
 
-  // Se o banco de dados ativo for o PostgreSQL, redireciona o armazenamento para a tabela persistente
-  if (isPostgres) {
-    const PgStore = connectPgSimple(session);
-    opcoes.store = new PgStore({
-      pool,
-      tableName: "session",
-      createTableIfMissing: true,
-    });
-  }
+  // Guarda as sessões na tabela "session" do PostgreSQL (o login sobrevive a reinícios do servidor)
+  const PgStore = connectPgSimple(session);
+  opcoes.store = new PgStore({
+    pool,
+    tableName: "session",
+    createTableIfMissing: true,
+  });
 
   // Retorna o middleware configurado para ser utilizado na aplicação Express
   return session(opcoes);

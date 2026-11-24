@@ -1,5 +1,7 @@
 # Allocate
 
+![Tela inicial do Allocate](Documentos/tela-inicial.png)
+
 Aplicação web para **gestão de eventos, inscrições e orçamento por departamento**.
 Node.js + Express + EJS, padrão **MVC**, com autenticação por sessão e senhas com **bcrypt**.
 Banco de dados **PostgreSQL**.
@@ -14,6 +16,7 @@ Banco de dados **PostgreSQL**.
 | Início e catálogo de eventos | `/`, `/catalogo`, `/catalogo/:id` | Público |
 | Login e cadastro | `/login`, `/registro` | Público |
 | Painel | `/dashboard` | Logado |
+| Meu perfil | `/perfil` | Logado |
 | Eventos (CRUD) + tiers de inscrição (CRUD) | `/eventos`, `/eventos/:id/tiers` | Logado |
 | Inscrições (criar, listar, cancelar) | `/inscricoes` | Logado (usuário comum vê só as próprias) |
 | Simulador de orçamento (cenários e itens) | `/simulador-orcamento` | Logado (aprovar/excluir cenário: admin) |
@@ -81,7 +84,7 @@ E rode:
 npm run dev               # ou: npm start
 ```
 
-Acesse http://localhost:3000. Na primeira execução, as tabelas e os dados de exemplo são criados sozinhos
+Acesse http://localhost:8081. Na primeira execução, as tabelas e os dados de exemplo são criados sozinhos
 (no log: `[db] Dados iniciais inseridos com sucesso!`). O database (`allocate_db`) precisa existir antes.
 
 ### Variáveis de ambiente
@@ -90,7 +93,7 @@ Acesse http://localhost:3000. Na primeira execução, as tabelas e os dados de e
 |---|---|---|
 | `DATABASE_URL` | conexão com o PostgreSQL (**obrigatória**) | — |
 | `SESSION_SECRET` | segredo que assina o cookie da sessão | texto fixo de desenvolvimento |
-| `PORT` | porta do servidor | `3000` |
+| `PORT` | porta do servidor | `8081` |
 | `NODE_ENV` | `production` ativa cookie `secure` e SSL no banco | — |
 | `DB_SSL` | `true` força SSL na conexão (necessário para acessar o banco do Render de fora) | `false` (ativado sozinho em produção) |
 | `DB_AUTO_INIT` | `false` desliga a criação automática das tabelas/dados ao iniciar | `true` |
@@ -117,7 +120,7 @@ Atenção: `npm run db:reset` apaga também as views e triggers — execute o `s
 1. Suba o projeto para um repositório no GitHub (o `.env` **não** vai, ele está no `.gitignore`).
 2. No Render: **New + → Blueprint** e selecione o repositório.
    O arquivo `render.yaml` cria o **PostgreSQL** e o **Web Service** e já configura as variáveis
-   `DATABASE_URL`, `SESSION_SECRET`, `NODE_ENV`, `DB_CLIENT` e `DB_AUTO_INIT`.
+   `DATABASE_URL`, `SESSION_SECRET`, `NODE_ENV` e `DB_AUTO_INIT`.
 3. Aguarde o deploy. Na primeira inicialização as tabelas são criadas automaticamente (veja os logs: `[db] Dados iniciais inseridos com sucesso!`).
 
 Cada `push` na branch `main` gera um novo deploy automaticamente.

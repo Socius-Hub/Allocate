@@ -17,6 +17,13 @@ const TABELAS = [
 // Cria as tabelas (se não existirem) e insere os dados de exemplo quando o banco está vazio.
 export async function inicializarBanco({ forcar = false } = {}) {
   try {
+    if (forcar) {
+      console.log('[db] Apagando todas as tabelas (reset)...');
+      await pool.query(`DROP TABLE IF EXISTS ${TABELAS.join(', ')} CASCADE`);
+      // Encerra as sessões abertas: elas apontam para usuários que deixaram de existir
+      await pool.query(`DO $$ BEGIN IF to_regclass('session') IS NOT NULL THEN DELETE FROM session; END IF; END $$`);
+    }
+
     console.log('[db] A verificar e criar tabelas no PostgreSQL...');
     
     const schemaSql = `
@@ -248,8 +255,10 @@ export async function inicializarBanco({ forcar = false } = {}) {
       // Executa os scripts de seeds no banco
       await pool.query(seedsSql);
       console.log('[db] Dados iniciais inseridos com sucesso!');
+      return true;
     } else {
       console.log('[db] O banco já possui dados cadastrados. Ignorando seeds.');
+      return false;
     }
 
   } catch (err) {
